@@ -1,0 +1,17 @@
+export const DM_PHONGBAN = {
+  id: null,
+  ma: null,
+  ten: null,
+  trang_thai: null,
+  sap_xep: null,
+  ngay_tao: null,
+  nguoi_tao: null,
+  ngay_cap_nhat: null,
+  nguoi_cap_nhat: null,
+  dm_donvi_id: null,
+  dm_phongban_id: null,
+  db_maphongban: null,
+  db_ngay: null,
+  ma_dviqly: null,
+  ten_dviqly: "",
+};

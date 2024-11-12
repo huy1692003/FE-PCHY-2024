@@ -1,0 +1,40 @@
+.loginLeftside {
+    width: 60%;
+    height: 75vh;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    z-index: 10000;
+    margin-left: 15px;
+    background-image: url('/demo/images/login/bg.jpg');
+}
+
+
+.line {
+    height: 1.5px;
+    width: 45%;
+    background-color: #e0e0e0;
+    margin-top: 10px;
+}
+
+.forgotPass {
+    color: #000;
+
+    &:hover {
+        color: #1445a7;
+    }
+}
+
+.buttonLogin {
+    background-color: #1445a7;
+    border-color: #1445a7;
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, .175);
+    width: 50%;
+    height: 40px;
+
+    &:hover {
+        background-color: #1445a7;
+        opacity: 0.8;
+    }
+}
