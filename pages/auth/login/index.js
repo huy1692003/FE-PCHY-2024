@@ -30,23 +30,23 @@ const LoginPage = () => {
 
     const handleLogin = async () => {
         try {
-            const data = {ten_dang_nhap: username, mat_khau: password}
+            const data = { ten_dang_nhap: username, mat_khau: password }
             const response = await login_HT_NGUOIDUNG(data)
-            if(response) {
+            if (response) {
                 sessionStorage.setItem('user', JSON.stringify(response.user));
                 sessionStorage.setItem('token', response.user.token);
-                toast.current.show({severity: 'success', summary: 'Thông báo', detail: 'Đăng nhập thành công', life: 3000})
+                toast.current.show({ severity: 'success', summary: 'Thông báo', detail: 'Đăng nhập thành công', life: 3000 })
                 router.push('/')
             }
         } catch (error) {
             console.log(error);
-            
-            toast.current.show({severity: 'error', summary: 'Thông báo', detail: 'Đăng nhập thất bại', life: 3000})
+
+            toast.current.show({ severity: 'error', summary: 'Thông báo', detail: 'Đăng nhập thất bại', life: 3000 })
         }
     }
 
     const handleUsernameError = () => {
-        if(!username) {
+        if (!username) {
             setUsernameError('Tên đăng nhập không được để trống')
         } else {
             setUsernameError('')
@@ -54,7 +54,7 @@ const LoginPage = () => {
     }
 
     const handlePasswordError = () => {
-        if(!password) {
+        if (!password) {
             setPasswordError('Mật khẩu không được để trống')
         } else {
             setPasswordError('')
@@ -65,27 +65,27 @@ const LoginPage = () => {
     return (
         <React.Fragment>
             <Head>
-                <title>Đăng nhập - Phần mềm quản lý kìm chì</title>
+                <title>Đăng nhập - Phần mềm quản lý PCHY</title>
             </Head>
             <Toast ref={toast} />
-            <div className={containerClassName} style={{backgroundColor: '#B0BEC5'}}>
-                <div style={{backgroundColor: 'white', width: '93%', boxShadow: '0px 4px 8px 0px #757575'}}>
-                    <div className="flex justify-content-between align-items-center gap-5" style={{padding: '2rem'}}>
+            <div className={containerClassName} style={{ backgroundColor: '#B0BEC5' }}>
+                <div style={{ backgroundColor: 'white', width: '93%', boxShadow: '0px 4px 8px 0px #757575' }}>
+                    <div className="flex justify-content-between align-items-center gap-5" style={{ padding: '2rem' }}>
                         <div className={styles.loginLeftside}>
                             <div className='pb-5'>
                                 <div className='row'>
-                                    <img src='/demo/images/login/logologin.png' style={{width: '30%'}} />
+                                    <img src='/demo/images/login/logologin.png' style={{ width: '30%' }} />
                                 </div>
                             </div>
                         </div>
-                        <div style={{width: '40%', paddingRight: '30px'}}>
+                        <div style={{ width: '40%', paddingRight: '30px' }}>
                             <div className='mb-8'>
                                 <div className='text-center'>
-                                    <h3 className='page-title uppercase' style={{color: '#1445a7'}}>hệ thống phần mềm pchungyen.vn</h3>
+                                    <h3 className='page-title uppercase' style={{ color: '#1445a7' }}>hệ thống phần mềm pchungyen.vn</h3>
                                 </div>
-                                <div className='flex flex-wrap px-3 mb-4' style={{marginRight: '-15px', marginLeft: '-15px'}}>
+                                <div className='flex flex-wrap px-3 mb-4' style={{ marginRight: '-15px', marginLeft: '-15px' }}>
                                     <div className={styles.line}></div>
-                                    <small style={{width: '10%', fontWeight: 'bold', textAlign: 'center'}}>o0o</small>
+                                    <small style={{ width: '10%', fontWeight: 'bold', textAlign: 'center' }}>o0o</small>
                                     <div className={styles.line}></div>
                                 </div>
                             </div>
@@ -95,27 +95,27 @@ const LoginPage = () => {
                                 <label htmlFor="username" className="block text-900 text-xl font-medium mb-2">
                                     Tên đăng nhập
                                 </label>
-                                <InputText inputid="username" value={username} type="text" placeholder="Tài khoản" className="w-full mb-2" style={{ padding: '1rem'}} onChange={(e) => setUsername(e.target.value)} onBlur={handleUsernameError} />
+                                <InputText inputid="username" value={username} type="text" placeholder="Tài khoản" className="w-full mb-2" style={{ padding: '1rem' }} onChange={(e) => setUsername(e.target.value)} onBlur={handleUsernameError} />
                                 {
                                     usernameError && (
-                                        <Message severity='error' text={usernameError} className='mb-5 w-full'/>
+                                        <Message severity='error' text={usernameError} className='mb-5 w-full' />
                                     )
                                 }
-                                
+
                             </div>
 
 
                             <label htmlFor="password" className="block text-900 font-medium text-xl mb-2">
                                 Mật khẩu
                             </label>
-                            <Password inputid="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Mật khẩu" toggleMask  className="w-full mb-2" inputClassName="w-full p-3" onBlur={handlePasswordError}></Password>
+                            <Password inputid="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Mật khẩu" toggleMask className="w-full mb-2" inputClassName="w-full p-3" onBlur={handlePasswordError}></Password>
                             {
                                 passwordError && (
-                                    <Message severity='error' text={passwordError} className='mb-4 w-full'/>
+                                    <Message severity='error' text={passwordError} className='mb-4 w-full' />
                                 )
                             }
 
-                            
+
 
                             <div className="flex align-items-center justify-content-between mb-5 gap-5">
                                 <div className="flex align-items-center">
@@ -131,10 +131,10 @@ const LoginPage = () => {
                             </div>
                         </div>
                     </div>
-                    <div className='text-center py-4' style={{backgroundColor: '#1A237E'}}>
+                    <div className='text-center py-4' style={{ backgroundColor: '#1A237E' }}>
                         <div className='text-center text-white'>
-                            <small className='text-center'>Copyright © {currentYear} <span style={{fontWeight: 'bold', fontSize: '14px'}}> Công ty Điện lực Hưng Yên</span> </small>
-                            
+                            <small className='text-center'>Copyright © {currentYear} <span style={{ fontWeight: 'bold', fontSize: '14px' }}> Công ty Điện lực Hưng Yên</span> </small>
+
                         </div>
                     </div>
                 </div>
