@@ -1,31 +1,22 @@
 import { Button } from "primereact/button";
-import { Toolbar } from "primereact/toolbar";
 import "primeicons/primeicons.css";
 import { InputText } from "primereact/inputtext";
 import React, { useRef, useState, useEffect } from "react";
 import "primeicons/primeicons.css";
 import { Dropdown } from "primereact/dropdown";
 import { HT_MENU } from "../../../models/HT_MENU";
-import Link from "next/link";
-import { Paginator } from "primereact/paginator";
-import { BreadCrumb } from "primereact/breadcrumb";
 import { Toast } from "primereact/toast";
 import { Panel } from "primereact/panel";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { Dialog } from "primereact/dialog";
-import Head from "next/head";
-import provinceData from "/public/demo/data/data_province.json";
 import {
-  delete_DM_DONVI,
   delete_HT_MENU,
   create_HT_MENU,
   get_All_HT_MENU,
-  update_DM_DONVI,
+  update_HT_MENU,
 } from "../../../services/HT_MENUService";
-import { Password } from "primereact/password";
-import { getAllD_DVIQLY } from "../../../services/D_DVIQLYService";
 
 const Menu = () => {
   const toast = useRef(null);
@@ -33,7 +24,10 @@ const Menu = () => {
   const [showDialog, setShowDialog] = useState(false);
   const [isAdd, setIsAdd] = useState(false);
   const [formData, setFormData] = useState(HT_MENU);
-  const [subMenus, setSubMenus] = useState({});
+
+  // State to store input value and filtered menu items
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredMenu, setFilteredMenu] = useState(arr_MENU);
   useEffect(() => {
     loadDataMENU();
   }, []);
@@ -111,6 +105,25 @@ const Menu = () => {
         });
       }
     } else {
+      try {
+        // console.log(formData.id)
+        const response = await update_HT_MENU(formData);
+        toast.current.show({
+          severity: "success",
+          summary: "Thành công",
+          detail: "Cập nhật menu thành công",
+          life: 3000,
+        });
+        loadDataMENU();
+        setShowDialog(false);
+      } catch (error) {
+        toast.current.show({
+          severity: "error",
+          summary: "Lỗi",
+          detail: "Thất bại",
+          life: 3000,
+        });
+      }
     }
   };
   const onDeleteConfirm = (menu) => {
@@ -165,39 +178,93 @@ const Menu = () => {
     </div>
   );
 
-  // Filter sub-menus based on parent_id
-  const getSubMenus = (parentId) => {
-    return sampleMenus.filter(menu => menu.parent_id === parentId);
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+  useEffect(() => {
+    if (searchTerm === "") {
+      setFilteredMenu(arr_MENU); // Không có từ khóa thì hiển thị tất cả
+    } else {
+      const filtered = arr_MENU.filter(item =>
+        item.ten_menu.toLowerCase().includes(searchTerm.toLowerCase()) 
+      );
+      setFilteredMenu(filtered);
+    }
+  }, [searchTerm, arr_MENU]);
+
+  // Hàm lấy danh sách menu con của mỗi parent khi dropdown được click
+  const renderSubMenuDropdown = (rowData) => {
+    const subMenuData = arr_MENU.filter(
+      (menu) => menu.parent_id === rowData.id
+    ); // Lọc các menu con của parent
+    // Kiểm tra nếu không có menu con, trả về thông báo "Không có"
+    if (subMenuData.length === 0) {
+      return <span>Không có</span>;
+    }
+    return (
+      <Dropdown
+        options={subMenuData}
+        optionLabel="ten_menu"
+        placeholder="Nhấn để xem"
+      />
+    );
   };
 
-  // Handle dropdown click to fetch sub-menu data dynamically
-  const onDropdownClick = async (parentId, rowData) => {
-    // Simulate an API call to fetch sub-menus for the clicked parent
-    console.log(rowData.id)
-    const fetchedSubMenus = getSubMenus(parentId);
-    
-    // Save the fetched sub-menus to the state
-    setSubMenus(prevState => ({
-      ...prevState,
-      [parentId]: fetchedSubMenus,
-    }));
-  };
   return (
     <React.Fragment>
       <div className="grid">
         <div className="col-12">
-          <div className="flex justify-content-between align-items-center mb-2">
-            {/* <BreadCrumb model={breadcrumb_router} home={home} className='bg-transparent border-transparent' /> */}
-          </div>
+          <div className="flex justify-content-between align-items-center mb-2"></div>
           <div className="card">
-            <h3 className="card-title text-lg m-0">Quản lý menu</h3>
-
+            <div
+              className="card-header flex justify-between mb-3 items-center"
+              style={{ justifyContent: "space-between", alignItems: "center" }}
+            >
+              <h3 className="card-title text-lg m-0">
+                Quản lý Menu
+              </h3>
+            </div>
             <Toast ref={toast} />
 
-            {/* table */}
+            {/* start_search */}
+            {/* <Panel header="Tìm kiếm">
+              <div
+                className="field"
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <label style={{ marginBottom: "5px" }}>Tên Menu</label>
+                <InputText
+                  placeholder="Nhập tên đơn vị cần tìm kiếm"
+                  style={{ width: "50%" }}
+                />
+              </div>
+              <div className="flex justify-content-center mt-2">
+                <Button
+                  label="Tìm kiếm"
+                  style={{ backgroundColor: "#1445a7" }}
+                />
+              </div>
+            </Panel> */}
+            {/* end_search */}
+
+            {/*start_table */}
             <Panel headerTemplate={headerList} className="mt-4">
+              <div style={{ textAlign: "right " }}>
+                {" "}
+                <InputText
+                  style={{ width: 300 }}
+                  placeholder="Tìm kiếm..."
+                  value={searchTerm}
+                  onChange={handleSearchChange} // Update search term and filter menu
+                />
+              </div>
               <DataTable
-                value={arr_MENU}
+                value={filteredMenu}
                 className="datatable-responsive mt-5"
                 showGridlines
                 paginator // Hiển thị phân trang
@@ -232,21 +299,12 @@ const Menu = () => {
                   headerStyle={{ backgroundColor: "#1445a7", color: "#fff" }}
                   body={(rowData) => <i className={`pi ${rowData.icon}`} />}
                 />
-
                 <Column
-                  header="Danh sách menu con"
+                  header="Danh sách Menu con"
                   headerStyle={{ backgroundColor: "#1445a7", color: "#fff" }}
-                  body={(rowData) => {
-                    return (
-                      <Dropdown
-                        value={null}
-                        options={subMenuData}
-                        optionLabel="ten_menu"
-                        onClick={() => onDropdownClick(parentId, rowData)} // Trigger when dropdown is clicked
-                      />
-                    );
-                  }}
+                  body={renderSubMenuDropdown} // Gọi hàm lấy menu con trực tiếp khi render
                 />
+
                 <Column
                   header="Thao tác"
                   headerStyle={{
@@ -263,7 +321,6 @@ const Menu = () => {
                       />
                       <Button
                         label="Xóa"
-                        // onClick={() => onDeleteConfirm(rowData)}
                         style={{ backgroundColor: "#e74c3c" }}
                         onClick={() => onDeleteConfirm(rowData)}
                       />
@@ -272,8 +329,9 @@ const Menu = () => {
                 ></Column>
               </DataTable>
             </Panel>
+            {/* end_table */}
 
-            {/* Dialog ADD+update */}
+            {/* Start_Dialog_ADD+update */}
             <Dialog
               visible={showDialog}
               style={{ width: "70%", height: "auto" }}
@@ -333,6 +391,7 @@ const Menu = () => {
                 />
               </div>
             </Dialog>
+            {/* end_Dialog_ADD+update */}
           </div>
         </div>
       </div>
