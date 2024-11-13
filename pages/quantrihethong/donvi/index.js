@@ -402,15 +402,15 @@ const DonVi = () => {
                 </Column>
 
               </DataTable>
-              {totalRecords > 0
-                    &&
-                    <Paginator
-                      first={((page - 1) * pageSize)}  // Vị trí đầu tiên của trang hiện tại
-                      rows={pageSize}
-                      totalRecords={totalRecords}
-                      onPageChange={onPageChange}
-                      rowsPerPageOptions={[5, 10, 20, 50]}
-                    />}
+              <Paginator
+                first={page - 1} // Dịch chuyển cho PrimeReact bắt đầu từ 0
+                rows={pageSize}
+                totalRecords={totalRecords} // Tổng số items (dữ liệu từ server hoặc database)
+                onPageChange={onPageChange} // Khi thay đổi trang hoặc page size
+                rowsPerPageOptions={[10, 20, 50, 100]} // Các tùy chọn page size
+                showPerPageDropdown={true} // Hiển thị dropdown cho người dùng chọn page size
+                template="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
+              />
 
             </Panel>
 
@@ -562,7 +562,15 @@ const DonVi = () => {
                   <label>
                     Trạng thái dự thảo
                   </label>
-                  
+                  {totalRecords > 0
+                    &&
+                    <Paginator
+                      first={((page - 1) * pageSize)}  // Vị trí đầu tiên của trang hiện tại
+                      rows={pageSize}
+                      totalRecords={totalRecords}
+                      onPageChange={onPageChange}
+                      rowsPerPageOptions={[5, 10, 20, 50]}
+                    />}
                 </div>
               </div>
             </Dialog>

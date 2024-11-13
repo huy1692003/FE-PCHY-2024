@@ -10,6 +10,7 @@ export const get_All_HT_MENU = async () => {
 export const create_HT_MENU = async (menuData) => {
     try {
         const res = await apiClient.post('/HT_MENU/create_HT_MENU', menuData);
+        console.log("Phản hồi từ API:", res.data); // Kiểm tra dữ liệu trả về
         return res.data;
     } catch (error) {
         throw new Error(error.response ? error.response.data : 'Error creating menu');
