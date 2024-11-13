@@ -10,6 +10,8 @@ import { Column } from "primereact/column";
 import { Toast } from "primereact/toast";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import { Dropdown } from "primereact/dropdown";
+import { HT_NHOMQUYEN } from "../../../models/HT_NHOMQUYEN";
+import moment from 'moment';
 
 const TableVaiTro = ({
   setVisible,
@@ -74,6 +76,7 @@ const TableVaiTro = ({
           label="Thêm mới"
           style={{ backgroundColor: "#1445a7" }}
           onClick={() => {
+            setVaiTro(HT_NHOMQUYEN)
             setVisible(true);
             setIsUpdate(false);
           }}
@@ -154,7 +157,7 @@ const TableVaiTro = ({
 
           <Column
             field="ten_nhom"
-            header="Tên nhóm"
+            header="Tên vai trò"
             headerStyle={{
               backgroundColor: "#1445a7",
               color: "#fff",
@@ -167,7 +170,10 @@ const TableVaiTro = ({
             headerStyle={{
               backgroundColor: "#1445a7",
               color: "#fff",
-            }}
+            }
+
+            }
+            body={(rowData) => moment(rowData).format('DD/MM/YYYY')} // Định dạng ngày ở đây
           ></Column>
 
           <Column
@@ -203,9 +209,9 @@ const TableVaiTro = ({
                   tooltipOptions={{ position: "top" }}
                   style={{ backgroundColor: "#1445a7" }}
                   onClick={() => {
+                    setVaiTro(rowData);
                     setVisible(true);
                     setIsUpdate(true);
-                    setVaiTro(rowData);
                     console.log(rowData);
                   }}
                 />

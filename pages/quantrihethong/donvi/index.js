@@ -32,7 +32,8 @@ const DonVi = () => {
   const [keyFilter, setkeyFilter] = useState()
   const [showDialog, setShowDialog] = useState(false)
   const [isAdd, setIsAdd] = useState(false)
-  const [dataEdit, setDataEdit] = useState()
+  const [filteredData, setFilteredData] = useState([]); // Dữ liệu sau khi tìm kiếm
+  const [searchTerm, setSearchTerm] = useState(""); // Từ khóa tìm kiếm
   const toast = useRef(null)
 
 
@@ -71,6 +72,22 @@ const DonVi = () => {
 
     }
   };
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  useEffect(() => {
+    if (searchTerm === "") {
+      setFilteredData(arr_DONVI); // Không có từ khóa thì hiển thị tất cả
+    } else {
+      const filtered = arr_DONVI.filter(item =>
+        item.ten.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.ma_dviqly.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredData(filtered);
+    }
+  }, [searchTerm, arr_DONVI]);
 
 
   const handleChange = (field, value) => {
@@ -200,6 +217,7 @@ const DonVi = () => {
     return (
       <div className={className}>
         <span className="font-bold text-2xl">Danh sách</span>
+
         <Button label="Thêm mới" style={{ backgroundColor: '#1445a7' }} onClick={openNewDonVi}></Button>
       </div>
     )
@@ -292,10 +310,17 @@ const DonVi = () => {
                 }} />
               </div>
             </Panel>
+
             <Panel headerTemplate={headerList} className="mt-4">
+              <div style={{ textAlign: "right " }}> <InputText
+                style={{ width: 300 }}
+                value={searchTerm}
+                onChange={handleSearchChange}
+                placeholder="Tìm kiếm..."
+              /></div>
 
               <DataTable
-                value={arr_DONVI}
+                value={filteredData}
 
                 className="datatable-responsive mt-5"
                 showGridlines
@@ -394,23 +419,23 @@ const DonVi = () => {
                   headerStyle={{ backgroundColor: '#1445a7', color: '#fff', width: '6rem' }}
                   body={(rowData) => (
                     <div className="flex justify-content-between gap-3">
-                      <Button label="Sửa" onClick={() => handleEdit(rowData)} style={{ backgroundColor: '#1445a7' }} />
-                      <Button label="Xóa" onClick={() => onDeleteConfirm(rowData)} style={{ backgroundColor: '#e74c3c' }} />
+                      <Button icon="pi pi-pencil" tooltip="Sửa" onClick={() => handleEdit(rowData)} style={{ backgroundColor: '#1445a7' }} />
+                      <Button icon="pi pi-trash" tooltip="Xóa" onClick={() => onDeleteConfirm(rowData)} style={{ backgroundColor: '#1445a7', border: "none" }} />
                     </div>
                   )}
                 >
                 </Column>
 
               </DataTable>
-              <Paginator
-                first={page - 1} // Dịch chuyển cho PrimeReact bắt đầu từ 0
-                rows={pageSize}
-                totalRecords={totalRecords} // Tổng số items (dữ liệu từ server hoặc database)
-                onPageChange={onPageChange} // Khi thay đổi trang hoặc page size
-                rowsPerPageOptions={[10, 20, 50, 100]} // Các tùy chọn page size
-                showPerPageDropdown={true} // Hiển thị dropdown cho người dùng chọn page size
-                template="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
-              />
+              {totalRecords > 0
+                &&
+                <Paginator
+                  first={((page - 1) * pageSize)}  // Vị trí đầu tiên của trang hiện tại
+                  rows={pageSize}
+                  totalRecords={totalRecords}
+                  onPageChange={(e) => onPageChange(e)}
+                  rowsPerPageOptions={[5, 10, 20, 50]}
+                />}
 
             </Panel>
 
