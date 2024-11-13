@@ -146,7 +146,7 @@ const TableDM_PhongBan = ({
                     onChange={onGlobalFilterChange}
                     placeholder="Nhập thông tin để tìm kiếm"
                 />
-            </div>
+            </div>      
         );
     };
 

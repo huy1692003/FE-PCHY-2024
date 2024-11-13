@@ -20,7 +20,7 @@ import QuanLyMenuVaiTro from "./roleMenuTable";
 
 const QuanLyVaiTro = () => {
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
   const [pageCount, setPageCount] = useState(0);
   const [options, setOptions] = useState({
     ten_nhom: "",

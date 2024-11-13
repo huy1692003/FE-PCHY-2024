@@ -14,6 +14,7 @@ import { Menu } from "primereact/menu";
 import { PrimeIcons } from "primereact/api";
 import { OverlayPanel } from "primereact/overlaypanel";
 
+// eslint-disable-next-line react/display-name
 const AppTopbar = forwardRef((props, ref) => {
     const menuLeft = useRef(null);
     const menuRight = useRef(null);
@@ -113,28 +114,28 @@ const AppTopbar = forwardRef((props, ref) => {
                     ref={overlayPanelRef}
                     id="overlay_panel"
                     style={{ width: "250px" }}
-                    
+
                 >
-                    <ul className="p-menu-list" style={{listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '20px', margin: '0', padding: '0'}}>
-                        <li className="p-menuitem" style={{height: '50px'}}>
-                            <a className="p-menuitem-link">
-                                <span className="p-menuitem-icon pi pi-home"></span>
+                    <ul className="p-menu-list" style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '20px', margin: '0', padding: '0' }}>
+                        <li className="p-menuitem" style={{ height: '50px' }}>
+                            <a className="p-menuitem-link text-2xl">
+                                <span className="p-menuitem-icon pi pi-home mr-2"></span>
                                 <span className="p-menuitem-text">
-                                    {tenPhongBan}
+                                    PB: {tenPhongBan}
                                 </span>
                             </a>
                         </li>
                         <li className="p-menuitem">
-                            <a className="p-menuitem-link">
-                                <span className="p-menuitem-icon pi pi-user"></span>
+                            <a className="p-menuitem-link text-xl">
+                                <span className="p-menuitem-icon pi pi-user mr-2"></span>
                                 <span className="p-menuitem-text">
                                     {tenDangNhap}
                                 </span>
                             </a>
                         </li>
                         <li className="p-menuitem">
-                            <a className="p-menuitem-link">
-                                <span className="p-menuitem-icon pi pi-lock"></span>
+                            <a className="p-menuitem-link text-xl">
+                                <span className="p-menuitem-icon pi pi-lock mr-2"></span>
                                 <span className="p-menuitem-text">
                                     Đổi mật khẩu
                                 </span>
