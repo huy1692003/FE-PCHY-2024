@@ -562,15 +562,7 @@ const DonVi = () => {
                   <label>
                     Trạng thái dự thảo
                   </label>
-                  {totalRecords > 0
-                    &&
-                    <Paginator
-                      first={((page - 1) * pageSize)}  // Vị trí đầu tiên của trang hiện tại
-                      rows={pageSize}
-                      totalRecords={totalRecords}
-                      onPageChange={onPageChange}
-                      rowsPerPageOptions={[5, 10, 20, 50]}
-                    />}
+
                 </div>
               </div>
             </Dialog>
