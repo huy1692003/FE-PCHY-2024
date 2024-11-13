@@ -56,6 +56,7 @@ const DonVi = () => {
       const items = await search_DM_DONVI({ pageIndex: page, pageSize, ...keyFilter });
       console.log(items.data)
       setArr_DONVI(items.data);
+      console.log(items)
       setTotalRecords(items.totalItems)
       setPageCount(Math.ceil(items.totalItems / pageSize));
 
@@ -108,7 +109,7 @@ const DonVi = () => {
 
   const onPageChange = (event) => {
 
-    setPageIndex(event.page + 1);  // Cập nhật pageIndex từ sự kiện
+    setPage(event.page + 1);  // Cập nhật pageIndex từ sự kiện
     setPageSize(event.rows);    // Cập nhật pageSize từ sự kiện
 
   };
@@ -310,7 +311,7 @@ const DonVi = () => {
                 >
                 </Column>
 
-                <Column
+                {/* <Column
                   field="stt"
                   header='STT'
                   headerStyle={{ backgroundColor: '#1445a7', color: '#fff' }}
@@ -318,7 +319,7 @@ const DonVi = () => {
                     return rowIndex + 1;
                   }}
                 >
-                </Column>
+                </Column> */}
 
                 {/* <Column
                   field="ma"
