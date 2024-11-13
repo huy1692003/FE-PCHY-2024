@@ -179,7 +179,7 @@ const QuanLyVaiTro = () => {
                 setVisible={handleCloseModal}
                 toast={toast}
                 loadDataMenu={loadDataMenu}
-                vaiTro={vaiTro}
+                vaiTro={selectedVaiTro}
               />
             )}
           </div>

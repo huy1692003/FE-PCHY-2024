@@ -11,6 +11,7 @@ import { Dropdown } from "primereact/dropdown";
 import { DM_DONVI } from "../../../models/DM_DONVI";
 import { v4 as uuidv4 } from "uuid";
 import { Button } from "primereact/button";
+import { getAllD_DVIQLY } from "../../../services/D_DVIQLYService";
 
 const ModalInputVaiTro = ({
   isUpdate,
@@ -20,43 +21,26 @@ const ModalInputVaiTro = ({
   toast,
   loadData,
 }) => {
-  const [vaiTro, setVaiTro] = useState(HT_NHOMQUYEN);
+  const [vaiTro, setVaiTro] = useState(vaitro);
 
-  const [donVi, setDonVi] = useState(DM_DONVI);
-  const [dsDonVi, setDSDonVi] = useState([]);
+  const [dviQLY, setDVIQLY] = useState([]);
 
   const [errors, setErrors] = useState({});
 
-  const getDonVi = (ten_dviqly) => {
-    return dsDonVi.find((d) => d.ten_dviqly === ten_dviqly);
-  };
 
-  const getAllDonVi = async () => {
-    try {
-      const results = await get_All_DM_DONVI();
-      setDSDonVi(results);
-    } catch (error) {
-      console.log(error);
-    }
 
-    if (isUpdate) {
-      console.log(vaitro);
-      setVaiTro(vaiTro);
-      setDonVi(getDonVi(vaiTro.ten_dviqly));
-    } else {
-      setVaiTro(HT_NHOMQUYEN);
-    }
-  };
+  const getDVIQLY = async () => {
+    let data = await getAllD_DVIQLY()
+    data && setDVIQLY(data.map(d => ({ id: d.mA_DVIQLY, name: d.teN_DVIQLY })))
+  }
+
+
 
   useEffect(() => {
-    setDonVi(getDonVi(vaiTro.ten_dviqly));
-  }, [vaiTro.ten_dviqly]);
-
-  useEffect(() => {
-    getAllDonVi();
-    console.log(isUpdate);
+    getDVIQLY()
   }, []);
 
+  console.log(vaiTro)
   const handleCreateVaiTro = () => {
     let tempErrors = {};
     let isValid = true;
@@ -74,34 +58,27 @@ const ModalInputVaiTro = ({
   };
 
   const handleSubmit = () => {
+    console.log(isUpdate)
     if (isUpdate) {
       updateVaiTro();
     } else {
       createVaiTro();
-      const nhom_id = uuidv4();
-
-      console.log({
-        ...vaiTro,
-        nhom_id: nhom_id,
-        nguoi_tao: "1",
-        cap_bac: 0,
-        sap_xep: 0,
-        ma_dviqly: donVi?.ma_dviqly,
-      });
     }
   };
 
   const createVaiTro = async () => {
+    alert()
     const nhom_id = uuidv4();
     try {
       if (handleCreateVaiTro) {
+
         const results = await create_HT_NHOMQUYEN({
           ...vaiTro,
           nhom_id: nhom_id,
           nguoi_tao: "1",
           cap_bac: 0,
           sap_xep: 0,
-          ma_dviqly: donVi.ma_dviqly,
+          ma_dviqly: vaiTro.ma_dviqly,
         });
         toast.current.show({
           severity: "success",
@@ -125,6 +102,10 @@ const ModalInputVaiTro = ({
   };
 
   const updateVaiTro = async () => {
+    console.log({
+      ...vaiTro,
+      nguoi_sua: "1",
+    })
     try {
       if (handleCreateVaiTro()) {
         const result = await update_HT_NHOMQUYEN({
@@ -147,7 +128,7 @@ const ModalInputVaiTro = ({
       toast.current.show({
         severity: "error",
         summary: "Thông báo",
-        detail: "Thêm vai trò không thành công",
+        detail: "Sửa vai trò không thành công",
         life: 3000,
       });
     }
@@ -170,10 +151,10 @@ const ModalInputVaiTro = ({
         <InputText
           id="ten_nhom"
           onChange={(e) => {
-            console.log(e.target.value);
+            setVaiTro({ ...vaiTro, ten_nhom: e.target.value })
           }}
           type="text"
-          value={HT_NHOMQUYEN.ten_nhom}
+          value={vaiTro.ten_nhom}
         />
       </div>
 
@@ -182,23 +163,25 @@ const ModalInputVaiTro = ({
         <InputText
           id="ghi_chu"
           onChange={(e) => {
-            console.log(e.target.value);
+            setVaiTro({ ...vaiTro, ghi_chu: e.target.value })
           }}
           type="text"
-          value={HT_NHOMQUYEN.ghi_chu}
+          value={vaiTro.ghi_chu}
         />
       </div>
 
       <div className="field">
         <label htmlFor="MA_DVIQLY">Đơn vị quản lý</label>
         <Dropdown
-          value={donVi}
-          options={dsDonVi}
+          value={vaiTro.ma_dviqly}
+          options={dviQLY}
           onChange={(e) => {
-            setDonVi(e.value);
+            setVaiTro({ ...vaitro, ma_dviqly: e.value });
             console.log(e.value);
           }}
-          optionLabel="ten"
+          filter
+          optionLabel="name"
+          optionValue="id"
           id="MA_DVIQLY"
           placeholder="Chọn đơn vị"
           className="w-full"
