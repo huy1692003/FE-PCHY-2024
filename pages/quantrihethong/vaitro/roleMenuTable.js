@@ -45,7 +45,7 @@ const QuanLyMenuVaiTro = ({
         children: [],
       };
     });
-
+    console.log(vaiTro)
     menuItems.forEach((item) => {
       if (item.parent_id === null) {
         roots.push(map[item.id]);
@@ -61,6 +61,7 @@ const QuanLyMenuVaiTro = ({
   const GetHT_PhanQuyenByMaNhomTV = async (treeData) => {
     try {
       const res = await get_HT_PHANQUYENByMA_NHOM_TV(vaiTro.id);
+      console.log(res)
       setHT_PhanQuyenList(res);
       handleAutoSelect(res, treeData);
     } catch (e) {
@@ -179,7 +180,7 @@ const QuanLyMenuVaiTro = ({
         dong_bo: null,
         hard_edit: null,
         chuyen_buoc: null,
-        ma_nhom_tv: 10,
+        ma_nhom_tv: vaiTro.id,
         ma_dviqly: null,
       };
       HT_PHANQUYENList.push(newModel);
@@ -205,7 +206,7 @@ const QuanLyMenuVaiTro = ({
             dong_bo: null,
             hard_edit: null,
             chuyen_buoc: null,
-            ma_nhom_tv: 10,
+            ma_nhom_tv: vaiTro.id,
             ma_dviqly: null,
           };
           HT_PHANQUYENList.push(newModel);
