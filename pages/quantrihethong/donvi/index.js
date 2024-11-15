@@ -18,7 +18,7 @@ import Head from "next/head";
 import provinceData from '/public/demo/data/data_province.json'
 import { delete_DM_DONVI, getDM_DONVI_ByID, insert_DM_DONVI, search_DM_DONVI, update_DM_DONVI } from "../../../services/DM_DONVIService";
 import { Password } from "primereact/password";
-import { getAllD_DVIQLY, } from "../../../services/D_DVIQLYService";
+import { getAllD_DVIQLY, } from "../../../services/DM_DVIQLYService";
 
 const DonVi = () => {
   const [page, setPage] = useState(1);

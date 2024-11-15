@@ -186,7 +186,7 @@ const Menu = () => {
       setFilteredMenu(arr_MENU); // Không có từ khóa thì hiển thị tất cả
     } else {
       const filtered = arr_MENU.filter(item =>
-        item.ten_menu.toLowerCase().includes(searchTerm.toLowerCase()) 
+        item.ten_menu.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredMenu(filtered);
     }
@@ -312,17 +312,22 @@ const Menu = () => {
                     color: "#fff",
                     width: "6rem",
                   }}
+                  // Start of Selection
                   body={(rowData) => (
                     <div className="flex justify-content-between gap-3">
                       <Button
-                        label="Sửa"
+                        icon="pi pi-pencil"
+                        tooltip="Sửa"
+
                         onClick={() => handleEdit(rowData)}
-                        style={{ backgroundColor: "#1445a7" }}
+                        style={{ backgroundColor: "#1445a7", color: "#fff" }}
                       />
                       <Button
-                        label="Xóa"
-                        style={{ backgroundColor: "#e74c3c" }}
+                        icon="pi pi-trash"
+                        tooltip="Xóa"
+
                         onClick={() => onDeleteConfirm(rowData)}
+                        style={{ backgroundColor: "#1445a7", color: "#fff" }}
                       />
                     </div>
                   )}
@@ -373,7 +378,7 @@ const Menu = () => {
                 <Dropdown
                   filter
                   value={formData.parent_id}
-                  options={arr_MENU}
+                  options={[{ id: null, ten_menu: 'Không có menu Cha' }, ...arr_MENU]}
                   onChange={(e) => handleChange("parent_id", e.value)}
                   optionLabel="ten_menu"
                   optionValue="id"

@@ -108,6 +108,7 @@ const TableVaiTro = ({
 
   const renderHeader = () => {
     return (
+
       <div className="flex justify-content-end">
         <InputText
           style={{ width: "250px" }}
@@ -122,9 +123,17 @@ const TableVaiTro = ({
   return (
     <div>
       <Panel headerTemplate={headerList} className="mt-4">
+        {/* <div className="flex justify-content-end">
+          <InputText
+            style={{ width: "250px" }}
+            value={globalFilterValue}
+            onChange={onGlobalFilterChange}
+            placeholder="Nhập thông tin để tìm kiếm"
+          />
+        </div> */}
         <DataTable
           value={data.data}
-          showHeaders={renderHeader()}
+          header={renderHeader()}
           filters={filters}
           onFilter={(e) => setFilters(e.filters)}
           rows={pageSize}
@@ -132,6 +141,7 @@ const TableVaiTro = ({
           rowsPerPageOptions={[5, 10]}
           className="datatable-responsive mt-5"
           showGridlines
+
           paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
         >
           <Column
@@ -173,7 +183,7 @@ const TableVaiTro = ({
             }
 
             }
-            body={(rowData) => moment(rowData).format('DD/MM/YYYY')} // Định dạng ngày ở đây
+            body={(rowData) => moment(rowData.ngay_tao).format('DD/MM/YYYY')} // Định dạng ngày ở đây
           ></Column>
 
           <Column

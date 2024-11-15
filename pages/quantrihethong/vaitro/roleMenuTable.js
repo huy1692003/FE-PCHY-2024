@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { Dialog } from "primereact/dialog";
 import { TreeTable } from "primereact/treetable";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { get_All_HT_MENU } from "../../../services/HT_MENUService";
 import { HT_MENU } from "../../../models/HT_MENU";
 import { Column } from "primereact/column";
@@ -12,7 +12,6 @@ import {
   get_HT_PHANQUYENByMA_NHOM_TV,
   insert_HT_PHANQUYEN,
 } from "../../../services/HT_PHANQUYEN";
-import { get_HT_NHOMQUYEN_ByID } from "../../../services/HT_NHOMQUYENService";
 
 const QuanLyMenuVaiTro = ({
   isUpdate,
@@ -26,7 +25,7 @@ const QuanLyMenuVaiTro = ({
 }) => {
   const [arrMenu, setArrMenu] = useState([HT_MENU]);
   const [nodes, setNodes] = useState([]);
-  const [selectedNodeKeys, setSelectedNodeKeys] = useState([]);
+  const [selectedNodeKeys, setSelectedNodeKeys] = useState({});
   const [ht_phanQuyenList, setHT_PhanQuyenList] = useState([]);
   const [unselectNodes, setUnSelectedNode] = useState([]);
   const buildTree = (menuItems) => {
@@ -118,45 +117,44 @@ const QuanLyMenuVaiTro = ({
     return text;
   };
 
-  // const handleMenuSelected = (e) => {
-  //   const selectedKeys = e.value || {};
+  const handleSelectionChange = useCallback((e) => {
+    const selectedKeys = e.value || {};
+    const updatedKeys = { ...selectedKeys };
 
-  //   // Xử lý đối tượng selectedKeys để đảm bảo các mục được chọn hiển thị đúng
-  //   const processedKeys = Object.keys(selectedKeys).reduce((acc, key) => {
-  //     if (
-  //       selectedKeys[key].checked === true ||
-  //       selectedKeys[key].partialChecked === true
-  //     ) {
-  //       acc[key] = {
-  //         checked: true,
-  //         partialChecked: selectedKeys[key].partialChecked,
-  //       };
-  //     } else {
-  //       acc[key] = selectedKeys[key];
-  //     }
+    // Chỉ xử lý các node không có con
+    Object.keys(selectedKeys).forEach((key) => {
+      const node = arrMenu.find((menuItem) => menuItem.key === key);
+      if (node && (!node.children || node.children.length === 0)) {
+        let parentId = node.parent_id;
+        if (parentId) {
+          const parentNode = arrMenu.find((menuItem) => menuItem.key === parentId);
+          if (parentNode && parentNode.children && parentNode.children.length > 0) {
+            updatedKeys[parentId] = { checked: true, partialChecked: false };
+          }
+        }
+      }
+    });
 
-  //     return acc;
-  //   }, {});
+    const previousSelection = Object.keys(selectedNodeKeys);
+    const currentSelection = Object.keys(updatedKeys);
+    console.log("pre", previousSelection);
+    console.log("cu", currentSelection);
 
-  //   setSelectedNodeKeys(processedKeys);
+    const unselect = previousSelection.filter((item) => !currentSelection.includes(item));
 
-  //   // Lọc các menu đã chọn từ arrMenu dựa trên các khóa
-  //   const keysArray = Object.keys(processedKeys).filter((key) => !isNaN(key));
-  //   const selectedMenus = keysArray
-  //     .map((key) => {
-  //       const item = arrMenu.find((menuItem) => menuItem.key === key);
-  //       return item ? item : null;
-  //     })
-  //     .filter((item) => item != null);
+    if (unselect.length > 0) {
+      // Xử lý khi bỏ chọn node
+      const newNodes = nodes.filter((node) => !unselect.includes(String(node.key)));
+      const unselectedNodes = nodes.filter((node) => unselect.includes(String(node.key)));
+      setUnSelectedNode([...unselectedNodes]);
+      setNodes(newNodes);
+    } else {
+      setUnSelectedNode([]);
+    }
 
-  //   const flatSelectedItems = selectedMenus.flatMap((item) => {
-  //     const children = item.children ? item.children : [];
-  //     return [item, ...children];
-  //   });
+    setSelectedNodeKeys(updatedKeys);
+  }, [selectedNodeKeys, nodes]);
 
-  //   setSelectedMenus(flatSelectedItems);
-  //   console.log(selectedMenus);
-  // };
   const handleCreateHT_PhanQuyen = async () => {
     let HT_PHANQUYENList = [];
     nodes.forEach((node) => {
@@ -229,7 +227,7 @@ const QuanLyMenuVaiTro = ({
           detail: "Đã lưu phân quyền thành công",
         });
         setNodes([]);
-        setSelectedNodeKeys([]);
+        setSelectedNodeKeys({});
         setVisible(false);
       } catch (e) {
         // Nếu có lỗi xảy ra trong quá trình insert
@@ -334,45 +332,9 @@ const QuanLyMenuVaiTro = ({
         <div className="field">
           <TreeTable
             selectionKeys={selectedNodeKeys}
-            onSelectionChange={(e) => {
-              const previousSelection = Object.keys(selectedNodeKeys);
-              const currentSelection = Object.keys(e.value);
-              console.log("pre", previousSelection);
-              console.log("cu", currentSelection);
-
-              const unselect = previousSelection.filter((item) => {
-                const isExists = currentSelection.includes(item);
-                if (!isExists) {
-                  return item;
-                }
-              });
-              if (unselect.length > 0) {
-                //đoạn mã xử lý khi người dùng bỏ chọn 1 node trên trê
-                const newNodes = nodes.filter((node) => {
-                  const isExists = unselect.includes(String(node.key));
-                  if (!isExists) {
-                    return node;
-                  }
-                });
-
-                //đoạn mã lấy ra các node đã bị loại bỏ để thực hiện việc xóa trong csdl
-                const unselectedNodes = nodes.filter((node) => {
-                  const isExists = unselect.includes(String(node.key));
-                  if (isExists) {
-                    return node;
-                  }
-                });
-                setUnSelectedNode([...unselectNodes, ...unselectedNodes]);
-                setNodes(newNodes);
-              } else {
-                setUnSelectedNode([]);
-              }
-              setSelectedNodeKeys(e.value);
-            }}
+            onSelectionChange={handleSelectionChange}
             selectionMode="checkbox"
-            onSelect={(e) => {
-              setNodes([...nodes, e.node]);
-            }}
+            onSelect={(e) => setNodes(prevNodes => [...prevNodes, e.node])}
             value={arrMenu}
           >
             <Column field="id" header="ID" expander></Column>

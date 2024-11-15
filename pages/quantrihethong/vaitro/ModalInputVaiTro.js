@@ -11,7 +11,7 @@ import { Dropdown } from "primereact/dropdown";
 import { DM_DONVI } from "../../../models/DM_DONVI";
 import { v4 as uuidv4 } from "uuid";
 import { Button } from "primereact/button";
-import { getAllD_DVIQLY } from "../../../services/D_DVIQLYService";
+import { getAllD_DVIQLY } from "../../../services/DM_DVIQLYService";
 
 const ModalInputVaiTro = ({
   isUpdate,
@@ -58,7 +58,6 @@ const ModalInputVaiTro = ({
   };
 
   const handleSubmit = () => {
-    console.log(isUpdate)
     if (isUpdate) {
       updateVaiTro();
     } else {
@@ -67,10 +66,14 @@ const ModalInputVaiTro = ({
   };
 
   const createVaiTro = async () => {
-    alert()
+
     const nhom_id = uuidv4();
     try {
       if (handleCreateVaiTro) {
+        console.log({
+          ...vaiTro
+
+        })
 
         const results = await create_HT_NHOMQUYEN({
           ...vaiTro,
@@ -102,10 +105,7 @@ const ModalInputVaiTro = ({
   };
 
   const updateVaiTro = async () => {
-    console.log({
-      ...vaiTro,
-      nguoi_sua: "1",
-    })
+
     try {
       if (handleCreateVaiTro()) {
         const result = await update_HT_NHOMQUYEN({
@@ -147,7 +147,7 @@ const ModalInputVaiTro = ({
       }}
     >
       <div className="field">
-        <label htmlFor="TEN_NHOM">Tên vai trò</label>
+        <label htmlFor="ten_nhom">Tên vai trò</label>
         <InputText
           id="ten_nhom"
           onChange={(e) => {
@@ -159,10 +159,11 @@ const ModalInputVaiTro = ({
       </div>
 
       <div className="field">
-        <label htmlFor="GHI_CHU">Ghi chú</label>
+        <label htmlFor="ghi_chu">Ghi chú</label>
         <InputText
           id="ghi_chu"
           onChange={(e) => {
+            console.log(e.target.value)
             setVaiTro({ ...vaiTro, ghi_chu: e.target.value })
           }}
           type="text"
@@ -171,12 +172,12 @@ const ModalInputVaiTro = ({
       </div>
 
       <div className="field">
-        <label htmlFor="MA_DVIQLY">Đơn vị quản lý</label>
+        <label htmlFor="ma_dviqly">Đơn vị quản lý</label>
         <Dropdown
           value={vaiTro.ma_dviqly}
           options={dviQLY}
           onChange={(e) => {
-            setVaiTro({ ...vaitro, ma_dviqly: e.value });
+            setVaiTro({ ...vaiTro, ma_dviqly: e.value });
             console.log(e.value);
           }}
           filter

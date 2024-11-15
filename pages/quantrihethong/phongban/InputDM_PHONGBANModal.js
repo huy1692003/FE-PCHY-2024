@@ -3,7 +3,7 @@ import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { DM_PHONGBAN } from "../../../models/DM_PHONGBAN";
-import { getAllD_DVIQLY } from "../../../services/D_DVIQLYService";
+import { getAllD_DVIQLY } from "../../../services/DM_DVIQLYService";
 import { Button } from "primereact/button";
 
 import {

@@ -63,7 +63,7 @@ const TableDM_PhongBan = ({
         setIsHide(false);
     };
 
-    
+
 
     const buttonOption = (rowData) => {
         return (
@@ -146,7 +146,7 @@ const TableDM_PhongBan = ({
                     onChange={onGlobalFilterChange}
                     placeholder="Nhập thông tin để tìm kiếm"
                 />
-            </div>      
+            </div>
         );
     };
 
