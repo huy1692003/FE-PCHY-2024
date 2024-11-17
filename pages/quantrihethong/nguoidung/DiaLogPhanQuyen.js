@@ -166,13 +166,13 @@ export const DialogPhanQuyen = ({ isDeleteMultiple, dataSelected, setDataSelecte
                     </Panel>
 
                     {!isDeleteMultiple &&
-                        <Panel header="Chọn quyền">
+                        <Panel header="Chọn vai trò">
                             <div className="flex justify-content-between ">
                                 <Dropdown value={selectedDVIQLY} onChange={(e) => setSelectedDVIQLY(e.value)}
                                     options={dataDVIQLY}
                                     filter className="md:w-6 w-full mt-2" placeholder="-- Đơn vị quản lý -- "></Dropdown>
                                 <Dropdown value={selectedNhomQuyen} onChange={(e) => setSelectedNhomQuyen(e.value)} options={dataNhomQuyen}
-                                    filter className="md:w-5 w-full mt-2" placeholder="-- Nhóm Quyền -- "></Dropdown>
+                                    filter className="md:w-5 w-full mt-2" placeholder="-- Vai trò -- "></Dropdown>
 
                             </div>
                         </Panel>
@@ -190,10 +190,10 @@ export const DialogPhanQuyen = ({ isDeleteMultiple, dataSelected, setDataSelecte
                 :
 
                 <Dialog className='w-6' header={<h4>Sửa quyền người dùng </h4>} visible={visible} onHide={() => setVisible(false)}>
-                    <Panel header={`Danh sách quyền của ${EditPhanQuyen.user.hO_TEN}`} className='mb-2 '>
+                    <Panel header={`Danh sách vai trò của người dùng :  ${EditPhanQuyen.user.hO_TEN}`} className='mb-2 '>
                         <DataTable value={nhomQuyenEdit} showGridlines style={{ fontSize: 12 }} >
                             <Column field="tenDonVi" header="Tên Đơn vị" className="w-5" />
-                            <Column field="tenNhom" header="Nhóm quyền hiện tại" className="w-5" />
+                            <Column field="tenNhom" header="Vai trò hiện tại" className="w-5" />
                             <Column header="Thao tác" style={{ width: 50 }} body={(row) => (
                                 <span className="flex  w-1">
                                     <Button size='small' className="w-1rem h-2rem p-3 mr-1 p-button-danger" icon="pi pi-trash"
@@ -215,15 +215,15 @@ export const DialogPhanQuyen = ({ isDeleteMultiple, dataSelected, setDataSelecte
                             )} />
                         </DataTable>
                     </Panel>
-                    <Panel header="Chọn quyền mới">
+                    <Panel header="Chọn vai trò mới">
                         <div className="flex justify-content-between ">
                             <Dropdown value={selectedDVIQLY} onChange={(e) => setSelectedDVIQLY(e.value)}
                                 options={dataDVIQLY}
                                 filter className="md:w-6 w-full mt-2" placeholder="-- Đơn vị quản lý -- " />
                             <Dropdown value={selectedNhomQuyen} onChange={(e) => setSelectedNhomQuyen(e.value)} options={dataNhomQuyen}
-                                filter className="md:w-5 w-full mt-2" placeholder="-- Nhóm Quyền -- " />
+                                filter className="md:w-5 w-full mt-2" placeholder="-- Vai trò -- " />
                         </div>
-                        <Button size="small" className="mt-4" label="Thêm quyền" severity="info" icon="pi pi-plus"
+                        <Button size="small" className="mt-4" label="Thêm vai trò" severity="info" icon="pi pi-plus"
                             onClick={() => {
                                 onAddQuyenNew()
                             }} />

@@ -266,9 +266,7 @@ const DonVi = () => {
   return (
 
     <React.Fragment>
-      <Head>
-        <title>Quản lý Đơn Vị - Phần mềm quản lý kìm chì</title>
-      </Head>
+
       <div className="grid">
         <div className="col-12">
           <div className="flex justify-content-between align-items-center mb-2">

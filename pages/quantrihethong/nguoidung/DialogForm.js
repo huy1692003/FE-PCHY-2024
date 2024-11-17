@@ -3,8 +3,10 @@ import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { FileUpload } from 'primereact/fileupload';
 import { Dropdown } from "primereact/dropdown";
-import { useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { HT_NGUOIDUNG_Service } from "../../../services/HT_NGUOIDUNGService";
+import UploadFileService from "../../../services/UploadFileService";
+import { urlServer } from "../../../constants/api";
 
 const mockData = {
     trangThaiOptions: [
@@ -31,12 +33,31 @@ const FormField = ({ label, value, options, onChange, id, isDropdown = false, ty
 
 export const DialogForm = ({ isAdd, formData, setFormData, visible, setVisible, toast, loadData, DM_DONVI, DM_CHUCVU, DM_PHONGBAN, search }) => {
     const [loading, setLoading] = useState(false);
+    const [filePath, setFilePath] = useState(null);
+    const [previewImage, setPreviewImage] = useState(null);
+    const fileUploadRef = useRef(null);
+
+
+    useEffect(() => {
+        if (formData.anhchukynhay) {
+            setPreviewImage(urlServer + formData.anhchukynhay)
+        }
+    }, [formData.anhchukynhay])
+
+    const handleUploadImage = async (event) => {
+        const file = event.files[0]; // Lấy file được chọn
+        const formData = new FormData();
+        formData.append("file", file);
+        setFilePath(formData);
+        const previewUrl = URL.createObjectURL(file);
+        setPreviewImage(previewUrl); // Cập nhật state preview image
+        fileUploadRef.current.clear(); // Gọi clear() để reset input file
+    }
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
-    console.log(formData)
     // Hàm kiểm tra các trường trống
     const validateEmptyFields = () => {
         const requiredFields = ["ten_dang_nhap", "ho_ten", "email", "so_dien_thoai", "dm_donvi_id", "dm_phongban_id", "dm_chucvu_id"];
@@ -67,11 +88,16 @@ export const DialogForm = ({ isAdd, formData, setFormData, visible, setVisible, 
     const handleSubmit = async () => {
         if (validateEmptyFields()) {
             setLoading(true);
-            console.log(formData)
             try {
+                let anhchuky = formData.anhchukynhay;
+                if (filePath) {
+                    // Kiểm tra nếu filePath có giá trị thì upload ảnh mới
+                    const res = await UploadFileService.image(filePath);
+                    anhchuky = res.filePath;
+                }
                 const res = isAdd
-                    ? await HT_NGUOIDUNG_Service.create({ ...formData, trang_thai: 1 })
-                    : await HT_NGUOIDUNG_Service.update(formData);
+                    ? await HT_NGUOIDUNG_Service.create({ ...formData, trang_thai: 1, anhchukynhay: anhchuky })
+                    : await HT_NGUOIDUNG_Service.update({ ...formData, anhchukynhay: anhchuky });
 
                 toast.current.show({ severity: 'success', summary: 'Thông báo!', detail: `${(isAdd ? "Thêm" : "Sửa")} thành công người dùng.`, life: 3000 });
 
@@ -112,20 +138,35 @@ export const DialogForm = ({ isAdd, formData, setFormData, visible, setVisible, 
                     <FormField label="Số CMND" value={formData.so_cmnd} onChange={handleInputChange} id="so_cmnd" />
 
                     {/* Smart và ảnh chữ ký */}
-                    <FormField label="Smart" value={formData.smart} options={[
+                    <FormField label="Smart" value={formData.hrms_type} options={[
                         { name: '1-VNPT SmartCA', id: 1 },
                         { name: '2-Viettel SmartCA', id: 2 },
                         { name: '3-VNPT Token', id: 3 },
                         { name: '4-Viettel Token', id: 4 },
                         { name: '5-EVN CA', id: 5 }
-                    ]} onChange={handleInputChange} id="smart" isDropdown />
+                    ]} onChange={handleInputChange} id="hrms_type" isDropdown />
 
-                    <div className="field-item" style={{ flex: '1 1 calc(50% - 1rem)' }}>
-                        <label className='font-bold text-sm my-3 inline-block' htmlFor="fileUpload">Ảnh chữ ký nháy</label>
-                        <FileUpload mode="basic" id="fileUpload" name="fileUpload" accept="image/*" chooseLabel="Chọn ảnh chữ ký" className="p-inputtext-sm" />
-                    </div>
 
                 </div>
+                {(previewImage) && (
+                    <div className="mt-3">
+                        <h5 className="text-sm font-bold">Ảnh chữ ký đã tải lên:</h5>
+                        <img src={previewImage} alt="Ảnh chữ ký nháy" style={{ width: "200px", height: "100px" }} />
+                    </div>
+                )}
+                <div className="block my-3" >
+                    <FileUpload
+                        ref={fileUploadRef}
+                        mode="basic"
+                        id="fileUpload"
+                        name="fileUpload"
+                        accept="image/*"
+                        chooseLabel="Chọn ảnh chữ ký mới"
+                        className="p-inputtext-sm"
+                        onSelect={handleUploadImage}
+                    />
+                </div>
+
             </div>
 
             <div className='flex justify-content-end gap-2 mt-4'>

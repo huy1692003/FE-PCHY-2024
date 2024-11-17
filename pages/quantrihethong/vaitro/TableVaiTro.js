@@ -100,6 +100,7 @@ const TableVaiTro = ({
   };
 
   const initFilters = () => {
+
     setFilters({
       global: { value: null, matchMode: FilterMatchMode.CONTAINS },
     });
@@ -156,14 +157,14 @@ const TableVaiTro = ({
             }}
           ></Column>
 
-          <Column
+          {/* <Column
             field="nhom_id"
             header="ID Nhóm"
             headerStyle={{
               backgroundColor: "#1445a7",
               color: "#fff",
             }}
-          ></Column>
+          ></Column> */}
 
           <Column
             field="ten_nhom"
@@ -174,7 +175,7 @@ const TableVaiTro = ({
             }}
           ></Column>
 
-          <Column
+          {/* <Column
             field="ngay_tao"
             header="Ngày tạo"
             headerStyle={{
@@ -184,16 +185,16 @@ const TableVaiTro = ({
 
             }
             body={(rowData) => moment(rowData.ngay_tao).format('DD/MM/YYYY')} // Định dạng ngày ở đây
-          ></Column>
+          ></Column> */}
 
-          <Column
+          {/* <Column
             field="nguoi_tao"
             header="Người tạo"
             headerStyle={{
               backgroundColor: "#1445a7",
               color: "#fff",
             }}
-          ></Column>
+          ></Column> */}
 
           <Column
             field="ten"
