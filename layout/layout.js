@@ -2,18 +2,20 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEventListener, useMountEffect, useUnmountEffect } from 'primereact/hooks';
 import { classNames, DomHandler } from 'primereact/utils';
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import AppFooter from './AppFooter';
 import AppSidebar from './AppSidebar';
 import AppTopbar from './AppTopbar';
 import AppConfig from './AppConfig';
 import { LayoutContext } from './context/layoutcontext';
 import PrimeReact from 'primereact/api';
+import { Message } from 'primereact/message';
 
 const Layout = (props) => {
     const { layoutConfig, layoutState, setLayoutState } = useContext(LayoutContext);
     const topbarRef = useRef(null);
     const sidebarRef = useRef(null);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     const router = useRouter();
     const [bindMenuOutsideClickListener, unbindMenuOutsideClickListener] = useEventListener({
@@ -64,7 +66,7 @@ const Layout = (props) => {
 
     useMountEffect(() => {
         PrimeReact.ripple = true;
-    })
+    });
 
     useEffect(() => {
         if (layoutState.overlayMenuActive || layoutState.staticMenuMobileActive) {
@@ -92,6 +94,20 @@ const Layout = (props) => {
         unbindProfileMenuOutsideClickListener();
     });
 
+
+    useEffect(() => {
+        const isAuthenticated = !!sessionStorage.getItem('token');
+        setIsLoggedIn(true);
+    }, []);
+
+    // useEffect(() => {
+    //     const isAuthenticated = !!sessionStorage.getItem('token');
+
+    //     if (!isAuthenticated) {
+    //         router.replace('/auth/login');
+    //     }
+    // }, [router]);
+
     const containerClass = classNames('layout-wrapper', {
         'layout-overlay': layoutConfig.menuMode === 'overlay',
         'layout-static': layoutConfig.menuMode === 'static',
@@ -103,35 +119,37 @@ const Layout = (props) => {
     });
 
     return (
-        <React.Fragment>
-            <Head>
-                <title>Phần mềm PCHY- PCHY</title>
-                <meta charSet="UTF-8" />
-                <meta name="description" content="The ultimate collection of design-agnostic, flexible and accessible React UI Components." />
-                <meta name="robots" content="index, follow" />
-                <meta name="viewport" content="initial-scale=1, width=device-width" />
-                <meta property="og:type" content="website"></meta>
-                <meta property="og:title" content="Sakai by PrimeReact | Free Admin Template for NextJS"></meta>
-                <meta property="og:url" content="https://www.primefaces.org/sakai-react"></meta>
-                <meta property="og:description" content="The ultimate collection of design-agnostic, flexible and accessible React UI Components." />
-                <meta property="og:image" content="https://www.primefaces.org/static/social/sakai-nextjs.png"></meta>
-                <meta property="og:ttl" content="604800"></meta>
-                <link rel='icon' href='/demo/images/login/Logo.ico' sizes='any'></link>
-            </Head>
+        isLoggedIn ? (
+            <React.Fragment>
+                <Head>
+                    <title>Phần mềm PCHY- PCHY</title>
+                    <meta charSet="UTF-8" />
+                    <meta name="description" content="The ultimate collection of design-agnostic, flexible and accessible React UI Components." />
+                    <meta name="robots" content="index, follow" />
+                    <meta name="viewport" content="initial-scale=1, width=device-width" />
+                    <meta property="og:type" content="website"></meta>
+                    <meta property="og:title" content="Sakai by PrimeReact | Free Admin Template for NextJS"></meta>
+                    <meta property="og:url" content="https://www.primefaces.org/sakai-react"></meta>
+                    <meta property="og:description" content="The ultimate collection of design-agnostic, flexible and accessible React UI Components." />
+                    <meta property="og:image" content="https://www.primefaces.org/static/social/sakai-nextjs.png"></meta>
+                    <meta property="og:ttl" content="604800"></meta>
+                    <link rel='icon' href='/demo/images/login/Logo.ico' sizes='any'></link>
+                </Head>
 
-            <div className={containerClass}>
-                <AppTopbar ref={topbarRef} />
-                <div ref={sidebarRef} className="layout-sidebar">
-                    <AppSidebar />
+                <div className={containerClass}>
+                    <AppTopbar ref={topbarRef} />
+                    <div ref={sidebarRef} className="layout-sidebar">
+                        <AppSidebar />
+                    </div>
+                    <div className="layout-main-container">
+                        <div className="layout-main">{props.children}</div>
+                        <AppFooter />
+                    </div>
+                    <AppConfig />
+                    <div className="layout-mask"></div>
                 </div>
-                <div className="layout-main-container">
-                    <div className="layout-main">{props.children}</div>
-                    <AppFooter />
-                </div>
-                <AppConfig />
-                <div className="layout-mask"></div>
-            </div>
-        </React.Fragment>
+            </React.Fragment>
+        ) : <Message severity='error' text='Không có quyền truy cập !' className='w-full' />
     );
 };
 

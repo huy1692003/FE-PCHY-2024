@@ -1,4 +1,4 @@
-import { apiClient } from "../constants/api"
+import { apiClient } from "../../constants/api"
 
 export const HT_QUYEN_NGUOIDUNG_Service = {
     create: async (list) => {

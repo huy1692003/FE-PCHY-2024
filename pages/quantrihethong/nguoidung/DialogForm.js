@@ -4,7 +4,7 @@ import { InputText } from "primereact/inputtext";
 import { FileUpload } from 'primereact/fileupload';
 import { Dropdown } from "primereact/dropdown";
 import { useRef, useState, useEffect } from "react";
-import { HT_NGUOIDUNG_Service } from "../../../services/HT_NGUOIDUNGService";
+import { HT_NGUOIDUNG_Service } from "../../../services/quantrihethong/HT_NGUOIDUNGService";
 import UploadFileService from "../../../services/UploadFileService";
 import { urlServer } from "../../../constants/api";
 
@@ -35,6 +35,7 @@ export const DialogForm = ({ isAdd, formData, setFormData, visible, setVisible, 
     const [loading, setLoading] = useState(false);
     const [filePath, setFilePath] = useState(null);
     const [previewImage, setPreviewImage] = useState(null);
+    const [dsPhongBan, setDsPhongBan] = useState([]);
     const fileUploadRef = useRef(null);
 
 
@@ -43,6 +44,14 @@ export const DialogForm = ({ isAdd, formData, setFormData, visible, setVisible, 
             setPreviewImage(urlServer + formData.anhchukynhay)
         }
     }, [formData.anhchukynhay])
+
+    useEffect(() => {
+        console.log("test:" + formData.dm_donvi_id)
+        console.log(DM_PHONGBAN)
+        console.log(DM_PHONGBAN.filter(s => s.dm_donvi_id === formData.dm_donvi_id))
+        setDsPhongBan(DM_PHONGBAN.filter(s => s.dm_donvi_id === formData.dm_donvi_id))
+    }, [formData.dm_donvi_id])
+
 
     const handleUploadImage = async (event) => {
         const file = event.files[0]; // Lấy file được chọn
@@ -116,6 +125,9 @@ export const DialogForm = ({ isAdd, formData, setFormData, visible, setVisible, 
             <div className="p-fluid border-solid p-4 border-100 border-round-2xl">
                 <div className="form-wrapper" style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
 
+                    {/* Đơn vị và phòng ban */}
+                    <FormField label="Đơn vị trực thuộc" value={formData.dm_donvi_id} options={DM_DONVI} onChange={handleInputChange} id="dm_donvi_id" isDropdown />
+                    <FormField label="Phòng ban" value={formData.dm_phongban_id} options={dsPhongBan} onChange={handleInputChange} id="dm_phongban_id" isDropdown />
                     {/* Tên đăng nhập và mật khẩu */}
                     <FormField label="Tên đăng nhập" value={formData.ten_dang_nhap} onChange={handleInputChange} id="ten_dang_nhap" />
                     {isAdd && <FormField label="Mật khẩu" value={formData.mat_khau} onChange={handleInputChange} id="mat_khau" />}
@@ -125,9 +137,6 @@ export const DialogForm = ({ isAdd, formData, setFormData, visible, setVisible, 
                     <FormField label="Email" value={formData.email} onChange={handleInputChange} id="email" typeInput="email" />
                     <FormField label="Số điện thoại" value={formData.so_dien_thoai} onChange={handleInputChange} id="so_dien_thoai" typeInput="tel" />
 
-                    {/* Đơn vị và phòng ban */}
-                    <FormField label="Đơn vị trực thuộc" value={formData.dm_donvi_id} options={DM_DONVI} onChange={handleInputChange} id="dm_donvi_id" isDropdown />
-                    <FormField label="Phòng ban" value={formData.dm_phongban_id} options={DM_PHONGBAN} onChange={handleInputChange} id="dm_phongban_id" isDropdown />
 
                     {/* Chức vụ và trạng thái */}
                     <FormField label="Chức vụ" value={formData.dm_chucvu_id} options={DM_CHUCVU} onChange={handleInputChange} id="dm_chucvu_id" isDropdown />

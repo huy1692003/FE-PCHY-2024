@@ -1,4 +1,4 @@
-import { apiClient } from "../constants/api";
+import { apiClient } from "../../constants/api";
 
 export const viewDM_DONVI = async () => {
   const res = await apiClient.post("");

@@ -13,6 +13,8 @@ import { LayoutContext } from "./context/layoutcontext";
 import { Menu } from "primereact/menu";
 import { PrimeIcons } from "primereact/api";
 import { OverlayPanel } from "primereact/overlaypanel";
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import { Dropdown } from "primereact/dropdown";
 
 // eslint-disable-next-line react/display-name
 const AppTopbar = forwardRef((props, ref) => {
@@ -25,23 +27,47 @@ const AppTopbar = forwardRef((props, ref) => {
     const menubuttonRef = useRef(null);
     const topbarmenuRef = useRef(null);
     const topbarmenubuttonRef = useRef(null);
-    const [tenDonVi, setTenDonVi] = useState("");
-    const [tenPhongBan, setTenPhongBan] = useState("");
     const [tenDangNhap, setTenDangNhap] = useState("");
+    const [tenPhongBan, setTenPhongBan] = useState("");
+    const [selectedDonVi, setSelectedDonVi] = useState(""); // Lưu giá trị đã chọn
 
     useEffect(() => {
+
         const user = JSON.parse(sessionStorage.getItem("user"));
         if (user) {
-            setTenDonVi(user.ten_donvi);
+            setSelectedDonVi(user.ma_dviqly)
             setTenPhongBan(user.ten_phongban);
             setTenDangNhap(user.ten_dang_nhap);
         }
     }, []);
 
+    useEffect(() => {
+        sessionStorage.setItem("current_MADVIQLY", JSON.stringify(selectedDonVi));
+    }, [selectedDonVi])
+    const ds_donvi = JSON.parse(sessionStorage.getItem("ds_donvi"));
+    console.log(ds_donvi);
+
+    const logout = () => {
+ 
+        confirmDialog({
+            message: 'Bạn có chắc chắn muốn đăng xuất không?',
+            header: 'Xác nhận đăng xuất',
+            icon: 'pi pi-exclamation-triangle',
+            accept: () => {
+                sessionStorage.removeItem('user');
+                sessionStorage.removeItem('token');
+                Router.push('/auth/login');
+            },
+            reject: () => {
+                // Optional: Thao tác khi người dùng từ chối
+                console.log('Hủy đăng xuất');
+            }
+        });
+    }
     const items = [
         {
             label: tenPhongBan,
-            icon: PrimeIcons.HOME,
+            icon: PrimeIcons.BUILDING,
         },
         {
             label: tenDangNhap,
@@ -96,7 +122,7 @@ const AppTopbar = forwardRef((props, ref) => {
             >
                 <button
                     type="button"
-                    className="p-link layout-topbar-button"
+                    className="p-link layout-topbar-button mr-2"
                     onClick={(e) => overlayPanelRef.current.toggle(e)}
                 >
                     <i className="pi pi-user"></i>
@@ -113,15 +139,15 @@ const AppTopbar = forwardRef((props, ref) => {
                 <OverlayPanel
                     ref={overlayPanelRef}
                     id="overlay_panel"
-                    style={{ width: "250px" }}
+                    style={{ width: "300px" }}
 
                 >
                     <ul className="p-menu-list" style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '20px', margin: '0', padding: '0' }}>
                         <li className="p-menuitem" style={{ height: '50px' }}>
-                            <a className="p-menuitem-link text-2xl">
+                            <a className="p-menuitem-link text-xl">
                                 <span className="p-menuitem-icon pi pi-home mr-2"></span>
-                                <span className="p-menuitem-text">
-                                    PB: {tenPhongBan}
+                                <span title="Tên phòng ban" className="p-menuitem-text"  >
+                                    {tenPhongBan}
                                 </span>
                             </a>
                         </li>
@@ -144,27 +170,41 @@ const AppTopbar = forwardRef((props, ref) => {
                     </ul>
                 </OverlayPanel>
 
-                <div style={{ cursor: "pointer" }}>
-                    <button
-                        type="button"
-                        className="p-link layout-topbar-button"
-                    >
-                        <i className="pi pi-sync"></i>
-                    </button>
-                    <span className="uppercase">{tenDonVi}</span>
+                <div style={{ cursor: "pointer", position: "relative" }}>
+
+                    <div className="menuitem">
+                        <Dropdown
+                            tooltip="Chuyển đơn vị"
+                            value={selectedDonVi}
+                            onChange={(e) => {
+
+                                setSelectedDonVi(e.value);
+
+                            }}
+                            options={ds_donvi}
+                            optionLabel="ten"
+                            optionValue="ma_dviqly"
+                            placeholder="Chọn đơn vị"
+                            style={{ border: 0, fontSize: 22 }}
+                            dropdownIcon="pi pi-sync"
+                        />
+                    </div>
+
                 </div>
-                <Link href="/auth/login">
+                <div onClick={logout} className="p-menuitem" style={{ cursor: "pointer" }} >
                     <button
+                        title="Đăng xuất"
                         type="button"
                         className="p-link layout-topbar-button"
                     >
                         <i className="pi pi-power-off"></i>
-                        <span>Logout</span>
                     </button>
-                </Link>
+                    <span className="uppercase">Đăng xuất</span>
+                </div>
             </div>
         </div>
     );
+
 });
 
 export default AppTopbar;

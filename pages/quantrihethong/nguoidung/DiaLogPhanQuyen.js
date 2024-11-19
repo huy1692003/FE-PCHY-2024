@@ -7,10 +7,11 @@ import { Panel } from "primereact/panel";
 import { TreeSelect } from 'primereact/treeselect';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { useEffect, useState } from "react";
-import { getNhomQuyen_byMaDVQLY, HT_NHOMQUYENService } from "../../../services/HT_NHOMQUYENService";
-import { getAllD_DVIQLY } from '../../../services/DM_DVIQLYService';
-import { HT_NGUOIDUNG_Service } from "../../../services/HT_NGUOIDUNGService";
-import { HT_QUYEN_NGUOIDUNG_Service } from "../../../services/HT_QUYEN_NGUOIDUNG";
+import { getNhomQuyen_byMaDVQLY, HT_NHOMQUYENService } from "../../../services/quantrihethong/HT_NHOMQUYENService";
+import { getAllD_DVIQLY } from '../../../services/quantrihethong/DM_DVIQLYService';
+import { HT_NGUOIDUNG_Service } from "../../../services/quantrihethong/HT_NGUOIDUNGService";
+import { HT_QUYEN_NGUOIDUNG_Service } from "../../../services/quantrihethong/HT_QUYEN_NGUOIDUNG";
+import { get_All_DM_DONVI } from "../../../services/quantrihethong/DM_DONVIService";
 
 export const DialogPhanQuyen = ({ isDeleteMultiple, dataSelected, setDataSelected, visible, setVisible, toast, EditPhanQuyen = { isEdit: true, user: null }, loadData, search }) => {
     const [dataDVIQLY, setDataDVIQLY] = useState([]);
@@ -27,8 +28,8 @@ export const DialogPhanQuyen = ({ isDeleteMultiple, dataSelected, setDataSelecte
         setSelectedNhomQuyen(null)
         const getDVIQLY = async () => {
 
-            let res = await getAllD_DVIQLY()
-            res && setDataDVIQLY(res.map((d) => ({ label: d.teN_DVIQLY, value: d.mA_DVIQLY })))
+            let res = await get_All_DM_DONVI()
+            res && setDataDVIQLY(res.map((d) => ({ label: d.ten, value: d.ma_dviqly })))
         }
         getDVIQLY()
     }, [visible])

@@ -12,7 +12,7 @@ import Link from "next/link";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { HT_NHOMQUYEN } from "../../../models/HT_NHOMQUYEN";
-import { search_HT_NHOMQUYEN } from "../../../services/HT_NHOMQUYENService";
+import { search_HT_NHOMQUYEN } from "../../../services/quantrihethong/HT_NHOMQUYENService";
 import TableVaiTro from "./TableVaiTro";
 import ModalInputVaiTro from "./ModalInputVaiTro";
 import { HT_MENU } from "../../../models/HT_MENU";
@@ -104,20 +104,18 @@ const QuanLyVaiTro = () => {
 
   return (
     <React.Fragment>
-      <Head>
-        <title>Quản lý Vai trò - Phần mềm quản lý kìm chì</title>
-      </Head>
+     
 
       <div className="grid">
         <div className="col-12">
-          <div className="flex justify-content-between align-items-center mb-2">
-            <div>Vai trò</div>
+          {/* <div className="flex justify-content-between align-items-center mb-2">
+           
             <BreadCrumb
               model={breadcrumb_router}
               home={home}
               className="bg-transparent border-transparent"
             />
-          </div>
+          </div> */}
           <div className="card">
             <Toast ref={toast} />
             <Panel header="Tìm kiếm">

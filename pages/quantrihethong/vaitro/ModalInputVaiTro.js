@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { HT_NHOMQUYEN } from "../../../models/HT_NHOMQUYEN";
-import { get_All_DM_DONVI } from "../../../services/DM_DONVIService";
+import { get_All_DM_DONVI } from "../../../services/quantrihethong/DM_DONVIService";
 import {
   create_HT_NHOMQUYEN,
   update_HT_NHOMQUYEN,
-} from "../../../services/HT_NHOMQUYENService";
+} from "../../../services/quantrihethong/HT_NHOMQUYENService";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
 import { DM_DONVI } from "../../../models/DM_DONVI";
 import { v4 as uuidv4 } from "uuid";
 import { Button } from "primereact/button";
-import { getAllD_DVIQLY } from "../../../services/DM_DVIQLYService";
+import { getAllD_DVIQLY } from "../../../services/quantrihethong/DM_DVIQLYService";
 
 const ModalInputVaiTro = ({
   isUpdate,

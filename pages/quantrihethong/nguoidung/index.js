@@ -15,11 +15,11 @@ import { DialogForm } from './DialogForm';
 import { Paginator } from 'primereact/paginator';
 import { HT_NGUOIDUNG } from '../../../models/HT_NGUOIDUNG';
 import { DialogPhanQuyen } from './DiaLogPhanQuyen';
-import { HT_NGUOIDUNG_Service } from '../../../services/HT_NGUOIDUNGService';
+import { HT_NGUOIDUNG_Service } from '../../../services/quantrihethong/HT_NGUOIDUNGService';
 import { apiClient } from '../../../constants/api';
-import { get_All_DM_DONVI } from '../../../services/DM_DONVIService';
-import { getAll_DM_CHUCVU } from '../../../services/DM_CHUCVU';
-import { searchDM_PHONGBAN } from '../../../services/DM_PHONGBANService';
+import { get_All_DM_DONVI } from '../../../services/quantrihethong/DM_DONVIService';
+import { getAll_DM_CHUCVU } from '../../../services/quantrihethong/DM_CHUCVUService';
+import { searchDM_PHONGBAN } from '../../../services/quantrihethong/DM_PHONGBANService';
 import { DialogResetPass } from './DialogResetPass';
 
 
@@ -92,7 +92,8 @@ const NguoiDung = () => {
         if (res) {
             setDM_DONVI([{ id: "", name: '-- Tất cả --' }, ...res.map(item => ({
                 id: item.id,
-                name: item.ten
+                name: item.ten,
+
             }))])
         }
     }
@@ -114,7 +115,8 @@ const NguoiDung = () => {
         if (res) {
             setDM_PHONGBAN(res.data.map(item => ({
                 id: item.id,
-                name: item.ten
+                name: item.ten,
+                dm_donvi_id: item.dm_donvi_id
             })))
         }
     }

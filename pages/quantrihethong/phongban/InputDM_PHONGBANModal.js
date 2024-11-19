@@ -3,13 +3,14 @@ import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { DM_PHONGBAN } from "../../../models/DM_PHONGBAN";
-import { getAllD_DVIQLY } from "../../../services/DM_DVIQLYService";
+import { getAllD_DVIQLY } from "../../../services/quantrihethong/DM_DVIQLYService";
 import { Button } from "primereact/button";
 
 import {
   insertDM_PHONGBAN,
   updateDM_PHONGBAN,
-} from "../../../services/DM_PHONGBANService";
+} from "../../../services/quantrihethong/DM_PHONGBANService";
+import { get_All_DM_DONVI } from "../../../services/quantrihethong/DM_DONVIService";
 
 export const InputDM_PHONGBANModal = ({
   isUpdate,
@@ -28,9 +29,17 @@ export const InputDM_PHONGBANModal = ({
     { label: "Có hiệu lực", value: 1 },
     { label: "Hết hiệu lực", value: 0 },
   ];
+
+
+  useEffect(() => {
+    let dvi = (dsDonViQuanLy.find(d => d.id === phongBan.dm_donvi_id)) || null
+    setPhongBan({ ...phongBan, ma_dviqly: dvi?.ma_dviqly, ten_dviqly: dvi?.ten })
+  },
+    [phongBan.dm_donvi_id])
+
   const getDSDVIQLY = async () => {
     try {
-      const results = await getAllD_DVIQLY();
+      const results = await get_All_DM_DONVI();
       setDSDonViQuanLy(results);
     } catch (err) {
       console.log(err);
@@ -58,17 +67,14 @@ export const InputDM_PHONGBANModal = ({
     let tempErrors = {};
     let isValid = true;
 
-    if (phongBan.ma == null) {
-      isValid = false;
-      tempErrors.ma = "Mã phòng ban không được để trống";
-    }
+
     if (phongBan.ten == null) {
       isValid = false;
       tempErrors.ten = "Tên phòng ban không được để trống";
     }
-    if (phongBan.ma_dviqly == null) {
+    if (phongBan.dm_donvi_id == null) {
       isValid = false;
-      tempErrors.donViQuanLy = "Vui lòng chọn đơn vị quản lý";
+      tempErrors.donViQuanLy = "Vui lòng chọn đơn vị ";
     }
     setErrors(tempErrors);
     return isValid;
@@ -81,8 +87,10 @@ export const InputDM_PHONGBANModal = ({
     }
   };
   const Create = async () => {
+    console.log(phongBan);
     try {
       if (handleCreate()) {
+        alert()
         const result = await insertDM_PHONGBAN({
           ...phongBan,
           nguoi_tao: "1",
@@ -108,6 +116,7 @@ export const InputDM_PHONGBANModal = ({
     }
   };
   const Update = async () => {
+    console.log(phongBan);
     try {
       if (handleCreate()) {
         const result = await updateDM_PHONGBAN({
@@ -141,73 +150,43 @@ export const InputDM_PHONGBANModal = ({
         !isUpdate ? "Thêm mới danh mục phòng ban" : "Sửa danh mục phòng ban"
       }
       visible={visible}
-      style={{ width: "60vw" }}
+      style={{ width: "40vw" }}
       onHide={() => {
         if (!visible) return;
         setVisible(false);
         setPhongBan(null);
       }}
     >
-      <div 
-        style={{
-          marginBottom: "20px"
-        }}
-      >
+      <div style={{ marginBottom: "20px" }}>
         <div className="form__group w-full">
-          <label htmlFor="SAP_XEP" className="form__label mb-3  inline-block">
+          <label htmlFor="SAP_XEP" className="form__label mb-3 inline-block">
             Chọn đơn vị
           </label>
           <Dropdown
             value={donViQuanLy}
             options={dsDonViQuanLy}
             onChange={(e) => {
-              setPhongBan({ ...phongBan, ma_dviqly: e.value.mA_DVIQLY });
+              setPhongBan({ ...phongBan, dm_donvi_id: e.value });
               setDonViQuanLy(e.value);
             }}
-            optionLabel="teN_DVIQLY"
+            optionLabel="ten"
             id="ma_dviqly"
-            placeholder="Chọn một option"
+            optionValue="id"
+            placeholder="Chọn đơn vị "
             className="w-full mr-2"
             onFocus={() => {
               if (errors.donViQuanLy) {
                 setErrors({});
               }
             }}
-          ></Dropdown>
+          />
           {errors.donViQuanLy && (
             <p style={{ color: "red" }}>{errors.donViQuanLy}</p>
           )}
         </div>
       </div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          marginBottom: "20px",
-        }}
-      >
-        <div className="form__group " style={{ width: "45%" }}>
-          <label htmlFor="MA" className="form__label mb-3 inline-block">
-            Mã phòng ban
-          </label>
-          <InputText
-            style={{ display: "block", width: "100%" }}
-            id="MA"
-            className="form__input"
-            placeholder="Mã phòng ban"
-            onChange={(e) => {
-              console.log(e.target.value);
-              setPhongBan({ ...phongBan, ma: e.target.value });
-            }}
-            onFocus={() => {
-              if (errors.ma) setErrors({});
-            }}
-            type="text"
-            value={phongBan.ma}
-          />
-          {errors.ma && <p style={{ color: "red" }}>{errors.ma}</p>}
-        </div>
-        <div className="form__group" style={{ width: "45%" }}>
+      <div style={{ marginBottom: "20px" }}>
+        <div className="form__group">
           <label htmlFor="TEN" className="form__label mb-3 inline-block">
             Tên phòng ban
           </label>
@@ -230,14 +209,8 @@ export const InputDM_PHONGBANModal = ({
           {errors.ten && <p style={{ color: "red" }}>{errors.ten}</p>}
         </div>
       </div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          marginBottom: "20px",
-        }}
-      >
-        <div className="form__group w-2/5" style={{ width: "45%" }}>
+      <div style={{ marginBottom: "20px" }}>
+        <div className="form__group w-2/5">
           <label htmlFor="TRANG_THAI" className="form__label mb-3 inline-block">
             Trạng thái
           </label>
@@ -253,10 +226,10 @@ export const InputDM_PHONGBANModal = ({
             options={arrTrangThai}
             placeholder="Chọn một trạng thái"
             value={trangThai}
-          ></Dropdown>
+          />
         </div>
-        <div className="form__group w-1/2 " style={{ width: "45%" }}>
-          <label htmlFor="SAP_XEP" className="form__label mb-3  inline-block">
+        <div className="form__group w-1/2 mt-2">
+          <label htmlFor="SAP_XEP" className="form__label mb-3 inline-block">
             Sắp xếp
           </label>
           <InputText
@@ -271,7 +244,7 @@ export const InputDM_PHONGBANModal = ({
           />
         </div>
       </div>
-      
+
       <div className="flex mt-4" style={{ justifyContent: "center" }}>
         <Button
           label="Lưu"

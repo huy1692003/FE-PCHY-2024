@@ -16,7 +16,7 @@ import {
   create_HT_MENU,
   get_All_HT_MENU,
   update_HT_MENU,
-} from "../../../services/HT_MENUService";
+} from "../../../services/quantrihethong/HT_MENUService";
 
 const Menu = () => {
   const toast = useRef(null);
@@ -24,6 +24,7 @@ const Menu = () => {
   const [showDialog, setShowDialog] = useState(false);
   const [isAdd, setIsAdd] = useState(false);
   const [formData, setFormData] = useState(HT_MENU);
+  const [selectedMenus, setSelectedMenus] = useState([]);
 
   // State to store input value and filtered menu items
   const [searchTerm, setSearchTerm] = useState("");
@@ -44,11 +45,21 @@ const Menu = () => {
     return (
       <div className={className}>
         <span className="font-bold text-2xl">Danh sách</span>
-        <Button
-          label="Thêm mới"
-          style={{ backgroundColor: "#1445a7" }}
-          onClick={ThemMoi}
-        ></Button>
+        <div>
+          {selectedMenus.length > 0 && (
+            <Button
+              label="Xóa nhiều"
+              style={{ backgroundColor: "#d9534f", marginRight: "8px" }}
+              onClick={onDeleteSelectedConfirm}
+              disabled={!selectedMenus.length}
+            />
+          )}
+          <Button
+            label="Thêm mới"
+            style={{ backgroundColor: "#1445a7" }}
+            onClick={ThemMoi}
+          ></Button>
+        </div>
       </div>
     );
   };
@@ -161,6 +172,46 @@ const Menu = () => {
       },
     });
   };
+
+  const onDeleteSelectedConfirm = () => {
+    confirmDialog({
+      message: "Bạn có chắc chắn muốn xóa các menu đã chọn?",
+      header: "Xác nhận xóa",
+      icon: "pi pi-exclamation-triangle",
+      accept: async () => {
+        try {
+          await Promise.all(
+            selectedMenus.map((menu) => delete_HT_MENU(menu.id))
+          );
+          setPage(selectedMenus.length===pageSize?(page>1?page-1:1):page);
+          toast.current.show({
+            severity: "success",
+            summary: "Thành công",
+            detail: "Xóa thành công",
+            life: 3000,
+          });
+          loadDataMENU();
+          setSelectedMenus([]);
+        } catch (error) {
+          toast.current.show({
+            severity: "error",
+            summary: "Lỗi",
+            detail: "Không thể xóa các menu đã chọn",
+            life: 3000,
+          });
+        }
+      },
+      reject: () => {
+        toast.current.show({
+          severity: "info",
+          summary: "Đã hủy",
+          detail: "Hành động xóa đã bị hủy",
+          life: 3000,
+        });
+      },
+    });
+  };
+
   const donViDialogFooter = (
     <div className="text-center">
       <Button
@@ -185,7 +236,7 @@ const Menu = () => {
     if (searchTerm === "") {
       setFilteredMenu(arr_MENU); // Không có từ khóa thì hiển thị tất cả
     } else {
-      const filtered = arr_MENU.filter(item =>
+      const filtered = arr_MENU.filter((item) =>
         item.ten_menu.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredMenu(filtered);
@@ -220,9 +271,7 @@ const Menu = () => {
               className="card-header flex justify-between mb-3 items-center"
               style={{ justifyContent: "space-between", alignItems: "center" }}
             >
-              <h3 className="card-title text-lg m-0">
-                Quản lý Menu
-              </h3>
+              {/* <h3 className="card-title text-lg m-0">Quản lý Menu</h3> */}
             </div>
             <Toast ref={toast} />
 
@@ -271,6 +320,8 @@ const Menu = () => {
                 rows={10} // Số mục trên mỗi trang
                 rowsPerPageOptions={[5, 10, 20]} // Các tùy chọn cho số mục trên mỗi trang
                 paginatorTemplate="RowsPerPageDropdown PageLinks" // Hiển thị bộ chọn số hàng và liên kết trang
+                selection={selectedMenus}
+                onSelectionChange={(e) => setSelectedMenus(e.value)}
               >
                 <Column
                   selectionMode="multiple"
@@ -312,20 +363,17 @@ const Menu = () => {
                     color: "#fff",
                     width: "6rem",
                   }}
-                  // Start of Selection
                   body={(rowData) => (
                     <div className="flex justify-content-between gap-3">
                       <Button
                         icon="pi pi-pencil"
                         tooltip="Sửa"
-
                         onClick={() => handleEdit(rowData)}
                         style={{ backgroundColor: "#1445a7", color: "#fff" }}
                       />
                       <Button
                         icon="pi pi-trash"
                         tooltip="Xóa"
-
                         onClick={() => onDeleteConfirm(rowData)}
                         style={{ backgroundColor: "#1445a7", color: "#fff" }}
                       />

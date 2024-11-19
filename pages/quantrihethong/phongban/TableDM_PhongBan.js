@@ -10,7 +10,7 @@ import { Toast } from "primereact/toast";
 import { Card } from "primereact/card";
 import { Divider } from "primereact/divider";
 import { Dropdown } from "primereact/dropdown";
-import { deleteDM_PHONGBAN } from "../../../services/DM_PHONGBANService";
+import { deleteDM_PHONGBAN } from "../../../services/quantrihethong/DM_PHONGBANService";
 import { FilterMatchMode, PrimeIcons } from "primereact/api";
 import { InputText } from "primereact/inputtext";
 const TableDM_PhongBan = ({
@@ -176,11 +176,11 @@ const TableDM_PhongBan = ({
                             return rowIndex + 1;
                         }}
                     ></Column>
-                    <Column
+                    {/* <Column
                         headerClassName="table__header text-lg bg-blue-600 text-white font-semibold justify-center"
                         field="ma"
                         header="MÃ PHÒNG BAN"
-                    ></Column>
+                    ></Column> */}
                     <Column
                         headerClassName="table__header text-lg bg-blue-600 text-white font-semibold justify-center"
                         field="ten"

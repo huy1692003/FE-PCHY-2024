@@ -1,174 +1,157 @@
-import React, { useState, useEffect } from 'react';
-import { Button, InputText, Dialog, Toast } from 'primereact';
-import { insert_DM_DONVI, update_DM_DONVI, delete_DM_DONVI, getDM_DONVI_ByID, get_All_DM_DONVI } from './services/dm_donviService'; // Import your API services
-import { DM_DONVI } from '../../../models/DM_DONVI';
+import { useRouter } from 'next/router';
+import React, { useContext, useRef, useState } from 'react';
+import AppConfig from '../../../layout/AppConfig';
+import { Checkbox } from 'primereact/checkbox';
+import { Button } from 'primereact/button';
+import { Password } from 'primereact/password';
+import { LayoutContext } from '../../../layout/context/layoutcontext';
+import { InputText } from 'primereact/inputtext';
+import { classNames } from 'primereact/utils';
+import styles from './login.module.scss'
+import { Message } from 'primereact/message';
+import { login_HT_NGUOIDUNG } from '../../../services/quantrihethong/HT_NGUOIDUNGService';
+import Head from 'next/head';
+import { Toast } from 'primereact/toast';
+import Link from 'next/link';
 
-const DM_DONVI_Management = () => {
-    const [dmDonviData, setDmDonviData] = useState([]);
-    const [showAddDialog, setShowAddDialog] = useState(false);
-    const [showEditDialog, setShowEditDialog] = useState(false);
-    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-    const [currentItem, setCurrentItem] = useState(null);
-    const [formData, setFormData] = useState(DM_DONVI);
-    const [toast, setToast] = useState(null);
+const LoginPage = () => {
+    const currentYear = new Date().getFullYear()
+    const [password, setPassword] = useState('');
+    const [checked, setChecked] = useState(false);
+    const [usernameError, setUsernameError] = useState('')
+    const [passwordError, setPasswordError] = useState('')
+    const { layoutConfig } = useContext(LayoutContext);
 
-    useEffect(() => {
-        fetchDM_DONVI();
-    }, []);
+    const router = useRouter();
+    const containerClassName = classNames('  flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden', { 'p-input-filled': layoutConfig.inputStyle === 'filled' });
 
-    const fetchDM_DONVI = async () => {
+    const [username, setUsername] = useState('')
+    const toast = useRef(null);
+
+    const handleLogin = async () => {
         try {
-            const data = await get_All_DM_DONVI();
-            setDmDonviData(data);
-        } catch (error) {
-            console.error('Error fetching DM_DONVI data:', error);
-        }
-    };
-
-    const handleAddClick = () => {
-        setShowAddDialog(true);
-    };
-
-    const handleEditClick = async (id) => {
-        try {
-            const data = await getDM_DONVI_ByID(id);
-            setFormData(data); // Set the form data with the existing item data
-            setShowEditDialog(true);
-        } catch (error) {
-            console.error('Error fetching DM_DONVI by ID:', error);
-        }
-    };
-
-    const handleDeleteClick = (id) => {
-        setCurrentItem(id);
-        setShowDeleteDialog(true);
-    };
-
-    const handleSave = async () => {
-        try {
-            if (formData.id) {
-                // Update existing DM_DONVI
-                await update_DM_DONVI(formData);
-                showSuccess('Cập nhật thành công');
-            } else {
-                // Insert new DM_DONVI
-                await insert_DM_DONVI(formData);
-                showSuccess('Thêm mới thành công');
+            const data = { ten_dang_nhap: username, mat_khau: password }
+            const response = await login_HT_NGUOIDUNG(data)
+            if (response) {
+                console.log(response)
+                let ds_donvi = response.user.ds_donvi.map(s => ({ ten: s.ten, ma_dviqly: s.ma_dviqly }))
+                sessionStorage.setItem('ds_donvi', JSON.stringify(ds_donvi))
+                sessionStorage.setItem('user', JSON.stringify(response.user));
+                sessionStorage.setItem('token', response.user.token);
+                toast.current.show({ severity: 'success', summary: 'Thông báo', detail: 'Đăng nhập thành công', life: 3000 })
+                router.push('/')
             }
-            setShowAddDialog(false);
-            setShowEditDialog(false);
-            fetchDM_DONVI(); // Refresh the list
         } catch (error) {
-            console.error('Error saving DM_DONVI:', error);
-            showError('Lỗi khi lưu dữ liệu');
+            console.log(error);
+
+            toast.current.show({ severity: 'error', summary: 'Đăng nhập thất bại', detail: 'Thông tin tài khoản hoặc mật khẩu không chính xác!', life: 4000 })
         }
-    };
+    }
 
-    const handleDelete = async () => {
-        try {
-            await delete_DM_DONVI(currentItem);
-            showSuccess('Xóa thành công');
-            setShowDeleteDialog(false);
-            fetchDM_DONVI(); // Refresh the list
-        } catch (error) {
-            console.error('Error deleting DM_DONVI:', error);
-            showError('Lỗi khi xóa');
+    const handleUsernameError = () => {
+        if (!username) {
+            setUsernameError('Tên đăng nhập không được để trống')
+        } else {
+            setUsernameError('')
         }
-    };
+    }
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value
-        });
-    };
+    const handlePasswordError = () => {
+        if (!password) {
+            setPasswordError('Mật khẩu không được để trống')
+        } else {
+            setPasswordError('')
+        }
+    }
 
-    const showSuccess = (message) => {
-        toast.show({ severity: 'success', summary: 'Thành công', detail: message, life: 3000 });
-    };
-
-    const showError = (message) => {
-        toast.show({ severity: 'error', summary: 'Lỗi', detail: message, life: 3000 });
-    };
 
     return (
-        <div>
-            {/* Toast for success and error messages */}
-            <Toast ref={(el) => setToast(el)} />
+        <React.Fragment>
+            <Head>
+                <title>Đăng nhập - Phần mềm quản lý kìm chì</title>
+            </Head>
+            <Toast ref={toast} />
+            <div className={containerClassName} style={{ backgroundColor: '#B0BEC5' }}>
+                <div style={{ backgroundColor: 'white', width: '93%', boxShadow: '0px 4px 8px 0px #757575' }}>
+                    <div className="flex justify-content-between align-items-center gap-5" style={{ padding: '2rem' }}>
+                        <div className={styles.loginLeftside}>
+                            <div className='pb-5'>
+                                <div className='row'>
+                                    <img src='/demo/images/login/logologin.png' style={{ width: '30%' }} />
+                                </div>
+                            </div>
+                        </div>
+                        <div style={{ width: '40%', paddingRight: '30px' }}>
+                            <div className='mb-8'>
+                                <div className='text-center'>
+                                    <h3 className='page-title uppercase' style={{ color: '#1445a7' }}>hệ thống phần mềm pchungyen.vn</h3>
+                                </div>
+                                <div className='flex flex-wrap px-3 mb-4' style={{ marginRight: '-15px', marginLeft: '-15px' }}>
+                                    <div className={styles.line}></div>
+                                    <small style={{ width: '10%', fontWeight: 'bold', textAlign: 'center' }}>o0o</small>
+                                    <div className={styles.line}></div>
+                                </div>
+                            </div>
 
-            {/* Button to add a new DM_DONVI */}
-            <Button label="Thêm mới" icon="pi pi-plus" onClick={handleAddClick} />
 
-            {/* Data table or list of DM_DONVI */}
-            <div>
-                <h3>Danh sách Đơn Vị</h3>
-                <ul>
-                    {dmDonviData.map(item => (
-                        <li key={item.id}>
-                            {item.name} - {item.DM_TINHTHANH_ID} - {item.DM_QUANHUYEN_ID}
-                            <Button label="Sửa" icon="pi pi-pencil" onClick={() => handleEditClick(item.id)} />
-                            <Button label="Xóa" icon="pi pi-trash" onClick={() => handleDeleteClick(item.id)} />
-                        </li>
-                    ))}
-                </ul>
+                            <div className='mb-3'>
+                                <label htmlFor="username" className="block text-900 text-xl font-medium mb-2">
+                                    Tên đăng nhập
+                                </label>
+                                <InputText inputid="username" value={username} type="text" placeholder="Tài khoản" className="w-full mb-2" style={{ padding: '1rem' }} onChange={(e) => setUsername(e.target.value)} onBlur={handleUsernameError} />
+                                {
+                                    usernameError && (
+                                        <Message severity='error' text={usernameError} className='mb-5 w-full' />
+                                    )
+                                }
+
+                            </div>
+
+
+                            <label htmlFor="password" className="block text-900 font-medium text-xl mb-2">
+                                Mật khẩu
+                            </label>
+                            <Password inputid="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Mật khẩu" toggleMask className="w-full mb-2" inputClassName="w-full p-3" onBlur={handlePasswordError}></Password>
+                            {
+                                passwordError && (
+                                    <Message severity='error' text={passwordError} className='mb-4 w-full' />
+                                )
+                            }
+
+
+
+                            <div className="flex align-items-center justify-content-between mb-5 gap-5">
+                                <div className="flex align-items-center">
+                                    <Checkbox inputid="rememberme1" checked={checked} onChange={(e) => setChecked(e.checked)} className="mr-2"></Checkbox>
+                                    <label htmlFor="rememberme1">Lưu mật khẩu</label>
+                                </div>
+                                <Link className={`${styles.forgotPass} font-medium no-underline ml-2 text-right cursor-pointer `} href='/auth/forgotpassword'>
+                                    Quên mật khẩu
+                                </Link>
+                            </div>
+                            <div className='text-center'>
+                                <Button label="Đăng nhập" className={styles.buttonLogin} onClick={handleLogin}></Button>
+                            </div>
+                        </div>
+                    </div>
+                    <div className='text-center py-4' style={{ backgroundColor: '#1A237E' }}>
+                        <div className='text-center text-white'>
+                            <small className='text-center'>Copyright © {currentYear} <span style={{ fontWeight: 'bold', fontSize: '14px' }}> Công ty Điện lực Hưng Yên</span> </small>
+
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            {/* Dialog for adding a new DM_DONVI */}
-            <Dialog
-                header="Thêm mới Đơn Vị"
-                visible={showAddDialog}
-                style={{ width: '50vw' }}
-                onHide={() => setShowAddDialog(false)}
-            >
-                <div>
-                    <InputText
-                        name="name"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        placeholder="Tên Đơn Vị"
-                        style={{ width: '100%', marginBottom: '10px' }}
-                    />
-                    {/* Add more form fields for DM_TINHTHANH_ID, DM_QUANHUYEN_ID as required */}
-                    <Button label="Lưu" icon="pi pi-check" onClick={handleSave} />
-                </div>
-            </Dialog>
-
-            {/* Dialog for editing a DM_DONVI */}
-            <Dialog
-                header="Sửa Đơn Vị"
-                visible={showEditDialog}
-                style={{ width: '50vw' }}
-                onHide={() => setShowEditDialog(false)}
-            >
-                <div>
-                    <InputText
-                        name="name"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        placeholder="Tên Đơn Vị"
-                        style={{ width: '100%', marginBottom: '10px' }}
-                    />
-                    {/* Add more form fields for DM_TINHTHANH_ID, DM_QUANHUYEN_ID as required */}
-                    <Button label="Lưu" icon="pi pi-check" onClick={handleSave} />
-                </div>
-            </Dialog>
-
-            {/* Dialog for confirming delete */}
-            <Dialog
-                header="Xóa Đơn Vị"
-                visible={showDeleteDialog}
-                style={{ width: '30vw' }}
-                onHide={() => setShowDeleteDialog(false)}
-            >
-                <div>
-                    <p>Bạn có chắc muốn xóa đơn vị này không?</p>
-                    <Button label="Xóa" icon="pi pi-trash" onClick={handleDelete} />
-                    <Button label="Hủy" icon="pi pi-times" onClick={() => setShowDeleteDialog(false)} />
-                </div>
-            </Dialog>
-        </div>
+        </React.Fragment>
     );
 };
 
-export default DM_DONVI_Management;
+LoginPage.getLayout = function getLayout(page) {
+    return (
+        <React.Fragment>
+            {page}
+            <AppConfig simple />
+        </React.Fragment>
+    );
+};
+export default LoginPage;

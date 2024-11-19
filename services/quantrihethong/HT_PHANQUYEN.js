@@ -1,4 +1,4 @@
-import { apiClient } from "../constants/api";
+import { apiClient } from "../../constants/api";
 
 export const insert_HT_PHANQUYEN = async (data) => {
   const res = await apiClient.post("/HT_PHANQUYEN/insert_HT_PHANQUYEN", data);

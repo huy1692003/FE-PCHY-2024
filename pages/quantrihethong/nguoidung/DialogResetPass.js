@@ -4,7 +4,7 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
-import { HT_NGUOIDUNG_Service } from '../../../services/HT_NGUOIDUNGService';
+import { HT_NGUOIDUNG_Service } from '../../../services/quantrihethong/HT_NGUOIDUNGService';
 
 export const DialogResetPass = ({ idNguoiDung, visible, onClose, toast }) => {
     const [currentPassword, setCurrentPassword] = useState('');

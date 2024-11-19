@@ -1,6 +1,6 @@
 import { FilterMatchMode, PrimeIcons } from "primereact/api";
 import React, { useState } from "react";
-import { delete_HT_NHOMQUYEN } from "../../../services/HT_NHOMQUYENService";
+import { delete_HT_NHOMQUYEN } from "../../../services/quantrihethong/HT_NHOMQUYENService";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { Card } from "primereact/card";

@@ -9,7 +9,7 @@ import { Dropdown } from "primereact/dropdown";
 import { Divider } from "primereact/divider";
 import { Card } from "primereact/card";
 import { DM_PHONGBAN } from "../../../models/DM_PHONGBAN";
-import { searchDM_PHONGBAN } from "../../../services/DM_PHONGBANService";
+import { searchDM_PHONGBAN } from "../../../services/quantrihethong/DM_PHONGBANService";
 const PhongBan = () => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -65,9 +65,9 @@ const PhongBan = () => {
             className="card-header flex justify-between mb-3 items-center"
             style={{ justifyContent: "space-between", alignItems: "center" }}
           >
-            <h3 className="card-title text-lg m-0">
+            {/* <h3 className="card-title text-lg m-0">
               Quản lý danh mục phòng ban
-            </h3>
+            </h3> */}
           </div>
 
           <Card title="Tìm kiếm" className="mb-4">

@@ -1,4 +1,4 @@
-import { apiClient } from "../constants/api"
+import { apiClient } from "../../constants/api"
 
 export const create_HT_NHOMQUYEN = async (data) => {
     const res = await apiClient.post('/HT_NHOMQUYEN/create_HT_NHOMQUYEN', data)

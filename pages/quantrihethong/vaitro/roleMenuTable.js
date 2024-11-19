@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { Dialog } from "primereact/dialog";
 import { TreeTable } from "primereact/treetable";
 import React, { useEffect, useState, useCallback } from "react";
-import { get_All_HT_MENU } from "../../../services/HT_MENUService";
+import { get_All_HT_MENU } from "../../../services/quantrihethong/HT_MENUService";
 import { HT_MENU } from "../../../models/HT_MENU";
 import { Column } from "primereact/column";
 import { Tooltip } from "primereact/tooltip";
@@ -11,7 +11,7 @@ import {
   delete_HT_PHANQUYEN,
   get_HT_PHANQUYENByMA_NHOM_TV,
   insert_HT_PHANQUYEN,
-} from "../../../services/HT_PHANQUYEN";
+} from "../../../services/quantrihethong/HT_PHANQUYEN";
 
 const QuanLyMenuVaiTro = ({
   isUpdate,
@@ -329,6 +329,36 @@ const QuanLyMenuVaiTro = ({
       }}
     >
       <div className="flex justify-content-between align-items-start gap-5">
+        <div className="flex mt-4" style={{ justifyContent: "center" }}>
+          <Button
+            label="Lưu"
+            onClick={() => {
+              handleCreateHT_PhanQuyen();
+              if (unselectNodes.length > 0) {
+                console.log("dlete", unselectNodes);
+
+                handleDeleteHT_PhanQuyen();
+              }
+            }}
+            severity="success"
+            style={{
+              backgroundColor: "#1445a7",
+              width: "20%",
+            }}
+            className="mr-4"
+          />
+          <Button
+            label="Đóng"
+            outlined
+            severity="secondary"
+            onClick={() => {
+              setVisible(false);
+            }}
+            style={{
+              width: "20%",
+            }}
+          />
+        </div>
         <div className="field">
           <TreeTable
             selectionKeys={selectedNodeKeys}
@@ -374,6 +404,36 @@ const QuanLyMenuVaiTro = ({
         </div>
 
         <div className="field">
+          <div className="flex mt-4" style={{ justifyContent: "center" }}>
+            <Button
+              label="Lưu"
+              onClick={() => {
+                handleCreateHT_PhanQuyen();
+                if (unselectNodes.length > 0) {
+                  console.log("dlete", unselectNodes);
+
+                  handleDeleteHT_PhanQuyen();
+                }
+              }}
+              severity="success"
+              style={{
+                backgroundColor: "#1445a7",
+                width: "20%",
+              }}
+              className="mr-4"
+            />
+            <Button
+              label="Đóng"
+              outlined
+              severity="secondary"
+              onClick={() => {
+                setVisible(false);
+              }}
+              style={{
+                width: "20%",
+              }}
+            />
+          </div>
           <TreeTable
             value={nodes}
             selectionKeys={selectedNodeKeys}
@@ -415,36 +475,7 @@ const QuanLyMenuVaiTro = ({
           </TreeTable>
         </div>
       </div>
-      <div className="flex mt-4" style={{ justifyContent: "center" }}>
-        <Button
-          label="Lưu"
-          onClick={() => {
-            handleCreateHT_PhanQuyen();
-            if (unselectNodes.length > 0) {
-              console.log("dlete", unselectNodes);
 
-              handleDeleteHT_PhanQuyen();
-            }
-          }}
-          severity="success"
-          style={{
-            backgroundColor: "#1445a7",
-            width: "20%",
-          }}
-          className="mr-4"
-        />
-        <Button
-          label="Đóng"
-          outlined
-          severity="secondary"
-          onClick={() => {
-            setVisible(false);
-          }}
-          style={{
-            width: "20%",
-          }}
-        />
-      </div>
     </Dialog>
   );
 };
