@@ -315,20 +315,56 @@ const QuanLyMenuVaiTro = ({
       throw e; // Ném lỗi để Promise.all có thể bắt lỗi
     }
   };
+
+  const headerTemplate = (
+    <div className="flex justify-content-between">
+      <span className='inline-block w-4'>PHÂN QUYỀN MENU</span>
+      <div className="w-full text-right" >
+        <Button
+          label="Lưu"
+          onClick={() => {
+            handleCreateHT_PhanQuyen();
+            if (unselectNodes.length > 0) {
+              console.log("dlete", unselectNodes);
+              handleDeleteHT_PhanQuyen();
+            }
+          }}
+          severity="success"
+          style={{
+            backgroundColor: "#1445a7",
+            width: "10%",
+          }}
+          className="mr-4"
+        />
+        <Button
+          label="Đóng"
+          outlined
+          severity="secondary"
+          onClick={() => {
+            setVisible(false);
+          }}
+          style={{
+            width: "10%",
+          }}
+        />
+      </div>
+    </div>
+  );
+
   return (
     <Dialog
-      header="Gán menu cho quyền "
-      modal
+      closable={false}
+      header={headerTemplate}
       style={{
         width: "1200px",
       }}
       className="p-fluid"
       visible={visible}
       onHide={() => {
-        // if (!visible) return;
         setVisible();
       }}
     >
+      
       <div className="flex justify-content-between align-items-start gap-5">        
         <div className="field">
           <TreeTable
@@ -417,36 +453,7 @@ const QuanLyMenuVaiTro = ({
           </TreeTable>
         </div>
       </div>
-      <div className="flex" style={{ justifyContent: "center", marginTop: "20px" }}>
-            <Button
-              label="Lưu"
-              onClick={() => {
-                handleCreateHT_PhanQuyen();
-                if (unselectNodes.length > 0) {
-                  console.log("dlete", unselectNodes);
-
-                  handleDeleteHT_PhanQuyen();
-                }
-              }}
-              severity="success"
-              style={{
-                backgroundColor: "#1445a7",
-                width: "20%",
-              }}
-              className="mr-4"
-            />
-            <Button
-              label="Đóng"
-              outlined
-              severity="secondary"
-              onClick={() => {
-                setVisible(false);
-              }}
-              style={{
-                width: "20%",
-              }}
-            />
-      </div>
+      
     </Dialog>
   );
 };

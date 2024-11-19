@@ -97,16 +97,16 @@ const Layout = (props) => {
 
     useEffect(() => {
         const isAuthenticated = !!sessionStorage.getItem('token');
-        setIsLoggedIn(true);
+        setIsLoggedIn(isAuthenticated);
     }, []);
 
-    // useEffect(() => {
-    //     const isAuthenticated = !!sessionStorage.getItem('token');
+    useEffect(() => {
+        const isAuthenticated = !!sessionStorage.getItem('token');
 
-    //     if (!isAuthenticated) {
-    //         router.replace('/auth/login');
-    //     }
-    // }, [router]);
+        if (!isAuthenticated) {
+            router.replace('/auth/login');
+        }
+    }, [router]);
 
     const containerClass = classNames('layout-wrapper', {
         'layout-overlay': layoutConfig.menuMode === 'overlay',
