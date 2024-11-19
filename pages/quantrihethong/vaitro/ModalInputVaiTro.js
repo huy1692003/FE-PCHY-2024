@@ -30,8 +30,8 @@ const ModalInputVaiTro = ({
 
 
   const getDVIQLY = async () => {
-    let data = await getAllD_DVIQLY()
-    data && setDVIQLY(data.map(d => ({ id: d.mA_DVIQLY, name: d.teN_DVIQLY })))
+    let data = await get_All_DM_DONVI()
+    data && setDVIQLY(data.map(d => ({ id: d.ma_dviqly, name: d.ten })))
   }
 
 

@@ -139,6 +139,16 @@ export const DialogPhanQuyen = ({ isDeleteMultiple, dataSelected, setDataSelecte
             }
         });
     }
+
+    const headerTemplate = (options) => {
+        const className = `${options.className} justify-content-space-between`
+        return (
+            <div className={className} >
+                <span>Chọn vai trò mới</span>
+                <Button size="small" label="Thêm vai trò" severity="info" icon="pi pi-plus" onClick={() => { onAddQuyenNew() }} />
+            </div>
+        )
+    }
     return (
         <>
             {!EditPhanQuyen.isEdit ?
@@ -216,7 +226,7 @@ export const DialogPhanQuyen = ({ isDeleteMultiple, dataSelected, setDataSelecte
                             )} />
                         </DataTable>
                     </Panel>
-                    <Panel header="Chọn vai trò mới">
+                    <Panel headerTemplate={headerTemplate}>
                         <div className="flex justify-content-between ">
                             <Dropdown value={selectedDVIQLY} onChange={(e) => setSelectedDVIQLY(e.value)}
                                 options={dataDVIQLY}
@@ -224,10 +234,6 @@ export const DialogPhanQuyen = ({ isDeleteMultiple, dataSelected, setDataSelecte
                             <Dropdown value={selectedNhomQuyen} onChange={(e) => setSelectedNhomQuyen(e.value)} options={dataNhomQuyen}
                                 filter className="md:w-5 w-full mt-2" placeholder="-- Vai trò -- " />
                         </div>
-                        <Button size="small" className="mt-4" label="Thêm vai trò" severity="info" icon="pi pi-plus"
-                            onClick={() => {
-                                onAddQuyenNew()
-                            }} />
                     </Panel>
 
                     <div className='flex justify-content-end gap-2 mt-4'>

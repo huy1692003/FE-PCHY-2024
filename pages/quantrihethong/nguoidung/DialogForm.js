@@ -132,15 +132,15 @@ export const DialogForm = ({ isAdd, formData, setFormData, visible, setVisible, 
                     <FormField label="Tên đăng nhập" value={formData.ten_dang_nhap} onChange={handleInputChange} id="ten_dang_nhap" />
                     {isAdd && <FormField label="Mật khẩu" value={formData.mat_khau} onChange={handleInputChange} id="mat_khau" />}
 
+                    {/* Chức vụ và trạng thái */}
+                    <FormField label="Chức vụ" value={formData.dm_chucvu_id} options={DM_CHUCVU} onChange={handleInputChange} id="dm_chucvu_id" isDropdown />
+                    {!isAdd && <FormField label="Trạng thái" value={formData.trang_thai} options={mockData.trangThaiOptions} onChange={handleInputChange} id="trang_thai" isDropdown />}
                     {/* Họ tên và email */}
                     <FormField label="Họ tên" value={formData.ho_ten} onChange={handleInputChange} id="ho_ten" />
                     <FormField label="Email" value={formData.email} onChange={handleInputChange} id="email" typeInput="email" />
                     <FormField label="Số điện thoại" value={formData.so_dien_thoai} onChange={handleInputChange} id="so_dien_thoai" typeInput="tel" />
 
 
-                    {/* Chức vụ và trạng thái */}
-                    <FormField label="Chức vụ" value={formData.dm_chucvu_id} options={DM_CHUCVU} onChange={handleInputChange} id="dm_chucvu_id" isDropdown />
-                    {!isAdd && <FormField label="Trạng thái" value={formData.trang_thai} options={mockData.trangThaiOptions} onChange={handleInputChange} id="trang_thai" isDropdown />}
 
                     {/* Giới tính và số CMND */}
                     <FormField label="Giới tính" value={formData.gioi_tinh} options={mockData.gioiTinhOptions} onChange={handleInputChange} id="gioi_tinh" isDropdown />
@@ -154,7 +154,7 @@ export const DialogForm = ({ isAdd, formData, setFormData, visible, setVisible, 
                         { name: '4-Viettel Token', id: 4 },
                         { name: '5-EVN CA', id: 5 }
                     ]} onChange={handleInputChange} id="hrms_type" isDropdown />
-
+                    <FormField label="Token Chữ Ký" value={formData.value_token} onChange={handleInputChange} id="value_token" />
 
                 </div>
                 {(previewImage) && (

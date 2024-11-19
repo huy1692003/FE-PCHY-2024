@@ -275,32 +275,7 @@ const Menu = () => {
             </div>
             <Toast ref={toast} />
 
-            {/* start_search */}
-            {/* <Panel header="Tìm kiếm">
-              <div
-                className="field"
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                <label style={{ marginBottom: "5px" }}>Tên Menu</label>
-                <InputText
-                  placeholder="Nhập tên đơn vị cần tìm kiếm"
-                  style={{ width: "50%" }}
-                />
-              </div>
-              <div className="flex justify-content-center mt-2">
-                <Button
-                  label="Tìm kiếm"
-                  style={{ backgroundColor: "#1445a7" }}
-                />
-              </div>
-            </Panel> */}
-            {/* end_search */}
-
+         
             {/*start_table */}
             <Panel headerTemplate={headerList} className="mt-4">
               <div style={{ textAlign: "right " }}>
