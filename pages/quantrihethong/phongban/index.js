@@ -17,7 +17,7 @@ const PhongBan = () => {
   const [pageCount, setPageCount] = useState(0);
 
   const [options, setOptions] = useState({
-    ma: "",
+    ma: undefined,
     ten: "",
     trang_thai: {
       label: "",
@@ -39,6 +39,7 @@ const PhongBan = () => {
   useEffect(() => {
     const getDSDonViQuanLy = async () => {
       const results = await get_All_DM_DONVI();
+      console.log(results)
       setDonViQuanLy(results);
     };
     getDSDonViQuanLy();
@@ -49,7 +50,7 @@ const PhongBan = () => {
       const data = {
         pageIndex: page,
         pageSize: pageSize,
-        ma: options.ma !== "" ? options.ma : ma_dviqly,
+        ma: options.ma ,
         ten: options.ten,
         trang_thai: options.trang_thai.value,
       };
@@ -87,7 +88,7 @@ const PhongBan = () => {
             <div className="flex flex-col">
               <div
                 className="form__group grow"
-                style={{ flexGrow: "1", width: "33.33333%" }}
+                style={{ flexGrow: "1", width: "30%" }}
               >
                 <label htmlFor="MA" className="form__label mb-3 inline-block">
                   Đơn vị
@@ -100,13 +101,14 @@ const PhongBan = () => {
                   }}
                   optionLabel="ten"
                   id="ma_dviqly"
-                  optionValue="ma_dviqly"
+                  optionValue="id"
                   placeholder="Chọn đơn vị "
                   className="w-full mr-2"
+                  showClear
                 />
               </div>
               <div
-                className="form__group grow"
+                className="form__group grow ml-6"
                 style={{
                   flexGrow: "1",
                   width: "33.33333%",
@@ -166,6 +168,7 @@ const PhongBan = () => {
           </Card>
 
           <TableDM_PhongBan
+            donvi={donViQuanLy}
             setVisible={setVisible}
             setIsUpdate={setIsUpdate}
             setPHONGBAN={setPHONGBAN}

@@ -171,6 +171,7 @@ const AppTopbar = forwardRef((props, ref) => {
                         <Dropdown
                             tooltip="Chuyển đơn vị"
                             value={selectedDonVi}
+                            filter
                             onChange={(e) => {
 
                                 setSelectedDonVi(e.value);

@@ -23,6 +23,7 @@ const TableDM_PhongBan = ({
     setPageSize,
     page,
     pageSize,
+    donvi,
     loadData,
     toast,
 }) => {
@@ -188,15 +189,19 @@ const TableDM_PhongBan = ({
                     ></Column>
                     <Column
                         headerClassName="table__header text-lg bg-blue-600 text-white font-semibold justify-center"
-                        field="ten_dviqly"
-                        header="TÊN ĐƠN VỊ QUẢN LÝ"
+                        field="ma_dviqly"
+                        header="Mã đơn vị quản lý"
+                       
+                    ></Column>
+                    <Column
+                        headerClassName="table__header text-lg bg-blue-600 text-white font-semibold justify-center"
+                        field="dm_donvi_id"
+                        header="Tên đơn vị"
                         body={(rowData) => {
-                            return (
-                                <span style={{ textTransform: "capitalize" }}>
-                                    {rowData.ten_dviqly.toLowerCase()}
-                                </span>
-                            );
+                            let nameDv= donvi.find(item=>item.id===rowData.dm_donvi_id)?.ten
+                                return <span>{nameDv}</span>
                         }}
+                       
                     ></Column>
                     <Column
                         headerClassName="table__header text-lg bg-blue-600 text-white font-semibold justify-center"

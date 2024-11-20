@@ -287,7 +287,7 @@ const DonVi = () => {
                     value={formFilter.ma}
                     onChange={(e) => handleChangeFilter("ma", e.target.value)}
                     style={{ width: '100%' }}
-                  />
+                  />  
                 </div>
                 <div className="field" style={{ width: '50%' }}>
                   <label>Tên đơn vị</label>
@@ -341,7 +341,7 @@ const DonVi = () => {
                 />
                 <Column
                   field="ma_dviqly"
-                  header='Mã Đơn Vị Quản Lý'
+                  header='Mã ĐVQL'
                   headerStyle={{ backgroundColor: '#1445a7', color: '#fff' }}
                 />
                 <Column
@@ -362,9 +362,8 @@ const DonVi = () => {
                     const district = province?.districts?.find(d => d.code === Number.parseInt(rowData.dm_quanhuyen_id));
                     return district ? district.name : 'Không có';
                   }}
-                  filter
-                  filterMatchMode="contains"
-                  filterPlaceholder="Tìm huyện"
+                  
+                
                 />
                 <Column
                   header='Thao tác'

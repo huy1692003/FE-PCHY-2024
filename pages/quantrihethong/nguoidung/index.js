@@ -28,9 +28,9 @@ const initSearch = {
     "hO_TEN": "",
     "teN_DANG_NHAP": "",
     "tranG_THAI": -1,
-    "dM_DONVI_ID": "",
-    "dM_PHONGBAN_ID": "",
-    "dM_CHUCVU_ID": "",
+    "dM_DONVI_ID": null,
+    "dM_PHONGBAN_ID": null,
+    "dM_CHUCVU_ID": null,
     "pageIndex": 1,
     "pageSize": 10
 }
@@ -241,24 +241,29 @@ const NguoiDung = () => {
                 <Panel header="Tìm kiếm">
                     <div className='flex flex-wrap p-fluid gap-3'>
                         <div className='field w-4' >
-                            <label>Họ tên</label>
-                            <InputText value={searchTerm.hO_TEN} onChange={(e) => setSearchTerm({ ...searchTerm, hO_TEN: e.target.value })} placeholder='Nhập họ tên cần tìm' type='search' style={{ width: '100%' }} />
+                            <label>Đơn vị</label>
+                            <Dropdown  value={searchTerm.dM_DONVI_ID} filter onChange={(e) => setSearchTerm({ ...searchTerm, dM_DONVI_ID: e.target.value })} placeholder='-- Chọn đơn vị --' optionLabel='name' optionValue='id' options={DM_DONVI} />
                         </div>
+                      
                         <div className='field w-4' >
-                            <label>Tên đăng nhập</label>
-                            <InputText value={searchTerm.teN_DANG_NHAP} onChange={(e) => setSearchTerm({ ...searchTerm, teN_DANG_NHAP: e.target.value })} placeholder='Nhập tên đăng nhập cần tìm' type='search' style={{ width: '100%' }} />
+                            <label>Phòng ban</label>
+                            <Dropdown showClear value={searchTerm.dM_PHONGBAN_ID} filter onChange={(e) => setSearchTerm({ ...searchTerm, dM_PHONGBAN_ID: e.target.value })} placeholder='-- Chọn phòng ban --' optionLabel='name' optionValue='id' options={DM_PHONGBAN.filter(s => s.dm_donvi_id === searchTerm.dM_DONVI_ID)} />
                         </div>
                         <div className='field w-3' >
-                            <label>Trạng thái</label>
-                            <Dropdown value={searchTerm.tranG_THAI} onChange={(e) => setSearchTerm({ ...searchTerm, tranG_THAI: e.target.value })} placeholder='-- Chọn trạng thái --' optionLabel='name' optionValue='id' options={[{ id: -1, name: '-- Tất cả --' }, { id: 1, name: 'Còn hiệu lực' }, { id: 0, name: 'Hết hiệu lực' }]} />
-                        </div>
-                        <div className='field w-4' >
-                            <label>Đơn vị</label>
-                            <Dropdown value={searchTerm.dM_DONVI_ID} filter onChange={(e) => setSearchTerm({ ...searchTerm, dM_DONVI_ID: e.target.value })} placeholder='-- Chọn đơn vị --' optionLabel='name' optionValue='id' options={DM_DONVI} />
-                        </div>
-                        <div className='field w-4' >
                             <label>Chức vụ</label>
-                            <Dropdown value={searchTerm.dM_CHUCVU_ID} filter placeholder='-- Tất cả --' optionLabel='name' optionValue='id' onChange={(e) => setSearchTerm({ ...searchTerm, dM_CHUCVU_ID: e.target.value })} options={DM_CHUCVU} />
+                            <Dropdown showClear value={searchTerm.dM_CHUCVU_ID} filter placeholder='-- Tất cả --' optionLabel='name' optionValue='id' onChange={(e) => setSearchTerm({ ...searchTerm, dM_CHUCVU_ID: e.target.value })} options={DM_CHUCVU} />
+                        </div>
+                        <div className='field w-4' >
+                            <label>Trạng thái</label>
+                            <Dropdown  value={searchTerm.tranG_THAI} onChange={(e) => setSearchTerm({ ...searchTerm, tranG_THAI: e.target.value })} placeholder='-- Chọn trạng thái --' optionLabel='name' optionValue='id' options={[{ id: -1, name: '-- Tất cả --' }, { id: 1, name: 'Còn hiệu lực' }, { id: 0, name: 'Hết hiệu lực' }]} />
+                        </div>
+                        <div className='field w-4' >
+                            <label>Họ tên</label>
+                            <InputText value={searchTerm.hO_TEN} onChange={(e) => setSearchTerm({ ...searchTerm, hO_TEN: e.target.value })} placeholder='Nhập họ tên ' type='search' style={{ width: '100%' }} />
+                        </div>
+                        <div className='field w-3' >
+                            <label>Tên đăng nhập</label>
+                            <InputText value={searchTerm.teN_DANG_NHAP} onChange={(e) => setSearchTerm({ ...searchTerm, teN_DANG_NHAP: e.target.value })} placeholder='Nhập tên đăng nhập ' type='search' style={{ width: '100%' }} />
                         </div>
                     </div>
                     <div className='flex justify-content-center mt-2'>
@@ -281,8 +286,8 @@ const NguoiDung = () => {
                         <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
                         <Column field="hO_TEN" header="Họ tên" className="w-2" />
                         <Column field="teN_DANG_NHAP" header="Tên đăng nhập" className="w-2" />
-                        <Column field="teN_DONVI" header="Tên Đơn vị" className="w-3" />
-                        <Column field="email" header="Email" className="w-2" />
+                        <Column field="teN_DONVI" header="Tên đơn vị" className="w-3" />
+                        <Column field="teN_PHONGBAN" header="Tên phòng ban" className="w-2" />
                         <Column field="teN_CHUCVU" header="Chức vụ" className="w-2" />
                         <Column field="tranG_THAI" header="Trạng thái" body={(row) => <span>{`${row.tranG_THAI === 0 ? "Không" : "Còn"} hiệu lực`}</span>} className="w-2" />
                         <Column header="Thao tác" style={{ width: 100 }} body={(rowData) => {

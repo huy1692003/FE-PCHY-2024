@@ -34,6 +34,6 @@ export const delete_DM_DONVI = async (id) => {
 };
 
 export const get_All_DM_DONVI = async () => {
-  const res = await apiClient.get("/DM_DONVI/get_All_DM_DONVI");
+  const res = await apiClient.get("/DM_DONVI/get_All_DM_DONVI?ma_dviqly=" + JSON.parse(sessionStorage.getItem("current_MADVIQLY")));
   return res.data;
 };

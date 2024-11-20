@@ -90,7 +90,7 @@ export const InputDM_PHONGBANModal = ({
     console.log(phongBan);
     try {
       if (handleCreate()) {
-        const result = await insertDM_PHONGBAN({
+         const result = await insertDM_PHONGBAN({
           ...phongBan,
           nguoi_tao: "1",
         });
@@ -162,7 +162,7 @@ export const InputDM_PHONGBANModal = ({
             Chọn đơn vị
           </label>
           <Dropdown
-            value={donViQuanLy}
+            value={phongBan.dm_donvi_id}
             options={dsDonViQuanLy}
             onChange={(e) => {
               setPhongBan({ ...phongBan, dm_donvi_id: e.value });

@@ -80,14 +80,44 @@ export const DialogForm = ({ isAdd, formData, setFormData, visible, setVisible, 
                 });
                 return false;
             }
-            if (isAdd && !formData["mat_khau"]) {
-                toast.current.show({
-                    severity: 'error',
-                    summary: 'Thông báo!',
-                    detail: `Trường mật khẩu không được để trống.`,
-                    life: 3000
-                });
-                return false;
+            if (isAdd) {
+                const password = formData["mat_khau"];
+                if (!password) {
+                    toast.current.show({
+                        severity: 'error',
+                        summary: 'Thông báo!',
+                        detail: `Trường mật khẩu không được để trống.`,
+                        life: 3000
+                    });
+                    return false;
+                }
+                if (password.length <= 7) {
+                    toast.current.show({
+                        severity: 'error',
+                        summary: 'Thông báo!',
+                        detail: `Mật khẩu phải từ 8 kí tự.`,
+                        life: 3000
+                    });
+                    return false;
+                }
+                if (!/[A-Z]/.test(password)) {
+                    toast.current.show({
+                        severity: 'error',
+                        summary: 'Thông báo!',
+                        detail: `Mật khẩu phải chứa ít nhất một chữ hoa.`,
+                        life: 3000
+                    });
+                    return false;
+                }
+                if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+                    toast.current.show({
+                        severity: 'error',
+                        summary: 'Thông báo!',
+                        detail: `Mật khẩu phải chứa ít nhất một ký tự đặc biệt.`,
+                        life: 3000
+                    });
+                    return false;
+                }
             }
         }
         return true;
@@ -131,7 +161,7 @@ export const DialogForm = ({ isAdd, formData, setFormData, visible, setVisible, 
                     {/* Tên đăng nhập và mật khẩu */}
                     <FormField label="Tên đăng nhập" value={formData.ten_dang_nhap} onChange={handleInputChange} id="ten_dang_nhap" />
                     {isAdd && <FormField label="Mật khẩu" value={formData.mat_khau} onChange={handleInputChange} id="mat_khau" />}
-                    {/* Validate thêm trường mật khẩu trên 8 kí tự  */}
+                    {/* Validate thêm trường mật khẩu trên 8 kí tự ... */}
 
                     <FormField label="Họ tên" value={formData.ho_ten} onChange={handleInputChange} id="ho_ten" />
                     {/* Chức vụ và trạng thái */}

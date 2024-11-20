@@ -1,7 +1,8 @@
 import { apiClient } from "../../constants/api";
 
 export const searchDM_PHONGBAN = async (data) => {
-  const res = await apiClient.post("/DM_PHONGBAN/search_DM_PHONGBAN", data);
+  console.log({...data,ma_dviqly:JSON.parse(sessionStorage.getItem("current_MADVIQLY"))})
+  const res = await apiClient.post("/DM_PHONGBAN/search_DM_PHONGBAN", {...data,ma_dviqly:JSON.parse(sessionStorage.getItem("current_MADVIQLY"))});
   return res.data;
 };
 
