@@ -12,6 +12,7 @@ import { ConfirmDialog } from "primereact/confirmdialog";
 import { Dropdown } from "primereact/dropdown";
 import { HT_NHOMQUYEN } from "../../../models/HT_NHOMQUYEN";
 import moment from 'moment';
+import { propSortAndFilter } from "../../../constants/propGlobal";
 
 const TableVaiTro = ({
   setVisible,
@@ -115,7 +116,7 @@ const TableVaiTro = ({
           style={{ width: "250px" }}
           value={globalFilterValue}
           onChange={onGlobalFilterChange}
-          placeholder="Nhập thông tin để tìm kiếm"
+          placeholder="Tìm kiếm"
         />
       </div>
     );
@@ -140,12 +141,13 @@ const TableVaiTro = ({
           rows={pageSize}
           rowkey="id"
           rowsPerPageOptions={[5, 10]}
-          className="datatable-responsive mt-5"
+          className="datatable-responsive mt-3"
           showGridlines
 
           paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
         >
           <Column
+          
             field="STT"
             header="STT"
             headerStyle={{
@@ -157,16 +159,9 @@ const TableVaiTro = ({
             }}
           ></Column>
 
-          {/* <Column
-            field="nhom_id"
-            header="ID Nhóm"
-            headerStyle={{
-              backgroundColor: "#1445a7",
-              color: "#fff",
-            }}
-          ></Column> */}
 
           <Column
+          {...propSortAndFilter}
             field="ten_nhom"
             header="Tên vai trò"
             headerStyle={{
@@ -175,28 +170,10 @@ const TableVaiTro = ({
             }}
           ></Column>
 
-          {/* <Column
-            field="ngay_tao"
-            header="Ngày tạo"
-            headerStyle={{
-              backgroundColor: "#1445a7",
-              color: "#fff",
-            }
-
-            }
-            body={(rowData) => moment(rowData.ngay_tao).format('DD/MM/YYYY')} // Định dạng ngày ở đây
-          ></Column> */}
-
-          {/* <Column
-            field="nguoi_tao"
-            header="Người tạo"
-            headerStyle={{
-              backgroundColor: "#1445a7",
-              color: "#fff",
-            }}
-          ></Column> */}
+          
 
           <Column
+          {...propSortAndFilter}
             field="ten"
             header="Đơn vị quản lý"
             headerStyle={{

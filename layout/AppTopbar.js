@@ -15,6 +15,7 @@ import { PrimeIcons } from "primereact/api";
 import { OverlayPanel } from "primereact/overlaypanel";
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { Dropdown } from "primereact/dropdown";
+import { Button } from 'primereact/button';
 
 // eslint-disable-next-line react/display-name
 const AppTopbar = forwardRef((props, ref) => {
@@ -170,6 +171,7 @@ const AppTopbar = forwardRef((props, ref) => {
                     <div className="menuitem">
                         <Dropdown
                             tooltip="Chuyển đơn vị"
+                            tooltipOptions={{ position: 'left' }}
                             value={selectedDonVi}
                             filter
                             onChange={(e) => {
@@ -189,7 +191,7 @@ const AppTopbar = forwardRef((props, ref) => {
 
                 </div>
 
-                <div onClick={()=>logout()} className="p-menuitem" style={{ cursor: "pointer" }} >
+                <div onClick={()=>logout()}  className="p-menuitem" style={{ cursor: "pointer" }} >
                     <button
                         tooltip="Đăng xuất"
                         title="Đăng xuất"
@@ -201,7 +203,7 @@ const AppTopbar = forwardRef((props, ref) => {
                     </button>
                     
                 </div>
-            </div>
+</div>
         </div>
     );
 

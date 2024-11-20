@@ -40,3 +40,39 @@
         }
     }
 }
+/* Tùy chỉnh biểu tượng sortable cho tất cả các Column */
+.p-column-sortable .p-sortable-column .p-sortable-column-icon {
+    font-size: 18px; /* Thay đổi kích thước icon sortable */
+    color: red; /* Thay đổi màu sắc icon sortable */
+}
+
+/* Tùy chỉnh biểu tượng filter cho tất cả các Column */
+.p-column-filter .p-column-filter-icon {
+    font-size: 18px; /* Thay đổi kích thước icon filter */
+    color: blue; /* Thay đổi màu sắc icon filter */
+}
+
+/* Tùy chỉnh biểu tượng sortable cho Column có class custom-column */
+.custom-column .p-sortable-column .p-sortable-column-icon {
+    font-size: 20px; /* Thay đổi kích thước icon sortable */
+    color: green; /* Thay đổi màu sắc icon sortable */
+}
+
+/* Tùy chỉnh biểu tượng filter cho Column có class custom-column */
+.custom-column .p-column-filter .p-column-filter-icon {
+    font-size: 20px; /* Thay đổi kích thước icon filter */
+    color: orange; /* Thay đổi màu sắc icon filter */
+}
+
+/* globalStyles.css */
+.p-datatable .p-column-header .p-sortable-column .p-sortable-header-icon {
+    color: white !important; /* Change icon color to white */
+    font-size: 1.5rem !important;; /* Increase icon size */
+}
+
+.p-datatable .p-column-header .p-column-filter-icon {
+    color: white !important; /* Change filter icon color to white */
+    font-size: 1.5rem !important;; /* Increase filter icon size */
+}
+
+

@@ -8,6 +8,8 @@ import { InputDM_PHONGBANModal } from "./InputDM_PHONGBANModal";
 import { Dropdown } from "primereact/dropdown";
 import { Divider } from "primereact/divider";
 import { Card } from "primereact/card";
+import { Panel } from "primereact/panel";
+
 import { DM_PHONGBAN } from "../../../models/DM_PHONGBAN";
 import { searchDM_PHONGBAN } from "../../../services/quantrihethong/DM_PHONGBANService";
 import { get_All_DM_DONVI } from "../../../services/quantrihethong/DM_DONVIService";
@@ -82,7 +84,7 @@ const PhongBan = () => {
             </h3> */}
           </div>
 
-          <Card title="Tìm kiếm" className="mb-4">
+          <Panel header="Tìm kiếm" className="mb-4">
             <Divider style={{ marginTop: "0", marginBottom: "10px" }} />
 
             <div className="flex flex-col">
@@ -160,12 +162,13 @@ const PhongBan = () => {
             </div>
             <div className="flex mt-3" style={{ justifyContent: "center" }}>
               <Button
+              style={{backgroundColor: '#1445a7', color: '#fff'  }}
                 label="Tìm kiếm"
                 onClick={onClinkSearchBtn}
                 severity="info"
               ></Button>
             </div>
-          </Card>
+          </Panel>
 
           <TableDM_PhongBan
             donvi={donViQuanLy}

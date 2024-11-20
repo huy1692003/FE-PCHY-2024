@@ -17,8 +17,8 @@ import { Dialog } from "primereact/dialog";
 import Head from "next/head";
 import provinceData from '/public/demo/data/data_province.json'
 import { delete_DM_DONVI, get_All_DM_DONVI, getDM_DONVI_ByID, insert_DM_DONVI, search_DM_DONVI, update_DM_DONVI } from "../../../services/quantrihethong/DM_DONVIService";
-import { Password } from "primereact/password";
-import { getAllD_DVIQLY, } from "../../../services/quantrihethong/DM_DVIQLYService";
+import { useTableSort } from "../../../hooks/useTableSort";
+import { propSortAndFilter } from "../../../constants/propGlobal";
 
 const DonVi = () => {
   const [page, setPage] = useState(1);
@@ -38,11 +38,15 @@ const DonVi = () => {
   const [selectedDonVis, setSelectedDonVis] = useState([]);
   const toast = useRef(null);
 
+  const { sortField, sortOrder, handleSort } = useTableSort();
+
+
+
   const loadDataDVI = useCallback(async () => {
     try {
       const items = await search_DM_DONVI({ pageIndex: page, pageSize, ...keyFilter });
       setArr_DONVI(items.data);
-      
+
       setTotalRecords(items.totalItems);
       setPageCount(Math.ceil(items.totalItems / pageSize));
     } catch (err) {
@@ -140,7 +144,7 @@ const DonVi = () => {
     try {
       await Promise.all(selectedDonVis.map(donVi => delete_DM_DONVI(donVi.id)));
       toast.current.show({ severity: 'success', summary: 'Thành công', detail: 'Các đơn vị đã được xóa', life: 3000 });
-      setPage(selectedMenus.length===pageSize?(page>1?page-1:1):page);
+      setPage(selectedMenus.length === pageSize ? (page > 1 ? page - 1 : 1) : page);
       setSelectedDonVis([]);
 
       loadDataDVI();
@@ -287,7 +291,7 @@ const DonVi = () => {
                     value={formFilter.ma}
                     onChange={(e) => handleChangeFilter("ma", e.target.value)}
                     style={{ width: '100%' }}
-                  />  
+                  />
                 </div>
                 <div className="field" style={{ width: '50%' }}>
                   <label>Tên đơn vị</label>
@@ -301,7 +305,7 @@ const DonVi = () => {
               </div>
               <div className='flex justify-content-center mt-2'>
                 <Button label='Tìm kiếm' style={{ backgroundColor: '#1445a7' }} onClick={() => {
-                  console.log(formFilter);  
+                  console.log(formFilter);
                   setPage(1);
                   setPageSize(5);
                   setKeyFilter(formFilter);
@@ -315,7 +319,7 @@ const DonVi = () => {
                   style={{ width: 300 }}
                   value={searchTerm}
                   onChange={handleSearchChange}
-                  placeholder="Tìm kiếm..."
+                  placeholder="Tìm kiếm"
                 />
               </div>
 
@@ -335,8 +339,11 @@ const DonVi = () => {
                   }}
                 />
                 <Column
+                  {...propSortAndFilter}  
+                                
                   field="ten"
-                  header='Tên đơn vị'
+                  style={{ cursor: 'pointer' }}
+                  header="Tên đơn vị"
                   headerStyle={{ backgroundColor: '#1445a7', color: '#fff' }}
                 />
                 <Column
@@ -345,6 +352,7 @@ const DonVi = () => {
                   headerStyle={{ backgroundColor: '#1445a7', color: '#fff' }}
                 />
                 <Column
+                  {...propSortAndFilter}
                   field="dm_tinhthanh_id"
                   header="Tỉnh"
                   headerStyle={{ backgroundColor: '#1445a7', color: '#fff' }}
@@ -354,6 +362,7 @@ const DonVi = () => {
                   }}
                 />
                 <Column
+                  {...propSortAndFilter}
                   field="dm_quanhuyen_id"
                   header="Huyện"
                   headerStyle={{ backgroundColor: '#1445a7', color: '#fff' }}
@@ -362,8 +371,8 @@ const DonVi = () => {
                     const district = province?.districts?.find(d => d.code === Number.parseInt(rowData.dm_quanhuyen_id));
                     return district ? district.name : 'Không có';
                   }}
-                  
-                
+
+
                 />
                 <Column
                   header='Thao tác'
@@ -498,6 +507,7 @@ const DonVi = () => {
         </div>
       </div>
       <ConfirmDialog />
+      
     </React.Fragment>
   );
 };

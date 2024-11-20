@@ -30,6 +30,7 @@ const Menu = () => {
   const [formData, setFormData] = useState(HT_MENU);
   const [selectedMenus, setSelectedMenus] = useState([]);
   const [selectedNodeKeys, setSelectedNodeKeys] = useState({});
+   const [globalFilter, setGlobalFilter] = useState('');
 
 
   // State to store input value and filtered menu items
@@ -45,6 +46,18 @@ const Menu = () => {
       [field]: value,
     }));
   };
+
+
+  const [expandedKeys, setExpandedKeys] = useState({});
+
+useEffect(() => {
+  if (arr_MENU.length > 0) {
+    const allExpanded = expandAllNodes(arr_MENU);
+    setExpandedKeys(allExpanded); // Cập nhật trạng thái mở rộng
+  }
+}, [arr_MENU]);
+
+
   const headerList = (options) => {
     const className = `${options.className} justify-content-space-between`;
 
@@ -325,24 +338,23 @@ const Menu = () => {
       setFilteredMenu(filtered);
     }
   }, [searchTerm, arr_MENU]);
-  const MAX_LENGTH = 8;
-  // Hàm lấy danh sách menu con của mỗi parent khi dropdown được click
-  const renderSubMenuDropdown = (rowData) => {
-    const subMenuData = arr_MENU.filter(
-      (menu) => menu.parent_id === rowData.id
-    ); // Lọc các menu con của parent
-    // Kiểm tra nếu không có menu con, trả về thông báo "Không có"
-    if (subMenuData.length === 0) {
-      return <span>Không có</span>;
-    }
-    return (
-      <Dropdown
-        options={subMenuData}
-        optionLabel="ten_menu"
-        placeholder="Nhấn để xem"
-      />
-    );
+
+  const expandAllNodes = (nodes) => {
+    const expanded = {};
+  
+    const traverse = (node) => {
+      expanded[node.key] = true; // Đánh dấu node này là mở rộng
+      if (node.children) {
+        node.children.forEach(traverse); // Tiếp tục cho các children
+      }
+    };
+  
+    nodes.forEach(traverse);
+    return expanded;
   };
+  
+
+
   const buildTree = (menuItems) => {
     const map = {};
     const roots = [];
@@ -399,108 +411,29 @@ const Menu = () => {
          
             {/*start_table */}
             <Panel headerTemplate={headerList} className="mt-3 mb-2">
-              {/* <div style={{ textAlign: "right " }}>
-                {" "}
-                <InputText
-                  style={{ width: 300 }}
-                  placeholder="Tìm kiếm..."
-                  value={searchTerm}
-                  onChange={handleSearchChange} // Update search term and filter menu
-                />
-              </div> */}
-              {/* <DataTable
-                value={filteredMenu}
-                className="datatable-responsive mt-5"
-                showGridlines
-                paginator // Hiển thị phân trang
-                rows={10} // Số mục trên mỗi trang
-                rowsPerPageOptions={[5, 10, 20]} // Các tùy chọn cho số mục trên mỗi trang
-                paginatorTemplate="RowsPerPageDropdown PageLinks" // Hiển thị bộ chọn số hàng và liên kết trang
-                selection={selectedMenus}
-                onSelectionChange={(e) => setSelectedMenus(e.value)}
-              >
-                <Column
-                  selectionMode="multiple"
-                  headerStyle={{
-                    width: "4rem",
-                    backgroundColor: "#1445a7",
-                    color: "#fff",
-                  }}
-                ></Column>
-                <Column
-                  field="id"
-                  header="Mã Menu"
-                  headerStyle={{ backgroundColor: "#1445a7", color: "#fff" }}
-                  hidden={true}
-                ></Column>
-
-                <Column
-                  field="ten_menu"
-                  header="Tên Menu"
-                  headerStyle={{ backgroundColor: "#1445a7", color: "#fff" }}
-                ></Column>
-
-                <Column
-                  field="icon"
-                  header="Biểu tượng"
-                  headerStyle={{ backgroundColor: "#1445a7", color: "#fff" }}
-                  body={(rowData) => <i className={`pi ${rowData.icon}`} />}
-                />
-                <Column
-                  header="Danh sách Menu con"
-                  headerStyle={{ backgroundColor: "#1445a7", color: "#fff" }}
-                  body={renderSubMenuDropdown} // Gọi hàm lấy menu con trực tiếp khi render
-                />
-
-                <Column
-                  header="Thao tác"
-                  headerStyle={{
-                    backgroundColor: "#1445a7",
-                    color: "#fff",
-                    width: "6rem",
-                  }}
-                  body={(rowData) => (
-                    <div className="flex justify-content-between gap-3">
-                      <Button
-                        icon="pi pi-pencil"
-                        tooltip="Sửa"
-                        onClick={() => handleEdit(rowData)}
-                        style={{ backgroundColor: "#1445a7", color: "#fff" }}
-                      />
-                      <Button
-                        icon="pi pi-trash"
-                        tooltip="Xóa"
-                        onClick={() => onDeleteConfirm(rowData)}
-                        style={{ backgroundColor: "#1445a7", color: "#fff" }}
-                      />
-                    </div>
-                  )}
-                ></Column>
-              </DataTable> */}
+            <div className="flex justify-content-end mb-2 ">                
+                    <InputText className="w-3" type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Tìm kiếm" />              
+            </div>
               <TreeTable
+              filterMode={"lenient"}
+              globalFilter={globalFilter}
             selectionKeys={selectedNodeKeys}
             onSelectionChange={handleSelectionChange}
             selectionMode="checkbox"
-            // onSelect={(e) => {
-
-            //   setNodes(prevNodes => {
-
-            //     console.log(prevNodes)
-
-            //     return [...prevNodes, e.node]
-            //   })
-
-            // }}
+            paginator rows={5} rowsPerPageOptions={[5, 10, 25]}
+            expandedKeys={expandedKeys} // Thêm trạng thái mở rộng
+            onToggle={(e) => setExpandedKeys(e.value)} // Cập nhật khi có thay đổi            
             value={arr_MENU}
           >
-            <Column field="id" header="ID" expander></Column>
-            <Column field="ten_menu" header="Tên menu"></Column>
+            <Column field="id" header=" ID Menu" expander   headerStyle={{ backgroundColor: '#1445a7', color: '#fff', width:"25%"}}></Column>
+            <Column field="ten_menu" header="Tên Menu"   headerStyle={{ backgroundColor: '#1445a7', color: '#fff'  }}></Column>
             
             <Column
               field="icon"
               header="Icon"
+              headerStyle={{ backgroundColor: '#1445a7', color: '#fff', width: "8%" }}
               body={(rowData) => <i className={`${rowData.data.icon}`} />}
-              style={{ width: "10%" }}
+              
             ></Column>
             <Column
                   header="Thao tác"

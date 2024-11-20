@@ -3,8 +3,10 @@ import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { DataTable } from "primereact/datatable";
 import { ConfirmDialog } from "primereact/confirmdialog";
+import { propSortAndFilter } from "../../../constants/propGlobal";
 
 // import { IconField } from "primereact/iconfield";
+import { Panel } from "primereact/panel";
 // import { InputIcon } from "primereact/inputicon";
 import { Toast } from "primereact/toast";
 import { Card } from "primereact/card";
@@ -97,27 +99,22 @@ const TableDM_PhongBan = ({
         );
     };
 
-    const header = (
-        <div
-            className="card-header flex  w-full p-4"
-            style={{ alignItems: "center", justifyContent: "space-between" }}
-        >
-            <h3 className="m-0">Danh sách</h3>
-            <Button
-                label="Thêm mới"
-                icon="pi pi-plus"
-                raised
-                style={{
-                    backgroundColor: "#1445a7",
-                }}
-                onClick={() => {
-                    setVisible(true);
-                    setIsUpdate(false);
-                }}
-            />
-        </div>
-    );
-
+    
+    const headerList = (options) => {
+        const className = `${options.className} justify-content-space-between`;
+    
+        return (
+          <div className={className}>
+            <span className="font-bold text-2xl">Danh sách</span>
+            <div>
+              {/* {selectedDonVis.length > 0 && <Button label="Xóa nhiều" style={{ backgroundColor: '#d9534f', marginRight: '8px' }} onClick={onDeleteSelectedConfirm} disabled={!selectedDonVis.length}></Button>} */}
+              <Button label="Thêm mới" style={{ backgroundColor: '#1445a7' }} onClick={()=>{
+                 setVisible(true);
+                    setIsUpdate(false);}}></Button>
+            </div>
+          </div>
+        );
+      };
     const clearFilter = () => {
         initFilters();
     };
@@ -145,7 +142,7 @@ const TableDM_PhongBan = ({
                     style={{ width: "250px" }}
                     value={globalFilterValue}
                     onChange={onGlobalFilterChange}
-                    placeholder="Nhập thông tin để tìm kiếm"
+                    placeholder="Tìm kiếm"
                 />
             </div>
         );
@@ -153,11 +150,11 @@ const TableDM_PhongBan = ({
 
     return (
         <>
-            <Card header={header}>
+            <Panel headerTemplate={headerList}>
                 <Divider style={{ marginTop: "0", marginBottom: "10px" }} />
                 <DataTable
                     value={data.data}
-                    // globalFilter={['ten', 'trang_thai']}
+                   
                     showGridlines
                     stripedRows
                     header={renderHeader()}
@@ -172,41 +169,40 @@ const TableDM_PhongBan = ({
                     <Column
                         field="STT"
                         header="STT"
-                        headerClassName="text-lg bg-blue-600 text-white font-semibold justify-center"
+                        headerStyle={{ backgroundColor: '#1445a7', color: '#fff'  }}
                         body={(rowData, { rowIndex }) => {
                             return rowIndex + 1;
                         }}
                     ></Column>
-                    {/* <Column
-                        headerClassName="table__header text-lg bg-blue-600 text-white font-semibold justify-center"
-                        field="ma"
-                        header="MÃ PHÒNG BAN"
-                    ></Column> */}
+                  
                     <Column
-                        headerClassName="table__header text-lg bg-blue-600 text-white font-semibold justify-center"
+{...propSortAndFilter}
+                       headerStyle={{ backgroundColor: '#1445a7', color: '#fff'  }}
                         field="ten"
-                        header="TÊN PHÒNG BAN"
+                        header="Tên phòng ban"
                     ></Column>
                     <Column
-                        headerClassName="table__header text-lg bg-blue-600 text-white font-semibold justify-center"
+                    {...propSortAndFilter}
+                       headerStyle={{ backgroundColor: '#1445a7', color: '#fff'  }}
                         field="ma_dviqly"
-                        header="Mã đơn vị quản lý"
+                        header="Mã ĐVQL"
                        
                     ></Column>
                     <Column
-                        headerClassName="table__header text-lg bg-blue-600 text-white font-semibold justify-center"
+                       
+                       headerStyle={{ backgroundColor: '#1445a7', color: '#fff'  }}
                         field="dm_donvi_id"
                         header="Tên đơn vị"
                         body={(rowData) => {
-                            let nameDv= donvi.find(item=>item.id===rowData.dm_donvi_id)?.ten
+                            let nameDv= donvi?.find(item=>item.id===rowData.dm_donvi_id)?.ten
                                 return <span>{nameDv}</span>
                         }}
                        
                     ></Column>
                     <Column
-                        headerClassName="table__header text-lg bg-blue-600 text-white font-semibold justify-center"
+                       headerStyle={{ backgroundColor: '#1445a7', color: '#fff'  }}
                         field="trang_thai"
-                        header="TRẠNG THÁI"
+                        header="Trạng thái"
                         body={(rowData) => {
                             return rowData.trang_thai === 1
                                 ? "Có hiệu lực"
@@ -214,9 +210,9 @@ const TableDM_PhongBan = ({
                         }}
                     ></Column>
                     <Column
-                        headerClassName="table__header text-lg bg-blue-600 text-white font-semibold justify-center"
+                       headerStyle={{ backgroundColor: '#1445a7', color: '#fff'  }}
                         body={buttonOption}
-                        header="THAO TÁC "
+                        header="Thao tác "
                     ></Column>
                 </DataTable>
                 <div
@@ -262,7 +258,7 @@ const TableDM_PhongBan = ({
                         placeholder="Select rows per page"
                     />
                 </div>
-            </Card>
+            </Panel>
 
             <Toast ref={toast} />
             <ConfirmDialog

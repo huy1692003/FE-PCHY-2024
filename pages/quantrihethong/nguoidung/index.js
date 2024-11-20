@@ -21,6 +21,7 @@ import { get_All_DM_DONVI } from '../../../services/quantrihethong/DM_DONVIServi
 import { getAll_DM_CHUCVU } from '../../../services/quantrihethong/DM_CHUCVUService';
 import { searchDM_PHONGBAN } from '../../../services/quantrihethong/DM_PHONGBANService';
 import { DialogResetPass } from './DialogResetPass';
+import { propSortAndFilter } from "../../../constants/propGlobal";
 
 
 
@@ -213,7 +214,7 @@ const NguoiDung = () => {
                         type="search"
                         value={filter || ''}
                         onChange={(e) => onFilterChangeTable(e)}
-                        placeholder="Nhập từ khóa"
+                        placeholder="Tìm kiếm"
                     />
                     <Button icon="pi pi-plus-circle" style={{ backgroundColor: "#1146A6" }} className='background-blue text-sm' label='Thêm mới' onClick={() => {
                         setIsAdd(true);
@@ -283,14 +284,14 @@ const NguoiDung = () => {
                         style={{ fontSize: 12, fontWeight: "" }}
                     >
 
-                        <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
-                        <Column field="hO_TEN" header="Họ tên" className="w-2" />
-                        <Column field="teN_DANG_NHAP" header="Tên đăng nhập" className="w-2" />
-                        <Column field="teN_DONVI" header="Tên đơn vị" className="w-3" />
-                        <Column field="teN_PHONGBAN" header="Tên phòng ban" className="w-2" />
-                        <Column field="teN_CHUCVU" header="Chức vụ" className="w-2" />
-                        <Column field="tranG_THAI" header="Trạng thái" body={(row) => <span>{`${row.tranG_THAI === 0 ? "Không" : "Còn"} hiệu lực`}</span>} className="w-2" />
-                        <Column header="Thao tác" style={{ width: 100 }} body={(rowData) => {
+                        <Column  headerStyle={{ backgroundColor: '#1445a7', color: '#fff' }} selectionMode="multiple" ></Column>
+                        <Column  {...propSortAndFilter} headerStyle={{ backgroundColor: '#1445a7', color: '#fff' }} field="hO_TEN" header="Họ tên" />
+                        <Column  headerStyle={{ backgroundColor: '#1445a7', color: '#fff' }} field="teN_DANG_NHAP" header="Tên đăng nhập" />
+                        <Column {...propSortAndFilter} headerStyle={{ backgroundColor: '#1445a7', color: '#fff' }} field="teN_DONVI" header="Tên đơn vị" />
+                        <Column {...propSortAndFilter} headerStyle={{ backgroundColor: '#1445a7', color: '#fff' }} field="teN_PHONGBAN" header="Tên phòng ban" />
+                        <Column {...propSortAndFilter} headerStyle={{ backgroundColor: '#1445a7', color: '#fff' }} field="teN_CHUCVU" header="Chức vụ" />
+                        <Column  headerStyle={{ backgroundColor: '#1445a7', color: '#fff' }} field="tranG_THAI" header="Trạng thái" style={{ width: "9rem" }} body={(row) => <span>{`${row.tranG_THAI === 0 ? "Không" : "Còn"} hiệu lực`}</span>}  />
+                        <Column  headerStyle={{ backgroundColor: '#1445a7', color: '#fff' }} header="Thao tác" style={{ width: 100 }} body={(rowData) => {
 
                             return (
                                 <span className="flex  w-1">
@@ -301,7 +302,7 @@ const NguoiDung = () => {
                                         )
                                     }} />
                                     <Button size='small' className="w-1rem h-2rem p-3 mr-1" style={{ backgroundColor: "#1146A6" }} icon="pi pi-user-edit" tooltip='Sửa thông tin người dùng' onClick={() => onEdit(rowData)} />
-                                    <Button size='small' className="w-1rem h-2rem p-3 mr-1 p-button-danger" icon="pi pi-trash" tooltip='Xóa người dùng' onClick={() => onDelete(rowData)} />
+                                    <Button size='small' className="w-1rem h-2rem p-3 mr-1" style={{ backgroundColor: "#1146A6" }} icon="pi pi-trash" tooltip='Xóa người dùng' onClick={() => onDelete(rowData)} />
                                     <Button size='small' className="w-1rem h-2rem p-3 mr-1" style={{ backgroundColor: "#1146A6" }} icon="pi pi-sync" tooltip='Reset mật khẩu ' onClick={() => setChangePass({ visible: true, idUser: rowData.id })} />
                                 </span>
                             )
