@@ -35,24 +35,24 @@ const PhongBan = () => {
     { label: "Có hiệu lực", value: 1 },
     { label: "Hết hiệu lực", value: 0 },
   ];
- 
-  useEffect(()=>{
+
+  useEffect(() => {
     const getDSDonViQuanLy = async () => {
-    const results = await get_All_DM_DONVI();
-    setDonViQuanLy(results);
-    }
+      const results = await get_All_DM_DONVI();
+      setDonViQuanLy(results);
+    };
     getDSDonViQuanLy();
-  },[])
+  }, []);
   const loadData = async () => {
     try {
+      const ma_dviqly = JSON.parse(sessionStorage.getItem("current_MADVIQLY"));
       const data = {
         pageIndex: page,
         pageSize: pageSize,
-        ma: options.ma,
+        ma: options.ma !== "" ? options.ma : ma_dviqly,
         ten: options.ten,
         trang_thai: options.trang_thai.value,
       };
-      console.log(data);
       const items = await searchDM_PHONGBAN(data);
       setArrPhongBan(items);
       setPageCount(Math.ceil(items.totalItems / pageSize));
@@ -100,12 +100,10 @@ const PhongBan = () => {
                   }}
                   optionLabel="ten"
                   id="ma_dviqly"
-                  optionValue="id"
+                  optionValue="ma_dviqly"
                   placeholder="Chọn đơn vị "
                   className="w-full mr-2"
-                 
                 />
-                
               </div>
               <div
                 className="form__group grow"
