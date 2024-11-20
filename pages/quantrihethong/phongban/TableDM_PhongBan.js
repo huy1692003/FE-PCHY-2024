@@ -33,6 +33,8 @@ const TableDM_PhongBan = ({
     const [isHide, setIsHide] = useState(false);
     const [id, setId] = useState();
     const [globalFilterValue, setGlobalFilterValue] = useState("");
+    const [selectedRecords, setSelectedRecords] = useState([]);
+    const [isMultiDelete, setIsMultiDelete] = useState(false);
 
     const [filters, setFilters] = useState({
         global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -43,13 +45,23 @@ const TableDM_PhongBan = ({
     const confirm = async () => {
         setIsHide(false);
         try {
-            await deleteDM_PHONGBAN(id);
-            toast.current.show({
-                severity: "success",
-                summary: "Thông báo",
-                detail: "Xóa bản ghi thành công",
-                life: 3000,
-            });
+            if (isMultiDelete) {
+                await Promise.all(selectedRecords.map(record => deleteDM_PHONGBAN(record.id)));
+                toast.current.show({
+                    severity: "success",
+                    summary: "Thông báo",
+                    detail: "Xóa các bản ghi thành công",
+                    life: 3000,
+                });
+            } else {
+                await deleteDM_PHONGBAN(id);
+                toast.current.show({
+                    severity: "success",
+                    summary: "Thông báo",
+                    detail: "Xóa bản ghi thành công",
+                    life: 3000,
+                });
+            }
             loadData();
         } catch (err) {
             console.log(err);
@@ -65,8 +77,6 @@ const TableDM_PhongBan = ({
     const cancel = () => {
         setIsHide(false);
     };
-
-
 
     const buttonOption = (rowData) => {
         return (
@@ -93,13 +103,13 @@ const TableDM_PhongBan = ({
                     onClick={() => {
                         setIsHide(true);
                         setId(rowData.id);
+                        setIsMultiDelete(false);
                     }}
                 />
             </div>
         );
     };
 
-    
     const headerList = (options) => {
         const className = `${options.className} justify-content-space-between`;
     
@@ -107,7 +117,10 @@ const TableDM_PhongBan = ({
           <div className={className}>
             <span className="font-bold text-2xl">Danh sách</span>
             <div>
-              {/* {selectedDonVis.length > 0 && <Button label="Xóa nhiều" style={{ backgroundColor: '#d9534f', marginRight: '8px' }} onClick={onDeleteSelectedConfirm} disabled={!selectedDonVis.length}></Button>} */}
+              {selectedRecords.length > 0 && <Button label="Xóa nhiều" style={{ backgroundColor: '#d9534f', marginRight: '8px' }} onClick={() => {
+                  setIsHide(true);
+                  setIsMultiDelete(true);
+              }} disabled={!selectedRecords.length}></Button>}
               <Button label="Thêm mới" style={{ backgroundColor: '#1445a7' }} onClick={()=>{
                  setVisible(true);
                     setIsUpdate(false);}}></Button>
@@ -115,6 +128,7 @@ const TableDM_PhongBan = ({
           </div>
         );
       };
+
     const clearFilter = () => {
         initFilters();
     };
@@ -154,7 +168,6 @@ const TableDM_PhongBan = ({
                 <Divider style={{ marginTop: "0", marginBottom: "10px" }} />
                 <DataTable
                     value={data.data}
-                   
                     showGridlines
                     stripedRows
                     header={renderHeader()}
@@ -165,15 +178,11 @@ const TableDM_PhongBan = ({
                     rowsPerPageOptions={[5, 10]}
                     className="datatable-responsive"
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                    selection={selectedRecords}
+                    onSelectionChange={(e) => setSelectedRecords(e.value)}
                 >
-                    <Column
-                        field="STT"
-                        header="STT"
-                        headerStyle={{ backgroundColor: '#1445a7', color: '#fff'  }}
-                        body={(rowData, { rowIndex }) => {
-                            return rowIndex + 1;
-                        }}
-                    ></Column>
+                    <Column selectionMode="multiple" headerStyle={{ width: '3em',backgroundColor: '#1445a7', color: '#fff' }}></Column>
+                    {/*  */}
                   
                     <Column
 {...propSortAndFilter}
@@ -265,7 +274,7 @@ const TableDM_PhongBan = ({
                 visible={isHide}
                 onHide={() => setIsHide(false)}
                 header="Xác nhận"
-                message="Bạn có chắc chắn xóa bản ghi này không?"
+                message={isMultiDelete ? "Bạn có chắc chắn xóa các bản ghi này không?" : "Bạn có chắc chắn xóa bản ghi này không?"}
                 icon="pi pi-info-circle"
                 footer={
                     <div>

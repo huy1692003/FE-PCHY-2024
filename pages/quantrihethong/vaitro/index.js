@@ -17,6 +17,8 @@ import TableVaiTro from "./TableVaiTro";
 import ModalInputVaiTro from "./ModalInputVaiTro";
 import { HT_MENU } from "../../../models/HT_MENU";
 import QuanLyMenuVaiTro from "./roleMenuTable";
+import { propSortAndFilter } from "../../../constants/propGlobal";
+
 
 const QuanLyVaiTro = () => {
   const [page, setPage] = useState(1);
@@ -123,6 +125,7 @@ const QuanLyVaiTro = () => {
                 <div className="field">
                   <label>Tên vai trò</label>
                   <InputText
+                    placeholder="Nhập tên vai trò "
                     style={{ width: "100%" }}
                     onChange={(e) => {
                       setOptions({

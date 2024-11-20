@@ -122,7 +122,7 @@ const PhongBan = () => {
                 <InputText
                   id="TEN"
                   style={{ display: "block", width: "90%" }}
-                  placeholder="Tên phòng ban ..."
+                  placeholder="Nhập tên"
                   onChange={(e) => {
                     console.log(e.target.value);
                     setOptions({ ...options, ten: e.target.value });
@@ -155,7 +155,7 @@ const PhongBan = () => {
                   className="w-full mr-2"
                   style={{ width: "90%" }}
                   options={arrTrangThai}
-                  placeholder="Chọn một trạng thái"
+                  placeholder="Chọn trạng thái"
                   value={options.trang_thai.value}
                 ></Dropdown>
               </div>

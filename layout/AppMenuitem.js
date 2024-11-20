@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { Ripple } from 'primereact/ripple';
 import { classNames } from 'primereact/utils';
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { MenuContext } from './context/menucontext';
 
@@ -14,43 +14,29 @@ const AppMenuitem = (props) => {
     const isActiveRoute = item.to && router.pathname === item.to;
     const active = activeMenu === key || activeMenu.startsWith(key + '-');
 
-    useEffect(() => {
-        if (item.to && router.pathname === item.to) {
-            setActiveMenu(key);
-        }
-
-        const onRouteChange = (url) => {
-            if (item.to && item.to === url) {
-                setActiveMenu(key);
-            }
-        };
-
-        router.events.on('routeChangeComplete', onRouteChange);
-
-        return () => {
-            router.events.off('routeChangeComplete', onRouteChange);
-        };
-    }, []);
-
+    // Xử lý sự kiện nhấp vào item menu
     const itemClick = (event) => {
-        //avoid processing disabled items
+        // Tránh xử lý các item bị vô hiệu hóa
         if (item.disabled) {
             event.preventDefault();
             return;
         }
 
-        //execute command
+        // Thực thi command
         if (item.command) {
             item.command({ originalEvent: event, item: item });
         }
 
-        // toggle active state
-        if (item.items) setActiveMenu(active ? props.parentKey : key);
-        else setActiveMenu(key);
+        // Chuyển trạng thái mở/đóng cho menu cha
+        if (item.items) {
+            setActiveMenu(active ? '' : key); // Chuyển trạng thái mở/đóng menu cha
+        } else {
+            setActiveMenu(key); // Mở item nếu đây là một item không có mục con
+        }
     };
 
     const subMenu = item.items && item.visible !== false && (
-        <CSSTransition timeout={{ enter: 1000, exit: 450 }} classNames="layout-submenu" in={props.root ? true : active} key={item.label}>
+        <CSSTransition timeout={{ enter: 300, exit: 200 }} classNames="layout-submenu" in={active} key={item.label}>
             <ul>
                 {item.items.map((child, i) => {
                     return <AppMenuitem item={child} index={i} className={child.badgeClass} parentKey={key} key={child.label} />;
@@ -85,4 +71,4 @@ const AppMenuitem = (props) => {
     );
 };
 
-export default AppMenuitem;
+export default AppMenuitem
