@@ -147,6 +147,23 @@ const ModalInputVaiTro = ({
       }}
     >
       <div className="field">
+        <label htmlFor="ma_dviqly">Đơn vị quản lý</label>
+        <Dropdown
+          value={vaiTro.ma_dviqly}
+          options={dviQLY}
+          onChange={(e) => {
+            setVaiTro({ ...vaiTro, ma_dviqly: e.value });
+            console.log(e.value);
+          }}
+          filter
+          optionLabel="name"
+          optionValue="id"
+          id="MA_DVIQLY"
+          placeholder="Chọn đơn vị"
+          className="w-full"
+        ></Dropdown>
+      </div>
+      <div className="field">
         <label htmlFor="ten_nhom">Tên vai trò</label>
         <InputText
           id="ten_nhom"
@@ -171,23 +188,6 @@ const ModalInputVaiTro = ({
         />
       </div>
 
-      <div className="field">
-        <label htmlFor="ma_dviqly">Đơn vị quản lý</label>
-        <Dropdown
-          value={vaiTro.ma_dviqly}
-          options={dviQLY}
-          onChange={(e) => {
-            setVaiTro({ ...vaiTro, ma_dviqly: e.value });
-            console.log(e.value);
-          }}
-          filter
-          optionLabel="name"
-          optionValue="id"
-          id="MA_DVIQLY"
-          placeholder="Chọn đơn vị"
-          className="w-full"
-        ></Dropdown>
-      </div>
 
       <div className="flex mt-4" style={{ justifyContent: "center" }}>
         <Button

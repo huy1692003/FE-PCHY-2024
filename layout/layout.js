@@ -149,7 +149,7 @@ const Layout = (props) => {
                     <div className="layout-mask"></div>
                 </div>
             </React.Fragment>
-        ) : <Message severity='error' text='Không có quyền truy cập !' className='w-full' />
+        ) : ""
     );
 };
 

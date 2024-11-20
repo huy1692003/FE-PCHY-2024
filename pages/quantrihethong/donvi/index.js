@@ -281,21 +281,18 @@ const DonVi = () => {
             <Panel header="Tìm kiếm">
               <div className="flex justify-content-between p-fluid gap-3">
                 <div className="field" style={{ width: '50%' }}>
-                  <label>Đơn vị quản lý</label>
-                  <Dropdown
-                    filter
+                  <label>Mã đơn vị</label>
+                  <InputText
+                    placeholder="Nhập mã đơn vị "
                     value={formFilter.ma}
-                    options={arr_DONVI_QLY}
-                    onChange={(e) => handleChangeFilter("ma", e.value)}
-                    optionLabel="name"
-                    optionValue="id"
-                    placeholder="Chọn đơn vị"
+                    onChange={(e) => handleChangeFilter("ma", e.target.value)}
+                    style={{ width: '100%' }}
                   />
                 </div>
                 <div className="field" style={{ width: '50%' }}>
                   <label>Tên đơn vị</label>
                   <InputText
-                    placeholder="Nhập tên đơn vị cần tìm kiếm"
+                    placeholder="Nhập tên đơn vị "
                     value={formFilter.ten}
                     onChange={(e) => handleChangeFilter("ten", e.target.value)}
                     style={{ width: '100%' }}
@@ -304,6 +301,7 @@ const DonVi = () => {
               </div>
               <div className='flex justify-content-center mt-2'>
                 <Button label='Tìm kiếm' style={{ backgroundColor: '#1445a7' }} onClick={() => {
+                  console.log(formFilter);  
                   setPage(1);
                   setPageSize(5);
                   setKeyFilter(formFilter);

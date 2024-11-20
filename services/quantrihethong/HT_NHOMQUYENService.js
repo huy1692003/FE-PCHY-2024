@@ -16,7 +16,7 @@ export const delete_HT_NHOMQUYEN = async (id) => {
 }
 
 export const search_HT_NHOMQUYEN = async (data) => {
-    const res = await apiClient.post('/HT_NHOMQUYEN/search_HT_NHOMQUYEN', data)
+    const res = await apiClient.post('/HT_NHOMQUYEN/search_HT_NHOMQUYEN', {...data,ma_dviqly:JSON.parse(sessionStorage.getItem("current_MADVIQLY"))})
     return res.data
 }
 

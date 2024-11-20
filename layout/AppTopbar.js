@@ -21,6 +21,7 @@ const AppTopbar = forwardRef((props, ref) => {
     const menuLeft = useRef(null);
     const menuRight = useRef(null);
     const overlayPanelRef = useRef(null);
+    const router = useRouter();
 
     const { layoutConfig, layoutState, onMenuToggle, showProfileSidebar } =
         useContext(LayoutContext);
@@ -29,40 +30,33 @@ const AppTopbar = forwardRef((props, ref) => {
     const topbarmenubuttonRef = useRef(null);
     const [tenDangNhap, setTenDangNhap] = useState("");
     const [tenPhongBan, setTenPhongBan] = useState("");
-    const [selectedDonVi, setSelectedDonVi] = useState(""); // Lưu giá trị đã chọn
+    const [selectedDonVi, setSelectedDonVi] = useState(JSON.parse(sessionStorage.getItem("current_MADVIQLY"))||""); // Lưu giá trị đã chọn
 
     useEffect(() => {
 
         const user = JSON.parse(sessionStorage.getItem("user"));
         if (user) {
-            setSelectedDonVi(user.ma_dviqly)
+            !selectedDonVi&&setSelectedDonVi(user.ma_dviqly)
             setTenPhongBan(user.ten_phongban);
             setTenDangNhap(user.ten_dang_nhap);
+            
         }
     }, []);
 
     useEffect(() => {
         sessionStorage.setItem("current_MADVIQLY", JSON.stringify(selectedDonVi));
+        
     }, [selectedDonVi])
     const ds_donvi = JSON.parse(sessionStorage.getItem("ds_donvi"));
-    console.log(ds_donvi);
+    
 
     const logout = () => {
- 
-        confirmDialog({
-            message: 'Bạn có chắc chắn muốn đăng xuất không?',
-            header: 'Xác nhận đăng xuất',
-            icon: 'pi pi-exclamation-triangle',
-            accept: () => {
+       
                 sessionStorage.removeItem('user');
+                sessionStorage.removeItem('current_MADVIQLY');
                 sessionStorage.removeItem('token');
                 Router.push('/auth/login');
-            },
-            reject: () => {
-                // Optional: Thao tác khi người dùng từ chối
-                console.log('Hủy đăng xuất');
-            }
-        });
+         
     }
     const items = [
         {
@@ -89,6 +83,7 @@ const AppTopbar = forwardRef((props, ref) => {
         <div className="layout-topbar">
             <Link href="/" className="layout-topbar-logo">
                 <img
+                    style={{width:"200px","height":"auto"}}
                     src="/demo/images/login/logologin.png"
                     widt={"true"}
                     alt="logo"
@@ -143,7 +138,7 @@ const AppTopbar = forwardRef((props, ref) => {
 
                 >
                     <ul className="p-menu-list" style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '20px', margin: '0', padding: '0' }}>
-                        <li className="p-menuitem" style={{ height: '50px' }}>
+                        <li className="p-menuitem" style={{ height: 'auto' }}>
                             <a className="p-menuitem-link text-xl">
                                 <span className="p-menuitem-icon pi pi-home mr-2"></span>
                                 <span title="Tên phòng ban" className="p-menuitem-text"  >
@@ -161,7 +156,7 @@ const AppTopbar = forwardRef((props, ref) => {
                         </li>
                         <li className="p-menuitem">
                             <a className="p-menuitem-link text-xl">
-                                <span className="p-menuitem-icon pi pi-lock mr-2"></span>
+                                <span className="p-menuitem-icon pi pi-lock mr-2" ></span>
                                 <span className="p-menuitem-text">
                                     Đổi mật khẩu
                                 </span>
@@ -179,6 +174,7 @@ const AppTopbar = forwardRef((props, ref) => {
                             onChange={(e) => {
 
                                 setSelectedDonVi(e.value);
+                                router.reload()
 
                             }}
                             options={ds_donvi}
@@ -191,15 +187,18 @@ const AppTopbar = forwardRef((props, ref) => {
                     </div>
 
                 </div>
-                <div onClick={logout} className="p-menuitem" style={{ cursor: "pointer" }} >
+
+                <div onClick={()=>logout()} className="p-menuitem" style={{ cursor: "pointer" }} >
                     <button
+                        tooltip="Đăng xuất"
                         title="Đăng xuất"
                         type="button"
+                        style={{color:"red"}}
                         className="p-link layout-topbar-button"
                     >
                         <i className="pi pi-power-off"></i>
                     </button>
-                    <span className="uppercase">Đăng xuất</span>
+                    
                 </div>
             </div>
         </div>

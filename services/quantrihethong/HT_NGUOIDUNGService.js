@@ -1,6 +1,5 @@
 import { apiClient } from "../../constants/api";
 
-
 export const login_HT_NGUOIDUNG = async (data) => {
     const res = await apiClient.post('/HT_NGUOIDUNG/login', data);
     return res.data
@@ -8,7 +7,9 @@ export const login_HT_NGUOIDUNG = async (data) => {
 
 export const HT_NGUOIDUNG_Service = {
     search: async (data) => {
-        const res = await apiClient.post("/HT_NGUOIDUNG/search", data)
+        console.log("search nd")
+        console.log({...data,ma_dviqly:JSON.parse(sessionStorage.getItem("current_MADVIQLY"))})
+        const res = await apiClient.post("/HT_NGUOIDUNG/search", {...data,ma_dviqly:JSON.parse(sessionStorage.getItem("current_MADVIQLY"))})
         return res.data
     },
     delete: async (id) => {
@@ -34,6 +35,10 @@ export const HT_NGUOIDUNG_Service = {
     , resetPassword: async (data) => {
         console.log(data)
         const res = await apiClient.post("/HT_NGUOIDUNG/resetPassword", data)
+        return res.data
+    },
+    getMenuByIdUser:async(idUser)=>{
+        const res = await apiClient.get(`/HT_NGUOIDUNG/get_HT_MENUByIdUser?userId=${idUser}`)
         return res.data
     }
 

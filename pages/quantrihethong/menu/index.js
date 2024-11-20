@@ -1,9 +1,11 @@
 import { Button } from "primereact/button";
 import "primeicons/primeicons.css";
 import { InputText } from "primereact/inputtext";
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect,useCallback } from "react";
 import "primeicons/primeicons.css";
 import { Dropdown } from "primereact/dropdown";
+import { TreeTable } from "primereact/treetable";
+
 import { HT_MENU } from "../../../models/HT_MENU";
 import { Toast } from "primereact/toast";
 import { Panel } from "primereact/panel";
@@ -17,14 +19,18 @@ import {
   get_All_HT_MENU,
   update_HT_MENU,
 } from "../../../services/quantrihethong/HT_MENUService";
+import { Tooltip } from "primereact/tooltip";
 
 const Menu = () => {
   const toast = useRef(null);
   const [arr_MENU, setArr_MENU] = useState([]);
+  const [menuOld,setMenuOld]=useState([])
   const [showDialog, setShowDialog] = useState(false);
   const [isAdd, setIsAdd] = useState(false);
   const [formData, setFormData] = useState(HT_MENU);
   const [selectedMenus, setSelectedMenus] = useState([]);
+  const [selectedNodeKeys, setSelectedNodeKeys] = useState({});
+
 
   // State to store input value and filtered menu items
   const [searchTerm, setSearchTerm] = useState("");
@@ -72,7 +78,9 @@ const Menu = () => {
     try {
       const items = await get_All_HT_MENU();
       console.log(items);
-      setArr_MENU(items);
+      setMenuOld(items)
+      const treeData = buildTree(items);
+      setArr_MENU(treeData);
       //   console.log(items)
       //   setTotalRecords(items.totalItems)
       //   setPageCount(Math.ceil(items.totalItems / pageSize));
@@ -86,6 +94,67 @@ const Menu = () => {
       });
     }
   };
+
+  
+  useEffect(() => {
+    
+    const treeData = buildTree(menuOld);
+    const filteredMenus = treeData.map((menu) => {
+      // Lọc các children của menu cha
+      const filteredChildren = menu.children.filter((child) => {
+        // Kiểm tra xem child có được chọn hay không trong selectedKeys
+        return selectedNodeKeys[child.data.id] && selectedNodeKeys[child.data.id].checked === true;
+      });
+
+      // Nếu menu cha hoặc có bất kỳ children nào được chọn, giữ lại menu cha với children đã lọc
+      if ((selectedNodeKeys[menu.data.id] && selectedNodeKeys[menu.data.id].checked === true) || filteredChildren.length > 0) {
+        return {
+          ...menu,
+          children: filteredChildren, // Cập nhật lại các children đã lọc
+        };
+      }
+
+      // Nếu không có gì được chọn, loại bỏ menu này
+      return null;
+    }).filter(menu => menu !== null); // Loại bỏ các menu không có gì được chọn
+
+    const result = extractKeys(filteredMenus);
+    setSelectedMenus(result)
+  }, [selectedNodeKeys])
+
+  console.log(selectedMenus)
+
+  function extractKeys(data) {
+    let keys = new Set(); // Dùng Set để tránh trùng lặp key
+
+    function traverse(node, parentSelected) {
+        if (parentSelected) {
+            // Nếu cha được chọn, chọn tất cả con
+            keys.add(node.key);
+            if (node.children && node.children.length > 0) {
+                node.children.forEach(child => traverse(child, true));
+            }
+        } else {
+            if (node.children && node.children.length > 0) {
+                // Nếu có con, kiểm tra từng con
+                node.children.forEach(child => traverse(child, false));
+
+                // Kiểm tra nếu tất cả con được chọn, cha không được chọn
+                const allChildrenSelected = node.children.every(child => keys.has(child.key));
+                if (!allChildrenSelected) {
+                    node.children.forEach(child => keys.add(child.key));
+                }
+            } else {
+                // Nếu là node lá, chỉ chọn node hiện tại
+                keys.add(node.key);
+            }
+        }
+    }
+
+    data.forEach(node => traverse(node, false)); // Duyệt từ mảng gốc
+    return Array.from(keys); // Trả về dưới dạng mảng
+}
+
   const hideDialog = () => {
     setShowDialog(false);
   };
@@ -95,6 +164,14 @@ const Menu = () => {
     setIsAdd(false);
     setShowDialog(true);
   };
+
+  const handleSelectionChange = useCallback((e) => {
+    let listSelect = e.value
+    console.log(selectedNodeKeys)
+    setSelectedNodeKeys(listSelect)
+  },
+    [selectedNodeKeys]);
+    
   const saveMenu = async () => {
     if (isAdd) {
       try {
@@ -140,12 +217,12 @@ const Menu = () => {
   const onDeleteConfirm = (menu) => {
     // console.log(menu)
     confirmDialog({
-      message: "Bạn có muốn xóa menu " + menu.ten_menu + "?",
+      message: "Bạn có muốn xóa menu " + menu.data.ten_menu + "?",
       header: "Xác nhận xóa",
       icon: "pi pi-exclamation-triangle",
       accept: async () => {
         try {
-          await delete_HT_MENU(menu.id);
+          await delete_HT_MENU(menu.data.id);
           toast.current.show({
             severity: "success",
             summary: "Thành công",
@@ -181,9 +258,14 @@ const Menu = () => {
       accept: async () => {
         try {
           await Promise.all(
-            selectedMenus.map((menu) => delete_HT_MENU(menu.id))
+            selectedMenus.map((menu) => 
+              {
+                console.log(menu)
+                delete_HT_MENU(menu)
+
+        })
           );
-          setPage(selectedMenus.length===pageSize?(page>1?page-1:1):page);
+        
           toast.current.show({
             severity: "success",
             summary: "Thành công",
@@ -193,6 +275,7 @@ const Menu = () => {
           loadDataMENU();
           setSelectedMenus([]);
         } catch (error) {
+          console.log(error)
           toast.current.show({
             severity: "error",
             summary: "Lỗi",
@@ -242,7 +325,7 @@ const Menu = () => {
       setFilteredMenu(filtered);
     }
   }, [searchTerm, arr_MENU]);
-
+  const MAX_LENGTH = 8;
   // Hàm lấy danh sách menu con của mỗi parent khi dropdown được click
   const renderSubMenuDropdown = (rowData) => {
     const subMenuData = arr_MENU.filter(
@@ -259,6 +342,44 @@ const Menu = () => {
         placeholder="Nhấn để xem"
       />
     );
+  };
+  const buildTree = (menuItems) => {
+    const map = {};
+    const roots = [];
+
+    menuItems.forEach((item) => {
+      map[item.id] = {
+        key: item.id,
+        data: {
+          id: item.id,
+          ten_menu: item.ten_menu,
+          duong_dan: item.duong_dan,
+          parent_id: item.parent_id,
+          icon: item.icon,
+        },
+        children: [],
+      };
+    });
+    menuItems.forEach((item) => {
+      if (item.parent_id === null) {
+        roots.push(map[item.id]);
+      } else {
+        if (map[item.parent_id]) {
+          map[item.parent_id].children.push(map[item.id]);
+        }
+      }
+    });
+
+    return roots;
+  };
+  const shortenText = (text, maxLength) => {
+    if (!text) {
+      return ""; // Trả về chuỗi rỗng nếu text là null hoặc undefined
+    }
+    if (text.length > maxLength) {
+      return text.substring(0, maxLength) + "..."; // Cắt ngắn chuỗi
+    }
+    return text;
   };
 
   return (
@@ -277,8 +398,8 @@ const Menu = () => {
 
          
             {/*start_table */}
-            <Panel headerTemplate={headerList} className="mt-4">
-              <div style={{ textAlign: "right " }}>
+            <Panel headerTemplate={headerList} className="mt-3 mb-2">
+              {/* <div style={{ textAlign: "right " }}>
                 {" "}
                 <InputText
                   style={{ width: 300 }}
@@ -286,8 +407,8 @@ const Menu = () => {
                   value={searchTerm}
                   onChange={handleSearchChange} // Update search term and filter menu
                 />
-              </div>
-              <DataTable
+              </div> */}
+              {/* <DataTable
                 value={filteredMenu}
                 className="datatable-responsive mt-5"
                 showGridlines
@@ -355,7 +476,57 @@ const Menu = () => {
                     </div>
                   )}
                 ></Column>
-              </DataTable>
+              </DataTable> */}
+              <TreeTable
+            selectionKeys={selectedNodeKeys}
+            onSelectionChange={handleSelectionChange}
+            selectionMode="checkbox"
+            // onSelect={(e) => {
+
+            //   setNodes(prevNodes => {
+
+            //     console.log(prevNodes)
+
+            //     return [...prevNodes, e.node]
+            //   })
+
+            // }}
+            value={arr_MENU}
+          >
+            <Column field="id" header="ID" expander></Column>
+            <Column field="ten_menu" header="Tên menu"></Column>
+            
+            <Column
+              field="icon"
+              header="Icon"
+              body={(rowData) => <i className={`${rowData.data.icon}`} />}
+              style={{ width: "10%" }}
+            ></Column>
+            <Column
+                  header="Thao tác"
+                  headerStyle={{
+                    backgroundColor: "#1445a7",
+                    color: "#fff",
+                    width: "12rem",
+                  }}
+                  body={(rowData) => (
+                    <div className=" flex justify-content-between gap-3">
+                      <Button
+                        icon="pi pi-pencil"
+                        tooltip="Sửa"
+                        onClick={() => handleEdit(rowData.data)}
+                        style={{ backgroundColor: "#1445a7", color: "#fff" }}
+                      />
+                      <Button
+                        icon="pi pi-trash"
+                        tooltip="Xóa"
+                        onClick={() => onDeleteConfirm(rowData)}
+                        style={{ backgroundColor: "#1445a7", color: "#fff" }}
+                      />
+                    </div>
+                  )}
+                ></Column>
+          </TreeTable>
             </Panel>
             {/* end_table */}
 
@@ -387,7 +558,7 @@ const Menu = () => {
                 />
               </div>
               <div className="field">
-                <label>Đường dẫn</label>
+                <label>Đường dẫn <span style={{ color: 'red' }}>(Bỏ qua nếu là Menu cấp cha)</span></label>
                 <InputText
                   required
                   id="duong_dan"
@@ -401,7 +572,7 @@ const Menu = () => {
                 <Dropdown
                   filter
                   value={formData.parent_id}
-                  options={[{ id: null, ten_menu: 'Không có menu Cha' }, ...arr_MENU]}
+                  options={[{ id: null, ten_menu: 'Là Menu Cấp Cha' }, ...menuOld]}
                   onChange={(e) => handleChange("parent_id", e.value)}
                   optionLabel="ten_menu"
                   optionValue="id"

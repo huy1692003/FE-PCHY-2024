@@ -1,84 +1,44 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import AppMenuitem from './AppMenuitem';
-import { LayoutContext } from './context/layoutcontext';
 import { MenuProvider } from './context/menucontext';
-import Link from 'next/link';
-import { PrimeIcons } from 'primereact/api'
+import { HT_NGUOIDUNG_Service } from '../services/quantrihethong/HT_NGUOIDUNGService';
 
 const AppMenu = () => {
-    const { layoutConfig } = useContext(LayoutContext);
+    const [menu, setMenu] = useState([]);
 
-    const model = [
-        {
-            label: 'Trang chủ',
-            items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' }]
-        },
-        {
-            label: 'Quản trị hệ thống',
-            items: [
-                // {
-                //     label: 'Nhóm người dùng',
-                //     icon: 'pi pi-users',
-                //     to: '/quantrihethong/quyen_nguoidung',
+    useEffect(() => {
+        const getMenu = async () => {
+            try {
+                const idUser = JSON.parse(sessionStorage.getItem('user')).id;
+                const res = await HT_NGUOIDUNG_Service.getMenuByIdUser(idUser);
 
-                // },
-                {
-                    label: 'Đơn vị',
-                    icon: 'pi pi-user',
-                    to: '/quantrihethong/donvi'
+                // Chuyển đổi dữ liệu từ API về định dạng menu
+                const transformedMenu = transformMenuData(res);
+                setMenu(transformedMenu);
+            } catch (error) {
+                console.error('Error fetching menu:', error);
+            }
+        };
 
-                },
-                {
-                    label: 'Menu',
-                    icon: 'pi pi-user',
-                    to: '/quantrihethong/menu'
+        getMenu();
+    }, []);
 
-                },
-                // {
-                //     label: 'Chức vụ',
-                //     icon: 'pi pi-user'
-                // },
-                {
-                    label: 'Phòng ban',
-                    icon: 'pi pi-user',
-                    to: '/quantrihethong/phongban'
-                },
-                {
-                    label: 'Người dùng',
-                    icon: 'pi pi-list',
-                    to: '/quantrihethong/nguoidung'
-                },
-                {
-                    label: 'Vai trò',
-                    icon: 'pi pi-user',
-                    to: '/quantrihethong/vaitro'
-                }
-            ]
-        },
-        {
-            label: 'Cá nhân',
-            icon: 'pi pi-fw pi-briefcase',
-            to: '/pages',
-            items: [
-                {
-                    label: 'Tài khoản',
-                    icon: 'pi pi-cog',
-                }
-            ]
-        },
-
-    ];
+    // Hàm chuyển đổi dữ liệu từ API
+    const transformMenuData = (data) => {
+        return data.map((item) => ({
+            label: item.ten_menu,
+            icon: item.icon,
+            to: item.duong_dan,
+            items: item.children ? transformMenuData(item.children) : null,
+        }));
+    };
 
     return (
         <MenuProvider>
             <ul className="layout-menu">
-                {model.map((item, i) => {
-                    return !item.seperator ? <AppMenuitem item={item} root={true} index={i} key={item.label} /> : <li className="menu-separator"></li>;
-                })}
-
-                {/* <Link href="https://blocks.primereact.org" target="_blank" style={{ cursor: 'pointer' }}>
-                    <img alt="Prime Blocks" className="w-full mt-3" src={`/layout/images/banner-primeblocks${layoutConfig.colorScheme === 'light' ? '' : '-dark'}.png`} />
-                </Link> */}
+                {menu.map((item, index) => (
+                    <AppMenuitem item={item} root={true} index={index} key={item.label} />
+                ))}
             </ul>
         </MenuProvider>
     );

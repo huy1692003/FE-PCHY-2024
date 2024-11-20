@@ -119,7 +119,7 @@ const QuanLyVaiTro = () => {
           <div className="card">
             <Toast ref={toast} />
             <Panel header="Tìm kiếm">
-              <div className="flex justify-content-between p-fluid gap-3">
+              <div className="justify-content-between p-fluid gap-3" style={{width:"100%"}}>
                 <div className="field">
                   <label>Tên vai trò</label>
                   <InputText

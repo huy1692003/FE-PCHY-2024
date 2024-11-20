@@ -126,17 +126,18 @@ export const DialogForm = ({ isAdd, formData, setFormData, visible, setVisible, 
                 <div className="form-wrapper" style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
 
                     {/* Đơn vị và phòng ban */}
-                    <FormField label="Đơn vị trực thuộc" value={formData.dm_donvi_id} options={DM_DONVI} onChange={handleInputChange} id="dm_donvi_id" isDropdown />
+                    <FormField label="Đơn vị quản lý" value={formData.dm_donvi_id} options={DM_DONVI} onChange={handleInputChange} id="dm_donvi_id" isDropdown />
                     <FormField label="Phòng ban" value={formData.dm_phongban_id} options={dsPhongBan} onChange={handleInputChange} id="dm_phongban_id" isDropdown />
                     {/* Tên đăng nhập và mật khẩu */}
                     <FormField label="Tên đăng nhập" value={formData.ten_dang_nhap} onChange={handleInputChange} id="ten_dang_nhap" />
                     {isAdd && <FormField label="Mật khẩu" value={formData.mat_khau} onChange={handleInputChange} id="mat_khau" />}
+                    {/* Validate thêm trường mật khẩu trên 8 kí tự  */}
 
+                    <FormField label="Họ tên" value={formData.ho_ten} onChange={handleInputChange} id="ho_ten" />
                     {/* Chức vụ và trạng thái */}
                     <FormField label="Chức vụ" value={formData.dm_chucvu_id} options={DM_CHUCVU} onChange={handleInputChange} id="dm_chucvu_id" isDropdown />
                     {!isAdd && <FormField label="Trạng thái" value={formData.trang_thai} options={mockData.trangThaiOptions} onChange={handleInputChange} id="trang_thai" isDropdown />}
                     {/* Họ tên và email */}
-                    <FormField label="Họ tên" value={formData.ho_ten} onChange={handleInputChange} id="ho_ten" />
                     <FormField label="Email" value={formData.email} onChange={handleInputChange} id="email" typeInput="email" />
                     <FormField label="Số điện thoại" value={formData.so_dien_thoai} onChange={handleInputChange} id="so_dien_thoai" typeInput="tel" />
 

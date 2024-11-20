@@ -10,6 +10,7 @@ import { Divider } from "primereact/divider";
 import { Card } from "primereact/card";
 import { DM_PHONGBAN } from "../../../models/DM_PHONGBAN";
 import { searchDM_PHONGBAN } from "../../../services/quantrihethong/DM_PHONGBANService";
+import { get_All_DM_DONVI } from "../../../services/quantrihethong/DM_DONVIService";
 const PhongBan = () => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -26,6 +27,7 @@ const PhongBan = () => {
   const [arrPhongBan, setArrPhongBan] = useState([DM_PHONGBAN]);
   const [PHONGBAN, setPHONGBAN] = useState(DM_PHONGBAN);
   const [visible, setVisible] = useState(false);
+  const [donViQuanLy, setDonViQuanLy] = useState(null);
   const [isUpdate, setIsUpdate] = useState(false);
   const toast = useRef(null);
 
@@ -33,6 +35,14 @@ const PhongBan = () => {
     { label: "Có hiệu lực", value: 1 },
     { label: "Hết hiệu lực", value: 0 },
   ];
+ 
+  useEffect(()=>{
+    const getDSDonViQuanLy = async () => {
+    const results = await get_All_DM_DONVI();
+    setDonViQuanLy(results);
+    }
+    getDSDonViQuanLy();
+  },[])
   const loadData = async () => {
     try {
       const data = {
@@ -42,6 +52,7 @@ const PhongBan = () => {
         ten: options.ten,
         trang_thai: options.trang_thai.value,
       };
+      console.log(data);
       const items = await searchDM_PHONGBAN(data);
       setArrPhongBan(items);
       setPageCount(Math.ceil(items.totalItems / pageSize));
@@ -79,18 +90,22 @@ const PhongBan = () => {
                 style={{ flexGrow: "1", width: "33.33333%" }}
               >
                 <label htmlFor="MA" className="form__label mb-3 inline-block">
-                  Mã phòng ban
+                  Đơn vị
                 </label>
-                <InputText
-                  id="MA"
-                  style={{ display: "block", width: "90%" }}
-                  placeholder="Mã phòng ban ..."
+                <Dropdown
+                  value={options.ma}
+                  options={donViQuanLy}
                   onChange={(e) => {
                     setOptions({ ...options, ma: e.target.value });
                   }}
-                  type="text"
-                  value={options.ma}
+                  optionLabel="ten"
+                  id="ma_dviqly"
+                  optionValue="id"
+                  placeholder="Chọn đơn vị "
+                  className="w-full mr-2"
+                 
                 />
+                
               </div>
               <div
                 className="form__group grow"

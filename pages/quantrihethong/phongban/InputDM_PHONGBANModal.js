@@ -90,7 +90,6 @@ export const InputDM_PHONGBANModal = ({
     console.log(phongBan);
     try {
       if (handleCreate()) {
-        alert()
         const result = await insertDM_PHONGBAN({
           ...phongBan,
           nguoi_tao: "1",
