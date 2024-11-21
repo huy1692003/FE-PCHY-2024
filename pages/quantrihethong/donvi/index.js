@@ -40,8 +40,6 @@ const DonVi = () => {
 
   const { sortField, sortOrder, handleSort } = useTableSort();
 
-
-
   const loadDataDVI = useCallback(async () => {
     try {
       const items = await search_DM_DONVI({ pageIndex: page, pageSize, ...keyFilter });
@@ -242,20 +240,20 @@ const DonVi = () => {
   };
 
   const donViDialogFooter = (
-    <div className="text-center">
-      <Button label='Lưu' style={{ backgroundColor: '#1445a7', color: '#fff' }} className="border-transparent" onClick={saveDonVi} />
+    <div className="flex justify-content-center">
+      <Button label='Lưu' style={{ backgroundColor: '#1445a7', color: '#fff' }} className="border-transparent mr-2" onClick={saveDonVi} />
       <Button label='Đóng' style={{ backgroundColor: '#666666', color: '#fff' }} className="border-transparent" onClick={hideDialog} />
     </div>
   );
 
   const headerList = (options) => {
-    const className = `${options.className} justify-content-space-between`;
+    const className = `${options.className} flex align-items-center justify-content-between`;
 
     return (
       <div className={className}>
         <span className="font-bold text-2xl">Danh sách</span>
-        <div>
-          {selectedDonVis.length > 0 && <Button label="Xóa nhiều" style={{ backgroundColor: '#d9534f', marginRight: '8px' }} onClick={onDeleteSelectedConfirm} disabled={!selectedDonVis.length}></Button>}
+        <div className="flex">
+          {selectedDonVis.length > 0 && <Button label="Xóa nhiều" severity="danger" className="mr-2" onClick={onDeleteSelectedConfirm} disabled={!selectedDonVis.length}></Button>}
           <Button label="Thêm mới" style={{ backgroundColor: '#1445a7' }} onClick={openNewDonVi}></Button>
         </div>
       </div>
@@ -283,27 +281,27 @@ const DonVi = () => {
           <div className="card">
             <Toast ref={toast} />
             <Panel header="Tìm kiếm">
-              <div className="flex justify-content-between p-fluid gap-3">
-                <div className="field" style={{ width: '50%' }}>
-                  <label>Mã đơn vị</label>
+              <div className="flex flex-column md:flex-row gap-3">
+                <div className="flex-1">
+                  <label className="block mb-2">Mã đơn vị</label>
                   <InputText
                     placeholder="Nhập mã đơn vị "
                     value={formFilter.ma}
                     onChange={(e) => handleChangeFilter("ma", e.target.value)}
-                    style={{ width: '100%' }}
+                    className="w-full"
                   />
                 </div>
-                <div className="field" style={{ width: '50%' }}>
-                  <label>Tên đơn vị</label>
+                <div className="flex-1">
+                  <label className="block mb-2">Tên đơn vị</label>
                   <InputText
                     placeholder="Nhập tên đơn vị "
                     value={formFilter.ten}
                     onChange={(e) => handleChangeFilter("ten", e.target.value)}
-                    style={{ width: '100%' }}
+                    className="w-full"
                   />
                 </div>
               </div>
-              <div className='flex justify-content-center mt-2'>
+              <div className='flex justify-content-center mt-3'>
                 <Button label='Tìm kiếm' style={{ backgroundColor: '#1445a7' }} onClick={() => {
                   console.log(formFilter);
                   setPage(1);
@@ -314,9 +312,9 @@ const DonVi = () => {
             </Panel>
 
             <Panel headerTemplate={headerList} className="mt-4">
-              <div style={{ textAlign: "right " }}>
+              <div className="flex justify-content-end">
                 <InputText
-                  style={{ width: 300 }}
+                  className="w-full md:w-20rem"
                   value={searchTerm}
                   onChange={handleSearchChange}
                   placeholder="Tìm kiếm"
@@ -329,6 +327,7 @@ const DonVi = () => {
                 showGridlines
                 selection={selectedDonVis}
                 onSelectionChange={(e) => setSelectedDonVis(e.value)}
+                responsiveLayout="scroll"
               >
                 <Column
                   selectionMode="multiple"
@@ -340,7 +339,6 @@ const DonVi = () => {
                 />
                 <Column
                   {...propSortAndFilter}  
-                                
                   field="ten"
                   style={{ cursor: 'pointer' }}
                   header="Tên đơn vị"
@@ -371,8 +369,6 @@ const DonVi = () => {
                     const district = province?.districts?.find(d => d.code === Number.parseInt(rowData.dm_quanhuyen_id));
                     return district ? district.name : 'Không có';
                   }}
-
-
                 />
                 <Column
                   header='Thao tác'
@@ -398,7 +394,7 @@ const DonVi = () => {
 
             <Dialog
               visible={showDialog}
-              style={{ width: '40%', height: "85%" }}
+              style={{ width: '90%', maxWidth: '40rem' }}
               header='Thông tin đơn vị'
               className="p-fluid"
               onHide={hideDialog}
@@ -415,7 +411,7 @@ const DonVi = () => {
                   id="tenDonVi"
                   value={formData.ten}
                   onChange={(e) => handleChange("ten", e.target.value)}
-                  className={errors.ten && 'p-invalid'}
+                  className={errors.ten ? 'p-invalid' : ''}
                 />
                 {errors.ten && <small className="p-error">{errors.ten}</small>}
               </div>
@@ -433,7 +429,7 @@ const DonVi = () => {
                   optionLabel="name"
                   optionValue="id"
                   placeholder="Chọn Tỉnh/Thành phố"
-                  className={errors.dm_tinhthanh_id && 'p-invalid'}
+                  className={errors.dm_tinhthanh_id ? 'p-invalid' : ''}
                 />
                 {errors.dm_tinhthanh_id && <small className="p-error">{errors.dm_tinhthanh_id}</small>}
               </div>
@@ -452,7 +448,7 @@ const DonVi = () => {
                   optionValue="id"
                   placeholder="Chọn Quận/Huyện"
                   disabled={!formData.dm_tinhthanh_id}
-                  className={errors.dm_quanhuyen_id && 'p-invalid'}
+                  className={errors.dm_quanhuyen_id ? 'p-invalid' : ''}
                 />
                 {errors.dm_quanhuyen_id && <small className="p-error">{errors.dm_quanhuyen_id}</small>}
               </div>
@@ -469,23 +465,9 @@ const DonVi = () => {
                   placeholder="Chọn trạng thái"
                   optionLabel="name"
                   optionValue="id"
-                  className={errors.trang_thai && 'p-invalid'}
+                  className={errors.trang_thai ? 'p-invalid' : ''}
                 />
-
               </div>
-
-              {/* <div className="field">
-                <label>
-                  <span className="text-red-400">(*) </span>
-                  Sắp xếp
-                </label>
-                <InputText
-                  required
-                  id="sapXep"
-                  value={formData.sap_xep}
-                  onChange={(e) => handleChange("sap_xep", e.target.value)}
-                />
-              </div> */}
 
               <div className="field">
                 <label>
@@ -498,7 +480,7 @@ const DonVi = () => {
                   id="ma_dviqly"
                   value={formData.ma_dviqly}
                   onChange={(e) => handleChange("ma_dviqly", e.target.value)}
-                  className={errors.ma_dviqly && 'p-invalid'}
+                  className={errors.ma_dviqly ? 'p-invalid' : ''}
                 />
                 {errors.ma_dviqly && <small className="p-error">{errors.ma_dviqly}</small>}
               </div>

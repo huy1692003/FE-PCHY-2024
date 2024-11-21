@@ -8,10 +8,10 @@ import { Panel } from "primereact/panel";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Toast } from "primereact/toast";
-import { ConfirmDialog } from "primereact/confirmdialog";
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { Dropdown } from "primereact/dropdown";
 import { HT_NHOMQUYEN } from "../../../models/HT_NHOMQUYEN";
-import moment from 'moment';
+
 import { propSortAndFilter } from "../../../constants/propGlobal";
 
 const TableVaiTro = ({
@@ -34,6 +34,7 @@ const TableVaiTro = ({
   const [isHide, setIsHide] = useState(false);
   const [id, setId] = useState();
   const [globalFilterValue, setGlobalFilterValue] = useState("");
+  const [selectedRows, setSelectedRows] = useState([]);
 
   const [filters, setFilters] = useState({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -63,32 +64,60 @@ const TableVaiTro = ({
     }
   };
 
+  const confirmDeleteSelected = async () => {
+    setIsHide(false);
+    try {
+      await Promise.all(selectedRows.map(row => delete_HT_NHOMQUYEN(row.id)));
+      toast.current.show({
+        severity: 'success',
+        summary: 'Thành công',
+        detail: 'Đã xóa các vai trò đã chọn',
+        life: 3000
+      });
+      setSelectedRows([]);
+      loadData();
+    } catch (error) {
+      toast.current.show({
+        severity: 'error',
+        summary: 'Lỗi',
+        detail: 'Không thể xóa các vai trò đã chọn',
+        life: 3000
+      });
+    }
+  };
+
   const cancel = () => {
     setIsHide(false);
   };
 
-  const headerList = (options) => {
-    const className = `${options.className} justify-content-space-between`;
-
+  const headerTemplate = (options) => {
+    const className = `${options.className} flex flex-wrap justify-content-between align-items-center gap-2`
     return (
-      <div className={className}>
-        <span className="font-bold text-2xl">Danh sách</span>
-        <Button
-          label="Thêm mới"
-          style={{ backgroundColor: "#1445a7" }}
-          onClick={() => {
-            setVaiTro(HT_NHOMQUYEN)
-            setVisible(true);
-            setIsUpdate(false);
-          }}
-        ></Button>
+      <div className={className} >
+        <span className='text-xl font-bold'>Danh sách</span>
+        <div className="flex align-items-center gap-2">
+          {selectedRows.length > 0 && (
+            <Button
+              label="Xóa nhiều"
+              severity="danger"
+              onClick={() => {
+                setIsHide(true);
+              }}
+            />
+          )}
+          <Button
+            label="Thêm mới"
+            style={{ backgroundColor: "#1445a7" }}
+            onClick={() => {
+              setVaiTro(HT_NHOMQUYEN)
+              setVisible(true);
+              setIsUpdate(false);
+            }}
+          />
+        </div>
       </div>
-    );
-  };
-
-  const clearFilter = () => {
-    initFilters();
-  };
+    )
+  }
 
   const onGlobalFilterChange = (e) => {
     const value = e.target.value;
@@ -100,169 +129,148 @@ const TableVaiTro = ({
     setGlobalFilterValue(value);
   };
 
-  const initFilters = () => {
-
-    setFilters({
-      global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    });
-    setGlobalFilterValue("");
-  };
-
-  const renderHeader = () => {
-    return (
-
-      <div className="flex justify-content-end">
-        <InputText
-          style={{ width: "250px" }}
-          value={globalFilterValue}
-          onChange={onGlobalFilterChange}
-          placeholder="Tìm kiếm"
-        />
-      </div>
-    );
-  };
-
   return (
-    <div>
-      <Panel headerTemplate={headerList} className="mt-4">
-        {/* <div className="flex justify-content-end">
-          <InputText
-            style={{ width: "250px" }}
-            value={globalFilterValue}
-            onChange={onGlobalFilterChange}
-            placeholder="Nhập thông tin để tìm kiếm"
-          />
-        </div> */}
-        <DataTable
-          value={data.data}
-          header={renderHeader()}
-          filters={filters}
-          onFilter={(e) => setFilters(e.filters)}
-          rows={pageSize}
-          rowkey="id"
-          rowsPerPageOptions={[5, 10]}
-          className="datatable-responsive mt-3"
-          showGridlines
+    <div >
+      <Panel headerTemplate={headerTemplate} className="mt-4">
+        <div className="flex flex-column md:flex-row justify-content-end align-items-center mb-1">
+          <span className="p-input-icon-left w-full md:w-3">
+            <i className="pi pi-search" />
+            <InputText
+              className="w-full"
+              value={globalFilterValue}
+              onChange={onGlobalFilterChange}
+              placeholder="Tìm kiếm"
+            />
+          </span>
+        </div>
+        <div className="flex flex-column">
+          <DataTable
+            value={data.data}
+            selection={selectedRows}
+            onSelectionChange={e => setSelectedRows(e.value)}
+            filters={filters}
+            onFilter={(e) => setFilters(e.filters)}
+            rows={pageSize}
+            rowkey="id"
+            rowsPerPageOptions={[5, 10]}
+            className="datatable-responsive mt-3"
+            showGridlines
+            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+            responsiveLayout="scroll"
+          >
+            <Column 
+              selectionMode="multiple" 
+              headerStyle={{
+                backgroundColor: "#1445a7",
+                color: "#fff",
+                width: '3rem'
+              }}
+            />
+            
 
-          paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-        >
-          <Column
-          
-            field="STT"
-            header="STT"
-            headerStyle={{
-              backgroundColor: "#1445a7",
-              color: "#fff",
-            }}
-            body={(rowData, { rowIndex }) => {
-              return rowIndex + 1;
-            }}
-          ></Column>
+            <Column
+              {...propSortAndFilter}
+              field="ten_nhom"
+              header="Tên vai trò"
+              headerStyle={{
+                backgroundColor: "#1445a7",
+                color: "#fff",
+                minWidth: '150px'
+              }}
+            />
 
+            <Column
+              {...propSortAndFilter}
+              field="ten"
+              header="Đơn vị quản lý"
+              headerStyle={{
+                backgroundColor: "#1445a7",
+                color: "#fff",
+                minWidth: '150px'
+              }}
 
-          <Column
-          {...propSortAndFilter}
-            field="ten_nhom"
-            header="Tên vai trò"
-            headerStyle={{
-              backgroundColor: "#1445a7",
-              color: "#fff",
-            }}
-          ></Column>
+            />
 
-          
+            <Column
+              header="Thao tác"
+              headerStyle={{
+                backgroundColor: "#1445a7",
+                color: "#fff",
+                width: "6rem",
+              }}
+              body={(rowData) => (
+                <div className="flex justify-content-between gap-3">
+                  <Button
+                    icon="pi pi-pencil"
+                    tooltip="Sửa"
+                    tooltipOptions={{ position: "top" }}
+                    style={{ backgroundColor: "#1445a7" }}
+                    onClick={() => {
+                      setVaiTro(rowData);
+                      setVisible(true);
+                      setIsUpdate(true);
+                      console.log(rowData);
+                    }}
+                  />
+                  <Button
+                    icon="pi pi-trash"
+                    tooltip="Xóa"
+                    tooltipOptions={{ position: "top" }}
+                    style={{ backgroundColor: "#1445a7" }}
+                    onClick={() => {
+                      setIsHide(true);
+                      setId(rowData.id);
+                    }}
+                  />
 
-          <Column
-          {...propSortAndFilter}
-            field="ten"
-            header="Đơn vị quản lý"
-            headerStyle={{
-              backgroundColor: "#1445a7",
-              color: "#fff",
-            }}
-          ></Column>
+                  <Button
+                    icon="pi pi-file-edit"
+                    tooltip="Gán menu"
+                    tooltipOptions={{ position: "top" }}
+                    style={{ backgroundColor: "#1445a7" }}
+                    onClick={() => {
+                      setMenuDialogVisible(true);
+                      setSelectedVaiTro(rowData);
+                    }}
+                  />
+                </div>
+              )}
+            />
+          </DataTable>
 
-          <Column
-            header="Thao tác"
-            headerStyle={{
-              backgroundColor: "#1445a7",
-              color: "#fff",
-              width: "6rem",
-            }}
-            body={(rowData) => (
-              <div className="flex justify-content-between gap-3">
-                <Button
-                  icon="pi pi-pencil"
-                  tooltip="Sửa"
-                  tooltipOptions={{ position: "top" }}
-                  style={{ backgroundColor: "#1445a7" }}
-                  onClick={() => {
-                    setVaiTro(rowData);
-                    setVisible(true);
-                    setIsUpdate(true);
-                    console.log(rowData);
-                  }}
-                />
-                <Button
-                  icon="pi pi-trash"
-                  tooltip="Xóa"
-                  tooltipOptions={{ position: "top" }}
-                  style={{ backgroundColor: "#1445a7" }}
-                  onClick={() => {
-                    setIsHide(true);
-                    setId(rowData.id);
-                  }}
-                />
-
-                <Button
-                  icon="pi pi-file-edit"
-                  tooltip="Gán menu"
-                  tooltipOptions={{ position: "top" }}
-                  style={{ backgroundColor: "#1445a7" }}
-                  onClick={() => {
-                    setMenuDialogVisible(true);
-                    setSelectedVaiTro(rowData);
-                  }}
-                />
-              </div>
-            )}
-          ></Column>
-        </DataTable>
-        <div
-          style={{ marginTop: "20px", justifyContent: "center" }}
-          className="flex justify-between items-center mt-4"
-        >
-          <div className="flex items-center" style={{ alignItems: "center" }}>
-            <Button
-              outlined
-              text
-              icon={PrimeIcons.ANGLE_DOUBLE_LEFT}
-              onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-              disabled={page === 1}
-              severity="secondary"
-            ></Button>
-            <p className="mr-4 ml-4 mb-0">
-              Trang {page} trong tổng số {pageCount} trang
-            </p>
-            <Button
-              outlined
-              text
-              severity="secondary"
-              icon={PrimeIcons.ANGLE_DOUBLE_RIGHT}
-              onClick={() => setPage((prev) => Math.min(prev + 1, pageCount))}
-              disabled={page === pageCount}
-            ></Button>
+          <div className="flex flex-wrap align-items-center justify-content-between gap-3 mt-4">
+            <div className="flex align-items-center">
+              <Button
+                outlined
+                text
+                icon={PrimeIcons.ANGLE_DOUBLE_LEFT}
+                onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                disabled={page === 1}
+                severity="secondary"
+              />
+              <p className="mx-4 mb-0">
+                Trang {page} trong tổng số {pageCount} trang
+              </p>
+              <Button
+                outlined
+                text
+                severity="secondary"
+                icon={PrimeIcons.ANGLE_DOUBLE_RIGHT}
+                onClick={() => setPage((prev) => Math.min(prev + 1, pageCount))}
+                disabled={page === pageCount}
+              />
+            </div>
+            <Dropdown
+              className="w-full md:w-auto"
+              value={pageSize}
+              options={rowsPerPageOptions}
+              onChange={(e) => {
+                setPageSize(e.value);
+                setPage(1);
+              }}
+              placeholder="Select rows per page"
+            />
           </div>
-          <Dropdown
-            className="w-1/4 ml-4"
-            value={pageSize}
-            options={rowsPerPageOptions}
-            onChange={(e) => {
-              setPageSize(e.value);
-              setPage(1);
-            }}
-            placeholder="Select rows per page"
-          />
         </div>
       </Panel>
 
@@ -271,7 +279,7 @@ const TableVaiTro = ({
         visible={isHide}
         onHide={() => setIsHide(false)}
         header="Xác nhận"
-        message="Bạn có chắc chắn xóa bản ghi này không?"
+        message={selectedRows.length > 0 ? "Bạn có chắc chắn xóa các bản ghi đã chọn không?" : "Bạn có chắc chắn xóa bản ghi này không?"}
         icon="pi pi-info-circle"
         footer={
           <div>
@@ -286,12 +294,12 @@ const TableVaiTro = ({
               severity="danger"
               label="Đồng ý"
               icon="pi pi-check"
-              onClick={confirmDelete}
+              onClick={selectedRows.length > 0 ? confirmDeleteSelected : confirmDelete}
               autoFocus
             />
           </div>
         }
-      ></ConfirmDialog>
+      />
     </div>
   );
 };

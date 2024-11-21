@@ -13,9 +13,11 @@ import { LayoutContext } from "./context/layoutcontext";
 import { Menu } from "primereact/menu";
 import { PrimeIcons } from "primereact/api";
 import { OverlayPanel } from "primereact/overlaypanel";
-import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { Dropdown } from "primereact/dropdown";
 import { Button } from 'primereact/button';
+import { ConfirmDialog } from 'primereact/confirmdialog';
+import { DialogResetPass } from '../pages/quantrihethong/nguoidung/DialogResetPass';
+import { Toast } from 'primereact/toast';
 
 // eslint-disable-next-line react/display-name
 const AppTopbar = forwardRef((props, ref) => {
@@ -32,9 +34,12 @@ const AppTopbar = forwardRef((props, ref) => {
     const [tenDangNhap, setTenDangNhap] = useState("");
     const [tenPhongBan, setTenPhongBan] = useState("");
     const [selectedDonVi, setSelectedDonVi] = useState(JSON.parse(sessionStorage.getItem("current_MADVIQLY"))||""); // Lưu giá trị đã chọn
+    const [visible, setVisible] = useState(false);
+    const [showResetPass, setShowResetPass] = useState(false);
+    const toast = useRef(null);
 
     useEffect(() => {
-
+        
         const user = JSON.parse(sessionStorage.getItem("user"));
         if (user) {
             !selectedDonVi&&setSelectedDonVi(user.ma_dviqly)
@@ -43,6 +48,9 @@ const AppTopbar = forwardRef((props, ref) => {
             
         }
     }, []);
+    
+    const userId = JSON.parse(sessionStorage.getItem("user"))?.id||"";
+
 
     useEffect(() => {
         sessionStorage.setItem("current_MADVIQLY", JSON.stringify(selectedDonVi));
@@ -82,6 +90,17 @@ const AppTopbar = forwardRef((props, ref) => {
 
     return (
         <div className="layout-topbar">
+            <Toast ref={toast} />
+            <ConfirmDialog 
+                visible={visible} 
+                onHide={() => setVisible(false)} 
+                message="Bạn có chắc chắn muốn đăng xuất?"
+                header="Xác nhận đăng xuất" 
+                icon="pi pi-exclamation-triangle"
+                accept={logout}
+                acceptLabel="Đồng ý"
+                rejectLabel="Hủy"
+            />
             <Link href="/" className="layout-topbar-logo">
                 <img
                     style={{width:"200px","height":"auto"}}
@@ -155,8 +174,8 @@ const AppTopbar = forwardRef((props, ref) => {
                                 </span>
                             </a>
                         </li>
-                        <li className="p-menuitem">
-                            <a className="p-menuitem-link text-xl">
+                        <li onClick={() => setShowResetPass(true)} className="p-menuitem">
+                            <a className="p-menuitem-link text-xl"  style={{ cursor: 'pointer' }}>
                                 <span className="p-menuitem-icon pi pi-lock mr-2" ></span>
                                 <span className="p-menuitem-text">
                                     Đổi mật khẩu
@@ -191,7 +210,7 @@ const AppTopbar = forwardRef((props, ref) => {
 
                 </div>
 
-                <div onClick={()=>logout()}  className="p-menuitem" style={{ cursor: "pointer" }} >
+                <div onClick={() => setVisible(true)} className="p-menuitem" style={{ cursor: "pointer" }} >
                     <button
                         tooltip="Đăng xuất"
                         title="Đăng xuất"
@@ -203,7 +222,16 @@ const AppTopbar = forwardRef((props, ref) => {
                     </button>
                     
                 </div>
-</div>
+
+                {showResetPass && (
+                    <DialogResetPass
+                        idNguoiDung={userId}
+                        visible={showResetPass}
+                        onClose={() => setShowResetPass(false)}
+                        toast={toast}
+                    />
+                )}
+            </div>
         </div>
     );
 

@@ -149,16 +149,16 @@ export const InputDM_PHONGBANModal = ({
         !isUpdate ? "Thêm mới danh mục phòng ban" : "Sửa danh mục phòng ban"
       }
       visible={visible}
-      style={{ width: "40vw" }}
+      className="w-11 md:w-5/12 lg:w-4/12"
       onHide={() => {
         if (!visible) return;
         setVisible(false);
         setPhongBan(null);
       }}
     >
-      <div style={{ marginBottom: "20px" }}>
-        <div className="form__group w-full">
-          <label htmlFor="SAP_XEP" className="form__label mb-3 inline-block">
+      <div className="flex flex-column gap-4">
+        <div className="flex flex-column">
+          <label htmlFor="SAP_XEP" className="mb-2">
             Chọn đơn vị
           </label>
           <Dropdown
@@ -172,7 +172,7 @@ export const InputDM_PHONGBANModal = ({
             id="ma_dviqly"
             optionValue="id"
             placeholder="Chọn đơn vị "
-            className="w-full mr-2"
+            className="w-full"
             onFocus={() => {
               if (errors.donViQuanLy) {
                 setErrors({});
@@ -180,91 +180,86 @@ export const InputDM_PHONGBANModal = ({
             }}
           />
           {errors.donViQuanLy && (
-            <p style={{ color: "red" }}>{errors.donViQuanLy}</p>
+            <small className="p-error">{errors.donViQuanLy}</small>
           )}
         </div>
-      </div>
-      <div style={{ marginBottom: "20px" }}>
-        <div className="form__group">
-          <label htmlFor="TEN" className="form__label mb-3 inline-block">
+
+        <div className="flex flex-column">
+          <label htmlFor="TEN" className="mb-2">
             Tên phòng ban
           </label>
           <InputText
             id="TEN"
-            style={{ display: "block", width: "100%" }}
+            className="w-full"
             placeholder="Tên phòng ban ..."
             onChange={(e) => {
               setPhongBan({ ...phongBan, ten: e.target.value });
             }}
             onFocus={() => {
               if (errors.ten) {
-                console.log("re render");
                 setErrors({});
               }
             }}
             type="text"
             value={phongBan.ten}
           />
-          {errors.ten && <p style={{ color: "red" }}>{errors.ten}</p>}
+          {errors.ten && <small className="p-error">{errors.ten}</small>}
         </div>
-      </div>
-      <div style={{ marginBottom: "20px" }}>
-        <div className="form__group w-2/5">
-          <label htmlFor="TRANG_THAI" className="form__label mb-3 inline-block">
-            Trạng thái
-          </label>
-          <Dropdown
-            onChange={(e) => {
-              setTrangThai(e.value);
-              setPhongBan({ ...phongBan, trang_thai: e.value });
-            }}
-            optionLabel="label"
-            id="TRANG_THAI"
-            className="w-full mr-2"
-            style={{ width: "90%" }}
-            options={arrTrangThai}
-            placeholder="Chọn một trạng thái"
-            value={trangThai}
-          />
-        </div>
-        <div className="form__group w-1/2 mt-2">
-          <label htmlFor="SAP_XEP" className="form__label mb-3 inline-block">
-            Sắp xếp
-          </label>
-          <InputText
-            id="SAP_XEP"
-            style={{ display: "block", width: "100%" }}
-            onChange={(e) => {
-              setPhongBan({ ...phongBan, sap_xep: e.target.value });
-            }}
-            type="text"
-            className="w-full"
-            value={phongBan.sap_xep}
-          />
-        </div>
-      </div>
 
-      <div className="flex mt-4" style={{ justifyContent: "center" }}>
-        <Button
-          label="Lưu"
-          onClick={() => {
-            handleSubmit();
-          }}
-          severity="success"
-          style={{
-            backgroundColor: '#1445a7'
-          }}
-          className="mr-4"
-        />
-        <Button
-          label="Đóng"
-          outlined
-          severity="secondary"
-          onClick={() => {
-            setVisible(false);
-            setPhongBan(null);
-          }}
-        />
+        <div className="flex flex-wrap gap-4">
+          <div className="flex flex-column flex-grow-1">
+            <label htmlFor="TRANG_THAI" className="mb-2">
+              Trạng thái
+            </label>
+            <Dropdown
+              onChange={(e) => {
+                setTrangThai(e.value);
+                setPhongBan({ ...phongBan, trang_thai: e.value });
+              }}
+              optionLabel="label"
+              id="TRANG_THAI"
+              className="w-full"
+              options={arrTrangThai}
+              placeholder="Chọn một trạng thái"
+              value={trangThai}
+            />
+          </div>
+
+          <div className="flex flex-column flex-grow-1">
+            <label htmlFor="SAP_XEP" className="mb-2">
+              Sắp xếp
+            </label>
+            <InputText
+              id="SAP_XEP"
+              className="w-full"
+              onChange={(e) => {
+                setPhongBan({ ...phongBan, sap_xep: e.target.value });
+              }}
+              type="text"
+              value={phongBan.sap_xep}
+            />
+          </div>
+        </div>
+
+        <div className="flex justify-content-center gap-4 mt-4">
+          <Button
+            label="Lưu"
+            onClick={handleSubmit}
+            severity="success"
+            style={{
+              backgroundColor: '#1445a7'
+            }}
+          />
+          <Button
+            label="Đóng"
+            outlined
+            severity="secondary"
+            onClick={() => {
+              setVisible(false);
+              setPhongBan(null);
+            }}
+          />
+        </div>
       </div>
     </Dialog>
   );

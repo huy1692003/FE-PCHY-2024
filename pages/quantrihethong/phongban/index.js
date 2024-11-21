@@ -13,6 +13,7 @@ import { Panel } from "primereact/panel";
 import { DM_PHONGBAN } from "../../../models/DM_PHONGBAN";
 import { searchDM_PHONGBAN } from "../../../services/quantrihethong/DM_PHONGBANService";
 import { get_All_DM_DONVI } from "../../../services/quantrihethong/DM_DONVIService";
+
 const PhongBan = () => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -46,13 +47,14 @@ const PhongBan = () => {
     };
     getDSDonViQuanLy();
   }, []);
+
   const loadData = async () => {
     try {
       const ma_dviqly = JSON.parse(sessionStorage.getItem("current_MADVIQLY"));
       const data = {
         pageIndex: page,
         pageSize: pageSize,
-        ma: options.ma ,
+        ma: options.ma,
         ten: options.ten,
         trang_thai: options.trang_thai.value,
       };
@@ -65,34 +67,25 @@ const PhongBan = () => {
       setPageCount(0);
     }
   };
+
   useEffect(() => {
     loadData();
   }, [page, pageSize]);
+
   const onClinkSearchBtn = (e) => {
     loadData();
   };
+
   return (
     <div className="grid">
       <div className="col-12">
         <div className="card">
-          <div
-            className="card-header flex justify-between mb-3 items-center"
-            style={{ justifyContent: "space-between", alignItems: "center" }}
-          >
-            {/* <h3 className="card-title text-lg m-0">
-              Quản lý danh mục phòng ban
-            </h3> */}
-          </div>
-
           <Panel header="Tìm kiếm" className="mb-4">
             <Divider style={{ marginTop: "0", marginBottom: "10px" }} />
 
-            <div className="flex flex-col">
-              <div
-                className="form__group grow"
-                style={{ flexGrow: "1", width: "30%" }}
-              >
-                <label htmlFor="MA" className="form__label mb-3 inline-block">
+            <div className="flex flex-column lg:flex-row gap-3">
+              <div className="flex-auto">
+                <label htmlFor="MA" className="mb-2 block">
                   Đơn vị
                 </label>
                 <Dropdown
@@ -104,24 +97,19 @@ const PhongBan = () => {
                   optionLabel="ten"
                   id="ma_dviqly"
                   optionValue="id"
-                  placeholder="Chọn đơn vị "
-                  className="w-full mr-2"
+                  placeholder="Chọn đơn vị"
+                  className="w-full"
                   showClear
                 />
               </div>
-              <div
-                className="form__group grow ml-6"
-                style={{
-                  flexGrow: "1",
-                  width: "33.33333%",
-                }}
-              >
-                <label htmlFor="TEN" className="form__label mb-3 inline-block">
+
+              <div className="flex-auto">
+                <label htmlFor="TEN" className="mb-2 block">
                   Tên phòng ban
                 </label>
                 <InputText
                   id="TEN"
-                  style={{ display: "block", width: "90%" }}
+                  className="w-full"
                   placeholder="Nhập tên"
                   onChange={(e) => {
                     console.log(e.target.value);
@@ -131,14 +119,9 @@ const PhongBan = () => {
                   value={options.ten}
                 />
               </div>
-              <div
-                className="form__group "
-                style={{ flexGrow: "1", width: "33.33333%" }}
-              >
-                <label
-                  htmlFor="TRANG_THAI"
-                  className="form__label mb-3 inline-block"
-                >
+
+              <div className="flex-auto">
+                <label htmlFor="TRANG_THAI" className="mb-2 block">
                   Trạng thái
                 </label>
                 <Dropdown
@@ -152,21 +135,21 @@ const PhongBan = () => {
                   }}
                   optionLabel="label"
                   id="TRANG_THAI"
-                  className="w-full mr-2"
-                  style={{ width: "90%" }}
+                  className="w-full"
                   options={arrTrangThai}
                   placeholder="Chọn trạng thái"
                   value={options.trang_thai.value}
-                ></Dropdown>
+                />
               </div>
             </div>
-            <div className="flex mt-3" style={{ justifyContent: "center" }}>
+
+            <div className="flex justify-content-center mt-4">
               <Button
-              style={{backgroundColor: '#1445a7', color: '#fff'  }}
+                style={{backgroundColor: '#1445a7', color: '#fff'}}
                 label="Tìm kiếm"
                 onClick={onClinkSearchBtn}
                 severity="info"
-              ></Button>
+              />
             </div>
           </Panel>
 
@@ -183,8 +166,9 @@ const PhongBan = () => {
             pageSize={pageSize}
             loadData={loadData}
             toast={toast}
-          ></TableDM_PhongBan>
-          {visible == true && (
+          />
+
+          {visible && (
             <InputDM_PHONGBANModal
               phongban={PHONGBAN}
               isUpdate={isUpdate}

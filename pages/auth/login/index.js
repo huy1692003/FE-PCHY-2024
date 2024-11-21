@@ -23,7 +23,7 @@ const LoginPage = () => {
     const { layoutConfig } = useContext(LayoutContext);
 
     const router = useRouter();
-    const containerClassName = classNames('  flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden', { 'p-input-filled': layoutConfig.inputStyle === 'filled' });
+    const containerClassName = classNames('flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden', { 'p-input-filled': layoutConfig.inputStyle === 'filled' });
 
     const [username, setUsername] = useState('')
     const toast = useRef(null);
@@ -64,49 +64,53 @@ const LoginPage = () => {
         }
     }
 
-
     return (
         <React.Fragment>
             <Head>
                 <title>Đăng nhập - Phần mềm quản lý kìm chì</title>
             </Head>
             <Toast ref={toast} />
-            <div className={containerClassName} style={{ backgroundColor: '#B0BEC5' }}>
-                <div style={{ backgroundColor: 'white', width: '93%', boxShadow: '0px 4px 8px 0px #757575' }}>
-                    <div className="flex justify-content-between align-items-center gap-5" style={{ padding: '2rem' }}>
-                        <div className={styles.loginLeftside}>
-                            <div className='pb-5'>
-                                <div className='row'>
-                                    <img src='/demo/images/login/logologin.png' style={{ width: '30%' }} />
+            <div className={containerClassName}  style={{ backgroundColor: 'white' }}>
+                <div className="w-11 " style={{ backgroundColor: 'white' }}>
+                    <div className="grid">
+                        <div className="col-12 md:col-6 relative z-5 ">
+                            <div className="pb-5">
+                                <div className="row">
+                                    <img src='/demo/images/login/logologin.png' className="w-4" />
                                 </div>
+                            </div>
+                            <div className='hidden md:block' style={{
+                                height: '75vh',
+                                backgroundImage: "url('/demo/images/login/bg.jpg')",
+                                backgroundRepeat: 'no-repeat',
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center'
+                            }}>
                             </div>
                         </div>
-                        <div style={{ width: '40%', paddingRight: '30px' }}>
-                            <div className='mb-8'>
-                                <div className='text-center'>
-                                    <h3 className='page-title uppercase' style={{ color: '#1445a7' }}>hệ thống phần mềm pchungyen.vn</h3>
+                        <div className="col-12 md:col-6 p-4">
+                            <div className="mb-8">
+                                <div className="text-center">
+                                    <h3 className="page-title uppercase" style={{ color: '#1445a7' }}>hệ thống phần mềm pchungyen.vn</h3>
                                 </div>
-                                <div className='flex flex-wrap px-3 mb-4' style={{ marginRight: '-15px', marginLeft: '-15px' }}>
-                                    <div className={styles.line}></div>
-                                    <small style={{ width: '10%', fontWeight: 'bold', textAlign: 'center' }}>o0o</small>
-                                    <div className={styles.line}></div>
+                                <div className="flex flex-wrap px-3 mb-4 mx-minus-2">
+                                    <div className="h-1rem w-5 bg-gray-200 mt-2"></div>
+                                    <small className="w-1 font-bold text-center">o0o</small>
+                                    <div className="h-1rem w-5 bg-gray-200 mt-2"></div>
                                 </div>
                             </div>
 
-
-                            <div className='mb-3'>
+                            <div className="mb-3">
                                 <label htmlFor="username" className="block text-900 text-xl font-medium mb-2">
                                     Tên đăng nhập
                                 </label>
-                                <InputText inputid="username" value={username} type="text" placeholder="Tài khoản" className="w-full mb-2" style={{ padding: '1rem' }} onChange={(e) => setUsername(e.target.value)} onBlur={handleUsernameError} />
+                                <InputText inputid="username" value={username} type="text" placeholder="Tài khoản" className="w-full mb-2 p-3" onChange={(e) => setUsername(e.target.value)} onBlur={handleUsernameError} />
                                 {
                                     usernameError && (
                                         <Message severity='error' text={usernameError} className='mb-5 w-full' />
                                     )
                                 }
-
                             </div>
-
 
                             <label htmlFor="password" className="block text-900 font-medium text-xl mb-2">
                                 Mật khẩu
@@ -118,26 +122,23 @@ const LoginPage = () => {
                                 )
                             }
 
-
-
                             <div className="flex align-items-center justify-content-between mb-5 gap-5">
                                 <div className="flex align-items-center">
                                     <Checkbox inputid="rememberme1" checked={checked} onChange={(e) => setChecked(e.checked)} className="mr-2"></Checkbox>
                                     <label htmlFor="rememberme1">Lưu mật khẩu</label>
                                 </div>
-                                <Link className={`${styles.forgotPass} font-medium no-underline ml-2 text-right cursor-pointer `} href='/auth/forgotpassword'>
+                                <Link className="font-medium no-underline ml-2 text-right cursor-pointer hover:text-blue-700" href='/auth/forgotpassword'>
                                     Quên mật khẩu
                                 </Link>
                             </div>
-                            <div className='text-center'>
-                                <Button label="Đăng nhập" className={styles.buttonLogin} onClick={handleLogin}></Button>
+                            <div className="text-center">
+                                <Button label="Đăng nhập" className="w-5 h-3rem shadow-6 bg-blue-700 hover:bg-blue-700 hover:opacity-80" onClick={handleLogin}></Button>
                             </div>
                         </div>
                     </div>
-                    <div className='text-center py-4' style={{ backgroundColor: '#1A237E' }}>
-                        <div className='text-center text-white'>
-                            <small className='text-center'>Copyright © {currentYear} <span style={{ fontWeight: 'bold', fontSize: '14px' }}> Công ty Điện lực Hưng Yên</span> </small>
-
+                    <div className="text-center py-4 bg-indigo-900">
+                        <div className="text-center text-white">
+                            <small className="text-center">Copyright © {currentYear} <span className="font-bold text-sm">Công ty Điện lực Hưng Yên</span></small>
                         </div>
                     </div>
                 </div>

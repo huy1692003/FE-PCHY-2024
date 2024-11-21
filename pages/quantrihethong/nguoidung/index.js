@@ -203,25 +203,39 @@ const NguoiDung = () => {
 
     // Template header
     const headerTemplate = (options) => {
-        const className = `${options.className} justify-content-space-between`
+        const className = `${options.className} flex flex-column md:flex-row justify-content-between align-items-center gap-2`
         return (
-            <div className={className} >
-                <span className='font-bold text-xl'>Danh sách người dùng</span>
-                <span>
-                    {selectedNguoiDung.length > 0 && <SplitButton model={items.current} label="Bổ sung" icon="pi pi-plus" severity={"success"} rounded />}
-                    <InputText
-                        className="mx-2"
-                        type="search"
-                        value={filter || ''}
-                        onChange={(e) => onFilterChangeTable(e)}
-                        placeholder="Tìm kiếm"
-                    />
-                    <Button icon="pi pi-plus-circle" style={{ backgroundColor: "#1146A6" }} className='background-blue text-sm' label='Thêm mới' onClick={() => {
-                        setIsAdd(true);
-                        setFormData(HT_NGUOIDUNG);
-                        setVisibleForm(true);
-                    }} />
-                </span>
+            <div className={className}>
+                <span className='text-xl font-bold mb-3 md:mb-0'>Danh sách</span>
+                <div className="flex flex-column md:flex-row align-items-center gap-2">
+                    {selectedNguoiDung.length > 0 && 
+                        <div className="mb-2 md:mb-0 w-full md:w-auto">
+                            <SplitButton model={items.current} label="Bổ sung" icon="pi pi-plus" severity={"success"} rounded />
+                        </div>
+                    }
+                    <div className="mb-2 md:mb-0 w-full md:w-auto">
+                        <InputText
+                            type="search"
+                            value={filter || ''}
+                            onChange={(e) => onFilterChangeTable(e)}
+                            placeholder="Tìm kiếm"
+                            className="w-full"
+                        />
+                    </div>
+                    <div className="w-full md:w-auto">
+                        <Button 
+                            icon="pi pi-plus-circle" 
+                            style={{ backgroundColor: "#1146A6" }} 
+                            className='background-blue text-sm w-full'
+                            label='Thêm mới' 
+                            onClick={() => {
+                                setIsAdd(true);
+                                setFormData(HT_NGUOIDUNG);
+                                setVisibleForm(true);
+                            }} 
+                        />
+                    </div>
+                </div>
             </div>
         )
     }
@@ -238,60 +252,62 @@ const NguoiDung = () => {
         <>
             <Toast ref={toast} />
             <ConfirmDialog />
-            <div className='border-round-3xl bg-white p-4 text-lg'>
+            <div className='border-round-3xl bg-white p-4'>
                 <Panel header="Tìm kiếm">
-                    <div className='flex flex-wrap p-fluid gap-3'>
-                        <div className='field w-4' >
-                            <label>Đơn vị</label>
-                            <Dropdown  value={searchTerm.dM_DONVI_ID} filter onChange={(e) => setSearchTerm({ ...searchTerm, dM_DONVI_ID: e.target.value })} placeholder='-- Chọn đơn vị --' optionLabel='name' optionValue='id' options={DM_DONVI} />
+                    <div className='grid'>
+                        <div className='col-12 md:col-6 lg:col-4'>
+                            <label className="block mb-2">Đơn vị</label>
+                            <Dropdown className="w-full" value={searchTerm.dM_DONVI_ID} filter onChange={(e) => setSearchTerm({ ...searchTerm, dM_DONVI_ID: e.target.value })} placeholder='-- Chọn đơn vị --' optionLabel='name' optionValue='id' options={DM_DONVI} />
                         </div>
-                      
-                        <div className='field w-4' >
-                            <label>Phòng ban</label>
-                            <Dropdown showClear value={searchTerm.dM_PHONGBAN_ID} filter onChange={(e) => setSearchTerm({ ...searchTerm, dM_PHONGBAN_ID: e.target.value })} placeholder='-- Chọn phòng ban --' optionLabel='name' optionValue='id' options={DM_PHONGBAN.filter(s => s.dm_donvi_id === searchTerm.dM_DONVI_ID)} />
+
+                        <div className='col-12 md:col-6 lg:col-4'>
+                            <label className="block mb-2">Phòng ban</label>
+                            <Dropdown className="w-full" showClear value={searchTerm.dM_PHONGBAN_ID} filter onChange={(e) => setSearchTerm({ ...searchTerm, dM_PHONGBAN_ID: e.target.value })} placeholder='-- Chọn phòng ban --' optionLabel='name' optionValue='id' options={DM_PHONGBAN.filter(s => s.dm_donvi_id === searchTerm.dM_DONVI_ID)} />
                         </div>
-                        <div className='field w-3' >
-                            <label>Chức vụ</label>
-                            <Dropdown showClear value={searchTerm.dM_CHUCVU_ID} filter placeholder='-- Tất cả --' optionLabel='name' optionValue='id' onChange={(e) => setSearchTerm({ ...searchTerm, dM_CHUCVU_ID: e.target.value })} options={DM_CHUCVU} />
+
+                        <div className='col-12 md:col-6 lg:col-4'>
+                            <label className="block mb-2">Chức vụ</label>
+                            <Dropdown className="w-full" showClear value={searchTerm.dM_CHUCVU_ID} filter placeholder='-- Tất cả --' optionLabel='name' optionValue='id' onChange={(e) => setSearchTerm({ ...searchTerm, dM_CHUCVU_ID: e.target.value })} options={DM_CHUCVU} />
                         </div>
-                        <div className='field w-4' >
-                            <label>Trạng thái</label>
-                            <Dropdown  value={searchTerm.tranG_THAI} onChange={(e) => setSearchTerm({ ...searchTerm, tranG_THAI: e.target.value })} placeholder='-- Chọn trạng thái --' optionLabel='name' optionValue='id' options={[{ id: -1, name: '-- Tất cả --' }, { id: 1, name: 'Còn hiệu lực' }, { id: 0, name: 'Hết hiệu lực' }]} />
+
+                        <div className='col-12 md:col-6 lg:col-4'>
+                            <label className="block mb-2">Trạng thái</label>
+                            <Dropdown className="w-full" value={searchTerm.tranG_THAI} onChange={(e) => setSearchTerm({ ...searchTerm, tranG_THAI: e.target.value })} placeholder='-- Chọn trạng thái --' optionLabel='name' optionValue='id' options={[{ id: -1, name: '-- Tất cả --' }, { id: 1, name: 'Còn hiệu lực' }, { id: 0, name: 'Hết hiệu lực' }]} />
                         </div>
-                        <div className='field w-4' >
-                            <label>Họ tên</label>
-                            <InputText value={searchTerm.hO_TEN} onChange={(e) => setSearchTerm({ ...searchTerm, hO_TEN: e.target.value })} placeholder='Nhập họ tên ' type='search' style={{ width: '100%' }} />
+
+                        <div className='col-12 md:col-6 lg:col-4'>
+                            <label className="block mb-2">Họ tên</label>
+                            <InputText className="w-full" value={searchTerm.hO_TEN} onChange={(e) => setSearchTerm({ ...searchTerm, hO_TEN: e.target.value })} placeholder='Nhập họ tên' type='search' />
                         </div>
-                        <div className='field w-3' >
-                            <label>Tên đăng nhập</label>
-                            <InputText value={searchTerm.teN_DANG_NHAP} onChange={(e) => setSearchTerm({ ...searchTerm, teN_DANG_NHAP: e.target.value })} placeholder='Nhập tên đăng nhập ' type='search' style={{ width: '100%' }} />
+
+                        <div className='col-12 md:col-6 lg:col-4'>
+                            <label className="block mb-2">Tên đăng nhập</label>
+                            <InputText className="w-full" value={searchTerm.teN_DANG_NHAP} onChange={(e) => setSearchTerm({ ...searchTerm, teN_DANG_NHAP: e.target.value })} placeholder='Nhập tên đăng nhập' type='search' />
                         </div>
                     </div>
-                    <div className='flex justify-content-center mt-2'>
+                    <div className='flex justify-content-center mt-4'>
                         <Button label='Tìm kiếm' style={{ backgroundColor: '#1445a7' }} onClick={() => loadData(searchTerm)} />
                     </div>
                 </Panel>
 
-
                 <p className="mt-4 mb-2">* Ghi chú : <span style={{ color: "red" }}>Tích chọn vào những người cần thao tác sẽ hiển thị nút Bổ sung để Phân Quyền hoặc Xóa nhiều .</span> </p>
 
-
-                <Panel headerTemplate={headerTemplate}  >
+                <Panel headerTemplate={headerTemplate}>
                     <DataTable
                         selection={selectedNguoiDung}
                         onSelectionChange={(e) => { setSelectedNguoiDung(e.value) }} dataKey='teN_DANG_NHAP'
                         value={DataFilter} showGridlines
+                        responsiveLayout="scroll"
                         style={{ fontSize: 12, fontWeight: "" }}
                     >
-
-                        <Column  headerStyle={{ backgroundColor: '#1445a7', color: '#fff' }} selectionMode="multiple" ></Column>
-                        <Column  {...propSortAndFilter} headerStyle={{ backgroundColor: '#1445a7', color: '#fff' }} field="hO_TEN" header="Họ tên" />
-                        <Column  headerStyle={{ backgroundColor: '#1445a7', color: '#fff' }} field="teN_DANG_NHAP" header="Tên đăng nhập" />
+                        <Column headerStyle={{ backgroundColor: '#1445a7', color: '#fff' }} selectionMode="multiple" ></Column>
+                        <Column {...propSortAndFilter} headerStyle={{ backgroundColor: '#1445a7', color: '#fff' }} field="hO_TEN" header="Họ tên" />
+                        <Column headerStyle={{ backgroundColor: '#1445a7', color: '#fff' }} field="teN_DANG_NHAP" header="Tên đăng nhập" />
                         <Column {...propSortAndFilter} headerStyle={{ backgroundColor: '#1445a7', color: '#fff' }} field="teN_DONVI" header="Tên đơn vị" />
                         <Column {...propSortAndFilter} headerStyle={{ backgroundColor: '#1445a7', color: '#fff' }} field="teN_PHONGBAN" header="Tên phòng ban" />
                         <Column {...propSortAndFilter} headerStyle={{ backgroundColor: '#1445a7', color: '#fff' }} field="teN_CHUCVU" header="Chức vụ" />
-                        <Column  headerStyle={{ backgroundColor: '#1445a7', color: '#fff' }} field="tranG_THAI" header="Trạng thái" style={{ width: "9rem" }} body={(row) => <span>{`${row.tranG_THAI === 0 ? "Không" : "Còn"} hiệu lực`}</span>}  />
-                        <Column  headerStyle={{ backgroundColor: '#1445a7', color: '#fff' }} header="Thao tác" style={{ width: 100 }} body={(rowData) => {
+                        <Column headerStyle={{ backgroundColor: '#1445a7', color: '#fff' }} field="tranG_THAI" header="Trạng thái" style={{ width: "9rem" }} body={(row) => <span>{`${row.tranG_THAI === 0 ? "Không" : "Còn"} hiệu lực`}</span>} />
+                        <Column headerStyle={{ backgroundColor: '#1445a7', color: '#fff' }} header="Thao tác" style={{ width: 100 }} body={(rowData) => {
 
                             return (
                                 <span className="flex  w-1">
@@ -308,10 +324,10 @@ const NguoiDung = () => {
                             )
                         }} />
                     </DataTable>
-                    {totalRecords > 0
-                        &&
+                    {totalRecords > 0 &&
                         <Paginator
-                            first={((pageIndex - 1) * pageSize)}  // Vị trí đầu tiên của trang hiện tại
+                            
+                            first={((pageIndex - 1) * pageSize)}
                             rows={pageSize}
                             totalRecords={totalRecords}
                             onPageChange={onPageChange}
@@ -333,7 +349,6 @@ const NguoiDung = () => {
 
             {visibleForm && <DialogForm isAdd={isAdd}
                 search={searchTerm}
-
                 toast={toast}
                 DM_DONVI={DM_DONVI}
                 DM_CHUCVU={DM_CHUCVU}

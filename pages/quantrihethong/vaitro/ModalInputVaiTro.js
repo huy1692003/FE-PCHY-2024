@@ -27,14 +27,10 @@ const ModalInputVaiTro = ({
 
   const [errors, setErrors] = useState({});
 
-
-
   const getDVIQLY = async () => {
     let data = await get_All_DM_DONVI()
     data && setDVIQLY(data.map(d => ({ id: d.ma_dviqly, name: d.ten })))
   }
-
-
 
   useEffect(() => {
     getDVIQLY()
@@ -66,13 +62,11 @@ const ModalInputVaiTro = ({
   };
 
   const createVaiTro = async () => {
-
     const nhom_id = uuidv4();
     try {
       if (handleCreateVaiTro) {
         console.log({
           ...vaiTro
-
         })
 
         const results = await create_HT_NHOMQUYEN({
@@ -105,7 +99,6 @@ const ModalInputVaiTro = ({
   };
 
   const updateVaiTro = async () => {
-
     try {
       if (handleCreateVaiTro()) {
         const result = await update_HT_NHOMQUYEN({
@@ -137,8 +130,7 @@ const ModalInputVaiTro = ({
   return (
     <Dialog
       header={!isUpdate ? "Thêm mới vai trò" : "Cập nhật vai trò"}
-      style={{ width: "600px" }}
-      className="p-fluid"
+      className="p-fluid w-11 md:w-6"
       visible={visible}
       onHide={() => {
         if (!visible) return;
@@ -146,69 +138,79 @@ const ModalInputVaiTro = ({
         setVaiTro(null);
       }}
     >
-      <div className="field">
-        <label htmlFor="ma_dviqly">Đơn vị quản lý</label>
-        <Dropdown
-          value={vaiTro.ma_dviqly}
-          options={dviQLY}
-          onChange={(e) => {
-            setVaiTro({ ...vaiTro, ma_dviqly: e.value });
-            console.log(e.value);
-          }}
-          filter
-          optionLabel="name"
-          optionValue="id"
-          id="MA_DVIQLY"
-          placeholder="Chọn đơn vị"
-          className="w-full"
-        ></Dropdown>
-      </div>
-      <div className="field">
-        <label htmlFor="ten_nhom">Tên vai trò</label>
-        <InputText
-          id="ten_nhom"
-          onChange={(e) => {
-            setVaiTro({ ...vaiTro, ten_nhom: e.target.value })
-          }}
-          type="text"
-          value={vaiTro.ten_nhom}
-        />
-      </div>
+      <div className="grid">
+        <div className="col-12">
+          <div className="field">
+            <label htmlFor="ma_dviqly">Đơn vị quản lý</label>
+            <Dropdown
+              value={vaiTro.ma_dviqly}
+              options={dviQLY}
+              onChange={(e) => {
+                setVaiTro({ ...vaiTro, ma_dviqly: e.value });
+                console.log(e.value);
+              }}
+              filter
+              optionLabel="name"
+              optionValue="id"
+              id="MA_DVIQLY"
+              placeholder="Chọn đơn vị"
+              className="w-full"
+            ></Dropdown>
+          </div>
+        </div>
 
-      <div className="field">
-        <label htmlFor="ghi_chu">Ghi chú</label>
-        <InputText
-          id="ghi_chu"
-          onChange={(e) => {
-            console.log(e.target.value)
-            setVaiTro({ ...vaiTro, ghi_chu: e.target.value })
-          }}
-          type="text"
-          value={vaiTro.ghi_chu}
-        />
-      </div>
+        <div className="col-12">
+          <div className="field">
+            <label htmlFor="ten_nhom">Tên vai trò</label>
+            <InputText
+              id="ten_nhom"
+              onChange={(e) => {
+                setVaiTro({ ...vaiTro, ten_nhom: e.target.value })
+              }}
+              type="text"
+              value={vaiTro.ten_nhom}
+            />
+          </div>
+        </div>
 
+        <div className="col-12">
+          <div className="field">
+            <label htmlFor="ghi_chu">Ghi chú</label>
+            <InputText
+              id="ghi_chu"
+              onChange={(e) => {
+                console.log(e.target.value)
+                setVaiTro({ ...vaiTro, ghi_chu: e.target.value })
+              }}
+              type="text"
+              value={vaiTro.ghi_chu}
+            />
+          </div>
+        </div>
 
-      <div className="flex mt-4" style={{ justifyContent: "center" }}>
-        <Button
-          label="Lưu"
-          onClick={() => {
-            handleSubmit();
-          }}
-          style={{
-            backgroundColor: "#1445a7",
-          }}
-          className="mr-4"
-        />
-        <Button
-          label="Đóng"
-          outlined
-          severity="secondary"
-          onClick={() => {
-            setVisible(false);
-            setVaiTro(null);
-          }}
-        />
+        <div className="col-12">
+          <div className="flex mt-4" style={{ justifyContent: "center" }}>
+            <Button
+              label="Lưu"
+              onClick={() => {
+                handleSubmit();
+              }}
+              style={{
+                backgroundColor: "#1445a7",
+              }}
+              className="mr-4"
+            />
+            <Button
+              label="Đóng"
+              outlined
+              severity="secondary"
+              onClick={() => {
+                setVisible(false);
+                setVaiTro(null);
+              }}
+            />
+          </div>
+        </div>
       </div>
     </Dialog>
   );

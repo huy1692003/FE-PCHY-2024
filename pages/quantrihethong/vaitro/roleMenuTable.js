@@ -389,21 +389,18 @@ const QuanLyMenuVaiTro = ({
   };
 
   const headerTemplate = (
-    <div className="flex justify-content-between">
-      <span className='inline-block w-4'>PHÂN QUYỀN MENU</span>
-      <div className="w-full text-right" >
+    <div className="flex justify-content-between align-items-center">
+      <span className='text-xl font-bold'>PHÂN QUYỀN MENU</span>
+      <div className="flex gap-2">
         <Button
           label="Lưu"
           onClick={() => {
             handleCreateHT_PhanQuyen();
-            
           }}
           severity="success"
           style={{
             backgroundColor: "#1445a7",
-            width: "10%",
           }}
-          className="mr-4"
         />
         <Button
           label="Đóng"
@@ -411,9 +408,6 @@ const QuanLyMenuVaiTro = ({
           severity="secondary"
           onClick={() => {
             setVisible(false);
-          }}
-          style={{
-            width: "10%",
           }}
         />
       </div>
@@ -425,7 +419,8 @@ const QuanLyMenuVaiTro = ({
       closable={false}
       header={headerTemplate}
       style={{
-        width: "1200px",
+        width: "90vw",
+        maxWidth: "1200px"
       }}
       className="p-fluid"
       visible={visible}
@@ -433,24 +428,21 @@ const QuanLyMenuVaiTro = ({
         setVisible();
       }}
     >
-
-      <div className="flex justify-content-between align-items-start gap-5">
-        <div className="field">
+      <div className="flex flex-column md:flex-row gap-4">
+        <div className="flex-1">
           <TreeTable
             selectionKeys={selectedNodeKeys}
             onSelectionChange={handleSelectionChange}
             selectionMode="checkbox"
             onSelect={(e) => {
-
               setNodes(prevNodes => {
-
                 console.log(prevNodes)
-
                 return [...prevNodes, e.node]
               })
-
             }}
             value={arrMenu}
+            scrollable
+            scrollHeight="calc(100vh - 300px)"
           >
             <Column field="" header="ID" expander></Column>
             <Column field="ten_menu" header="Tên menu"></Column>
@@ -462,7 +454,7 @@ const QuanLyMenuVaiTro = ({
                 const duongDan =
                   rowData.data && rowData.data.duong_dan
                     ? rowData.data.duong_dan
-                    : ""; // Kiểm tra sự tồn tại của rowData.data
+                    : "";
 
                 return (
                   <>
@@ -488,12 +480,12 @@ const QuanLyMenuVaiTro = ({
           </TreeTable>
         </div>
 
-        <div className="field">
-
+        <div className="flex-1">
           <TreeTable
             value={nodes}
             selectionKeys={selectedNodeKeys}
-
+            scrollable
+            scrollHeight="calc(100vh - 300px)"
           >
             <Column field="" header="ID" expander></Column>
             <Column field="ten_menu" header="Tên menu"></Column>
@@ -505,7 +497,7 @@ const QuanLyMenuVaiTro = ({
                 const duongDan =
                   rowData.data && rowData.data.duong_dan
                     ? rowData.data.duong_dan
-                    : ""; // Kiểm tra sự tồn tại của rowData.data
+                    : "";
 
                 return (
                   <>
@@ -531,7 +523,6 @@ const QuanLyMenuVaiTro = ({
           </TreeTable>
         </div>
       </div>
-
     </Dialog>
   );
 };

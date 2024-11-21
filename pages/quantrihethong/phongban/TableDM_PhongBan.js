@@ -5,9 +5,7 @@ import { DataTable } from "primereact/datatable";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import { propSortAndFilter } from "../../../constants/propGlobal";
 
-// import { IconField } from "primereact/iconfield";
 import { Panel } from "primereact/panel";
-// import { InputIcon } from "primereact/inputicon";
 import { Toast } from "primereact/toast";
 import { Card } from "primereact/card";
 import { Divider } from "primereact/divider";
@@ -15,6 +13,7 @@ import { Dropdown } from "primereact/dropdown";
 import { deleteDM_PHONGBAN } from "../../../services/quantrihethong/DM_PHONGBANService";
 import { FilterMatchMode, PrimeIcons } from "primereact/api";
 import { InputText } from "primereact/inputtext";
+
 const TableDM_PhongBan = ({
     setVisible,
     setIsUpdate,
@@ -110,67 +109,69 @@ const TableDM_PhongBan = ({
         );
     };
 
-    const headerList = (options) => {
-        const className = `${options.className} justify-content-space-between`;
-    
+    const headerTemplate = (options) => {
+        const className = `${options.className} flex flex-wrap justify-content-between align-items-center gap-2`
         return (
-          <div className={className}>
-            <span className="font-bold text-2xl">Danh sách</span>
-            <div>
-              {selectedRecords.length > 0 && <Button label="Xóa nhiều" style={{ backgroundColor: '#d9534f', marginRight: '8px' }} onClick={() => {
-                  setIsHide(true);
-                  setIsMultiDelete(true);
-              }} disabled={!selectedRecords.length}></Button>}
-              <Button label="Thêm mới" style={{ backgroundColor: '#1445a7' }} onClick={()=>{
-                 setVisible(true);
-                    setIsUpdate(false);}}></Button>
+            <div className={className} >
+                <span className='text-xl font-bold'>Danh sách</span>
+                <div className="flex flex-column sm:flex-row gap-3">
+                    {selectedRecords.length > 0 &&
+                        <Button
+                            label="Xóa nhiều"
+                           severity="danger"
+                            onClick={() => {
+                                setIsHide(true);
+                                setIsMultiDelete(true);
+                            }}
+                            disabled={!selectedRecords.length}
+                        />
+                    }
+                    <Button
+                        label="Thêm mới"
+                        style={{ backgroundColor: '#1445a7' }}
+                        onClick={() => {
+                            setVisible(true);
+                            setIsUpdate(false);
+                        }}
+                    />
+                </div>
             </div>
-          </div>
-        );
-      };
+        )
+    }
 
-    const clearFilter = () => {
-        initFilters();
-    };
+
 
     const onGlobalFilterChange = (e) => {
         const value = e.target.value;
         let _filters = { ...filters };
-
         _filters["global"].value = value;
-
         setFilters(_filters);
         setGlobalFilterValue(value);
     };
 
-    const initFilters = () => {
-        setFilters({
-            global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-        });
-        setGlobalFilterValue("");
-    };
-    const renderHeader = () => {
-        return (
-            <div className="flex justify-content-end">
-                <InputText
-                    style={{ width: "250px" }}
-                    value={globalFilterValue}
-                    onChange={onGlobalFilterChange}
-                    placeholder="Tìm kiếm"
-                />
-            </div>
-        );
-    };
+   
+
+    
 
     return (
         <>
-            <Panel headerTemplate={headerList}>
-                <Divider style={{ marginTop: "0", marginBottom: "10px" }} />
+            <Panel headerTemplate={headerTemplate}>
+                <div className="flex justify-content-end mb-3">
+                    <span className="p-input-icon-left w-full md:w-auto">
+                        <i className="pi pi-search" />
+                        <InputText
+                            value={globalFilterValue}
+                            onChange={onGlobalFilterChange}
+                            placeholder="Tìm kiếm"
+                            className="w-full md:w-auto"
+                        />
+                    </span>
+                </div>
                 <DataTable
                     value={data.data}
                     showGridlines
                     stripedRows
-                    header={renderHeader()}
+
                     filters={filters}
                     onFilter={(e) => setFilters(e.filters)}
                     rowkey="id"
@@ -180,36 +181,35 @@ const TableDM_PhongBan = ({
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                     selection={selectedRecords}
                     onSelectionChange={(e) => setSelectedRecords(e.value)}
+                    responsiveLayout="scroll"
                 >
-                    <Column selectionMode="multiple" headerStyle={{ width: '3em',backgroundColor: '#1445a7', color: '#fff' }}></Column>
-                    {/*  */}
-                  
+                    <Column selectionMode="multiple" headerStyle={{ width: '3em', backgroundColor: '#1445a7', color: '#fff' }}></Column>
                     <Column
-{...propSortAndFilter}
-                       headerStyle={{ backgroundColor: '#1445a7', color: '#fff'  }}
+                        {...propSortAndFilter}
+                        headerStyle={{ backgroundColor: '#1445a7', color: '#fff' }}
                         field="ten"
                         header="Tên phòng ban"
+                        className="min-w-10rem"
                     ></Column>
                     <Column
-                    {...propSortAndFilter}
-                       headerStyle={{ backgroundColor: '#1445a7', color: '#fff'  }}
+                        {...propSortAndFilter}
+                        headerStyle={{ backgroundColor: '#1445a7', color: '#fff' }}
                         field="ma_dviqly"
                         header="Mã ĐVQL"
-                       
+                        className="min-w-8rem"
                     ></Column>
                     <Column
-                       
-                       headerStyle={{ backgroundColor: '#1445a7', color: '#fff'  }}
+                        headerStyle={{ backgroundColor: '#1445a7', color: '#fff' }}
                         field="dm_donvi_id"
                         header="Tên đơn vị"
                         body={(rowData) => {
-                            let nameDv= donvi?.find(item=>item.id===rowData.dm_donvi_id)?.ten
-                                return <span>{nameDv}</span>
+                            let nameDv = donvi?.find(item => item.id === rowData.dm_donvi_id)?.ten
+                            return <span>{nameDv}</span>
                         }}
-                       
+                        className="min-w-10rem"
                     ></Column>
                     <Column
-                       headerStyle={{ backgroundColor: '#1445a7', color: '#fff'  }}
+                        headerStyle={{ backgroundColor: '#1445a7', color: '#fff' }}
                         field="trang_thai"
                         header="Trạng thái"
                         body={(rowData) => {
@@ -217,32 +217,27 @@ const TableDM_PhongBan = ({
                                 ? "Có hiệu lực"
                                 : "Hết hiệu lực";
                         }}
+                        className="min-w-8rem"
                     ></Column>
                     <Column
-                       headerStyle={{ backgroundColor: '#1445a7', color: '#fff'  }}
+                        headerStyle={{ backgroundColor: '#1445a7', color: '#fff' }}
                         body={buttonOption}
-                        header="Thao tác "
+                        header="Thao tác"
+                        className="min-w-8rem"
                     ></Column>
                 </DataTable>
-                <div
-                    style={{ marginTop: "20px", justifyContent: "center" }}
-                    className="flex justify-between items-center mt-4"
-                >
-                    <div
-                        className="flex items-center"
-                        style={{ alignItems: "center" }}
-                    >
+
+                <div className="flex flex-column md:flex-row justify-content-between align-items-center gap-3 mt-4">
+                    <div className="flex align-items-center">
                         <Button
                             outlined
                             text
                             icon={PrimeIcons.ANGLE_DOUBLE_LEFT}
-                            onClick={() =>
-                                setPage((prev) => Math.max(prev - 1, 1))
-                            }
+                            onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
                             disabled={page === 1}
                             severity="secondary"
-                        ></Button>
-                        <p className="mr-4 ml-4 mb-0">
+                        />
+                        <p className="mx-4 mb-0">
                             Trang {page} trong tổng số {pageCount} trang
                         </p>
                         <Button
@@ -250,14 +245,11 @@ const TableDM_PhongBan = ({
                             text
                             severity="secondary"
                             icon={PrimeIcons.ANGLE_DOUBLE_RIGHT}
-                            onClick={() =>
-                                setPage((prev) => Math.min(prev + 1, pageCount))
-                            }
+                            onClick={() => setPage((prev) => Math.min(prev + 1, pageCount))}
                             disabled={page === pageCount}
-                        ></Button>
+                        />
                     </div>
                     <Dropdown
-                        className="w-1/4 ml-4"
                         value={pageSize}
                         options={rowsPerPageOptions}
                         onChange={(e) => {
@@ -265,8 +257,10 @@ const TableDM_PhongBan = ({
                             setPage(1);
                         }}
                         placeholder="Select rows per page"
+                        className="w-full md:w-auto"
                     />
                 </div>
+
             </Panel>
 
             <Toast ref={toast} />

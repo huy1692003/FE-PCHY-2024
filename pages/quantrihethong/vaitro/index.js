@@ -19,7 +19,6 @@ import { HT_MENU } from "../../../models/HT_MENU";
 import QuanLyMenuVaiTro from "./roleMenuTable";
 import { propSortAndFilter } from "../../../constants/propGlobal";
 
-
 const QuanLyVaiTro = () => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
@@ -34,22 +33,14 @@ const QuanLyVaiTro = () => {
   const [visible, setVisible] = useState(false);
   const [menuDialogVisible, setMenuDialogVisible] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
-  const [selectedVaiTro, setSelectedVaiTro] = useState(null); // Để lưu vai trò đang được chọn cho gán menu
+  const [selectedVaiTro, setSelectedVaiTro] = useState(null);
 
   const toast = useRef(null);
   const dt = useRef(null);
 
   const router = useRouter();
 
-  const breadcrumb_router = [
-    {
-      label: "Quản trị hệ thống",
-    },
-    {
-      label: "Vai trò",
-      template: () => <Link href="/quantrihethong/vaitro">Vai trò</Link>,
-    },
-  ];
+
   const home = { icon: "pi pi-home", url: "/" };
   const handleCloseModal = () => {
     setMenuDialogVisible(false);
@@ -97,36 +88,18 @@ const QuanLyVaiTro = () => {
     loadData();
   };
 
-  // const vaiTroDialogFooter = (
-  //     <>
-  //         <Button label="Hủy" icon="pi pi-times" text onClick={hideDialog} />
-  //         <Button label="Lưu" icon="pi pi-check" text />
-  //     </>
-  // );
-
   return (
     <React.Fragment>
-     
-
-      <div className="grid">
-        <div className="col-12">
-          {/* <div className="flex justify-content-between align-items-center mb-2">
-           
-            <BreadCrumb
-              model={breadcrumb_router}
-              home={home}
-              className="bg-transparent border-transparent"
-            />
-          </div> */}
+      <div className="flex flex-column md:flex-row w-full">
+        <div className="flex-grow-1">
           <div className="card">
             <Toast ref={toast} />
             <Panel header="Tìm kiếm">
-              <div className="justify-content-between p-fluid gap-3" style={{width:"100%"}}>
-                <div className="field">
+              <div className="flex flex-column md:flex-row gap-3">
+                <div className="flex-grow-1 flex flex-column">
                   <label>Tên vai trò</label>
                   <InputText
                     placeholder="Nhập tên vai trò "
-                    style={{ width: "100%" }}
                     onChange={(e) => {
                       setOptions({
                         ...options,

@@ -1,5 +1,5 @@
 
-//Bật tìm kiếm và sort
+//Bật tìm kiếm và sort cho header table
 export const propSortAndFilter = {
     filterMatchMode: 'contains',  // Tìm kiếm gần đúng
     filter: true,                 // Bật bộ lọc

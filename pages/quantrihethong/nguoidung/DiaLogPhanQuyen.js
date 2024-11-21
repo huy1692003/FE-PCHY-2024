@@ -141,9 +141,9 @@ export const DialogPhanQuyen = ({ isDeleteMultiple, dataSelected, setDataSelecte
     }
 
     const headerTemplate = (options) => {
-        const className = `${options.className} justify-content-space-between`
+        const className = `${options.className} flex justify-content-between align-items-center`
         return (
-            <div className={className} >
+            <div className={className}>
                 <span>Chọn vai trò mới</span>
                 <Button size="small" label="Thêm vai trò" severity="info" icon="pi pi-plus" onClick={() => { onAddQuyenNew() }} />
             </div>
@@ -152,9 +152,9 @@ export const DialogPhanQuyen = ({ isDeleteMultiple, dataSelected, setDataSelecte
     return (
         <>
             {!EditPhanQuyen.isEdit ?
-                <Dialog header={<h4>{isDeleteMultiple ? "Xóa nhiều người dùng" : "Phân quyền người dùng"}</h4>} visible={visible} onHide={() => setVisible(false)}>
-                    <Panel header="Danh sách " className="mb-2" >
-                        <DataTable value={dataSelected} showGridlines paginator rows={10} style={{ fontSize: 12, fontWeight: "" }} rowsPerPageOptions={[5, 10, 25, 50, 100]}>
+                <Dialog header={<h4>{isDeleteMultiple ? "Xóa nhiều người dùng" : "Phân quyền người dùng"}</h4>} visible={visible} onHide={() => setVisible(false)} className="w-full md:w-8">
+                    <Panel header="Danh sách " className="mb-2">
+                        <DataTable value={dataSelected} showGridlines paginator rows={10} style={{ fontSize: 12 }} rowsPerPageOptions={[5, 10, 25, 50, 100]}>
                             <Column header="STT" body={(_, { rowIndex }) => rowIndex + 1} className='w-auto' />
                             <Column field="hO_TEN" header="Họ tên" className="w-2" />
                             <Column field="teN_DANG_NHAP" header="Tên đăng nhập" className="w-2" />
@@ -163,50 +163,43 @@ export const DialogPhanQuyen = ({ isDeleteMultiple, dataSelected, setDataSelecte
                             <Column field="teN_CHUCVU" header="Chức vụ" className="w-2" />
                             <Column field="tranG_THAI" header="Trạng thái" body={(row) => <span>{`${row.tranG_THAI === 0 ? "Hết" : "Còn"} hiệu lực`}</span>} className="w-2" />
                             <Column header="Thao tác" style={{ width: 100 }} body={(row) => (
-                                <span className="flex  w-1">
+                                <span className="flex w-1">
                                     <Button size='small' className="w-1rem h-2rem p-3 mr-1 p-button-danger" icon="pi pi-trash"
                                         onClick={() => {
-
                                             setDataSelected(dataSelected.filter(nd => nd.teN_DANG_NHAP != row.teN_DANG_NHAP))
                                         }} />
                                 </span>
                             )} />
-                        </DataTable >
-
-
+                        </DataTable>
                     </Panel>
 
                     {!isDeleteMultiple &&
                         <Panel header="Chọn vai trò">
-                            <div className="flex justify-content-between ">
+                            <div className="flex flex-column md:flex-row gap-3">
                                 <Dropdown value={selectedDVIQLY} onChange={(e) => setSelectedDVIQLY(e.value)}
                                     options={dataDVIQLY}
-                                    filter className="md:w-6 w-full mt-2" placeholder="-- Đơn vị quản lý -- "></Dropdown>
+                                    filter className="w-full md:w-6" placeholder="-- Đơn vị quản lý -- " />
                                 <Dropdown value={selectedNhomQuyen} onChange={(e) => setSelectedNhomQuyen(e.value)} options={dataNhomQuyen}
-                                    filter className="md:w-5 w-full mt-2" placeholder="-- Vai trò -- "></Dropdown>
-
+                                    filter className="w-full md:w-5" placeholder="-- Vai trò -- " />
                             </div>
                         </Panel>
                     }
 
-
                     <div className='flex justify-content-end gap-2 mt-4'>
                         <Button label="Đóng" icon="pi pi-times" onClick={() => setVisible(false)} className='p-button-outlined' />
-
                         {!isDeleteMultiple ?
                             <Button label="Lưu lại" icon="pi pi-check" onClick={() => onPhanQuyenNhieu()} /> :
                             <Button label="Xóa nhiều" icon="pi pi-trash" className='p-button-danger' onClick={() => onDelete()} />}
                     </div>
-                </Dialog >
+                </Dialog>
                 :
-
-                <Dialog className='w-6' header={<h4>Sửa quyền người dùng </h4>} visible={visible} onHide={() => setVisible(false)}>
-                    <Panel header={`Danh sách vai trò của người dùng :  ${EditPhanQuyen.user.hO_TEN}`} className='mb-2 '>
-                        <DataTable value={nhomQuyenEdit} showGridlines style={{ fontSize: 12 }} >
+                <Dialog className='w-full md:w-8' header={<h4>Sửa quyền người dùng </h4>} visible={visible} onHide={() => setVisible(false)}>
+                    <Panel header={`Danh sách vai trò của người dùng : ${EditPhanQuyen.user.hO_TEN}`} className='mb-2'>
+                        <DataTable value={nhomQuyenEdit} showGridlines style={{ fontSize: 12 }}>
                             <Column field="tenDonVi" header="Tên Đơn vị" className="w-5" />
                             <Column field="tenNhom" header="Vai trò hiện tại" className="w-5" />
                             <Column header="Thao tác" style={{ width: 50 }} body={(row) => (
-                                <span className="flex  w-1">
+                                <span className="flex w-1">
                                     <Button size='small' className="w-1rem h-2rem p-3 mr-1 p-button-danger" icon="pi pi-trash"
                                         onClick={async () => {
                                             let quyenOld = nhomQuyen_Old_ByUser.find(n => n.maNhom === row.maNhom)
@@ -220,19 +213,18 @@ export const DialogPhanQuyen = ({ isDeleteMultiple, dataSelected, setDataSelecte
                                                 }
                                             }
                                             setNhomQuyenEdit(nhomQuyenEdit.filter(s => s.maNhom !== row.maNhom))
-                                        }
-                                        } />
+                                        }} />
                                 </span>
                             )} />
                         </DataTable>
                     </Panel>
                     <Panel headerTemplate={headerTemplate}>
-                        <div className="flex justify-content-between ">
+                        <div className="flex flex-column md:flex-row gap-3">
                             <Dropdown value={selectedDVIQLY} onChange={(e) => setSelectedDVIQLY(e.value)}
                                 options={dataDVIQLY}
-                                filter className="md:w-6 w-full mt-2" placeholder="-- Đơn vị quản lý -- " />
+                                filter className="w-full md:w-6" placeholder="-- Đơn vị quản lý -- " />
                             <Dropdown value={selectedNhomQuyen} onChange={(e) => setSelectedNhomQuyen(e.value)} options={dataNhomQuyen}
-                                filter className="md:w-5 w-full mt-2" placeholder="-- Vai trò -- " />
+                                filter className="w-full md:w-5" placeholder="-- Vai trò -- " />
                         </div>
                     </Panel>
 
@@ -243,8 +235,5 @@ export const DialogPhanQuyen = ({ isDeleteMultiple, dataSelected, setDataSelecte
                 </Dialog>
             }
         </>
-
-
-
     );
 };

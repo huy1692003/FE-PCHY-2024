@@ -46,6 +46,7 @@ const AppMenu = () => {
         <MenuProvider>
             <PanelMenu
                 model={menu}
+                contextMenu=''                
                 
                     // Cập nhật trạng thái mở rộng khi thay đổi
             />
