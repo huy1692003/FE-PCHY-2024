@@ -115,7 +115,7 @@ const LoginPage = () => {
                             <label htmlFor="password" className="block text-900 font-medium text-xl mb-2">
                                 Mật khẩu
                             </label>
-                            <Password inputid="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Mật khẩu" toggleMask className="w-full mb-2" inputClassName="w-full p-3" onBlur={handlePasswordError}></Password>
+                            <Password inputid="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Mật khẩu" toggleMask feedback={false} className="w-full mb-2" inputClassName="w-full p-3" onBlur={handlePasswordError}></Password>
                             {
                                 passwordError && (
                                     <Message severity='error' text={passwordError} className='mb-4 w-full' />
