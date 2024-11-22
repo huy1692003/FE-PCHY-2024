@@ -84,7 +84,7 @@ const ModalInputVaiTro = ({
           life: 3000,
         });
 
-        setVisible(false);
+        // setVisible(false);
         loadData();
       }
     } catch (error) {

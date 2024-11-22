@@ -149,7 +149,7 @@ export const InputDM_PHONGBANModal = ({
         !isUpdate ? "Thêm mới danh mục phòng ban" : "Sửa danh mục phòng ban"
       }
       visible={visible}
-      className="w-11 md:w-5/12 lg:w-4/12"
+      className="w-11 md:w-6 lg:w-4/12"
       onHide={() => {
         if (!visible) return;
         setVisible(false);
