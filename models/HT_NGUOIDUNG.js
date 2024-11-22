@@ -9,7 +9,7 @@ export const HT_NGUOIDUNG = {
     dm_chucvu_id: null,
     ten_dang_nhap: null,
     mat_khau: null,
-    ho_ten: null,
+    ho_ten: null,   
     email: null,
     ldap: null,
     trang_thai: null,

@@ -251,7 +251,7 @@ const DonVi = () => {
 
     return (
       <div className={className}>
-        <span className="font-bold text-2xl">Danh sách</span>
+        <span className="font-bold text-xl">Danh sách</span>
         <div className="flex">
           {selectedDonVis.length > 0 && <Button label="Xóa nhiều" severity="danger" className="mr-2" onClick={onDeleteSelectedConfirm} disabled={!selectedDonVis.length}></Button>}
           <Button label="Thêm mới" style={{ backgroundColor: '#1445a7' }} onClick={openNewDonVi}></Button>

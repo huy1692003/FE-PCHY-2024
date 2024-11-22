@@ -60,7 +60,7 @@ const Menu = () => {
 
     return (
       <div className={className}>
-        <span className="font-bold text-2xl">Danh sách</span>
+        <span className="font-bold text-xl">Danh sách</span>
         <div className="flex flex-wrap gap-2">
           {selectedMenus.length > 0 && (
             <Button
