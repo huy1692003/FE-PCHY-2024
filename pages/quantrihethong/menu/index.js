@@ -384,6 +384,7 @@ const Menu = () => {
                   style={{
                     width: window.innerWidth < 700 ? '900px' : '100%',                    
                   }}
+                  showGridlines
                   filterMode={"lenient"}
                   globalFilter={globalFilter}
                   selectionKeys={selectedNodeKeys}

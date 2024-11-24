@@ -19,6 +19,7 @@ import provinceData from '/public/demo/data/data_province.json'
 import { delete_DM_DONVI, get_All_DM_DONVI, getDM_DONVI_ByID, insert_DM_DONVI, search_DM_DONVI, update_DM_DONVI } from "../../../services/quantrihethong/DM_DONVIService";
 import { useTableSort } from "../../../hooks/useTableSort";
 import { propSortAndFilter } from "../../../constants/propGlobal";
+import { Notification } from "../../../utils/notification";
 
 const DonVi = () => {
   const [page, setPage] = useState(1);
@@ -236,6 +237,7 @@ const DonVi = () => {
   };
 
   const hideDialog = () => {
+    
     setShowDialog(false);
   };
 
@@ -251,7 +253,7 @@ const DonVi = () => {
 
     return (
       <div className={className}>
-        <span className="font-bold text-xl">Danh sách</span>
+        <span className="font-bold text-2xl">Danh sách</span>
         <div className="flex">
           {selectedDonVis.length > 0 && <Button label="Xóa nhiều" severity="danger" className="mr-2" onClick={onDeleteSelectedConfirm} disabled={!selectedDonVis.length}></Button>}
           <Button label="Thêm mới" style={{ backgroundColor: '#1445a7' }} onClick={openNewDonVi}></Button>
