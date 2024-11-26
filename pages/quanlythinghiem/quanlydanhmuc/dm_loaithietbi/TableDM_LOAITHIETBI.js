@@ -9,9 +9,9 @@ import { Button } from "primereact/button";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import { useState, useRef } from "react";
 import { Toast } from "primereact/toast";
-import { delete_DM_LOAITHIETBI } from "../../../../services/quanlythinghiem/DM_LOAITHIETBIService";
 import { DM_LOAITHIETBI } from "../../../../models/DM_LOAITB";
 import { InputText } from "primereact/inputtext";
+import { DM_LOAI_THIET_BI_Service } from "../../../../services/quanlythinghiem/DM_LOAITHIETBIService";
 
 const TableDM_LoaiThietBi = ({
   data,
@@ -29,7 +29,7 @@ const TableDM_LoaiThietBi = ({
 
   const handleDelete = async () => {
     try {
-      await delete_DM_LOAITHIETBI(itemToDelete.id);
+      await DM_LOAI_THIET_BI_Service.delete_DM_LOAITHIETBI(itemToDelete.id);
       toast.current.show({
         severity: "success",
         summary: "Thành công",
@@ -50,7 +50,7 @@ const TableDM_LoaiThietBi = ({
 
   const handleDeleteSelected = async () => {
     try {
-      await Promise.all(selected.map((item) => delete_DM_LOAITHIETBI(item.id)));
+      await Promise.all(selected.map((item) => DM_LOAI_THIET_BI_Service.delete_DM_LOAITHIETBI(item.id)));
       toast.current.show({
         severity: "success",
         summary: "Thành công",

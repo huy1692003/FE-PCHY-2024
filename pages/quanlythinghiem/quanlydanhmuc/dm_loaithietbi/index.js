@@ -3,10 +3,7 @@ import { useEffect, useState, useRef } from "react";
 import { Button } from "primereact/button";
 import TableDM_LoaiThietBi from "./TableDM_LOAITHIETBI";
 import { DM_LOAITHIETBI } from "../../../../models/DM_LOAITB";
-import {
-  getAll_DM_LOAITHIETBI,
-  delete_DM_LOAITHIETBI,
-} from "../../../../services/quanlythinghiem/DM_LOAITHIETBIService";
+import { DM_LOAI_THIET_BI_Service } from "../../../../services/quanlythinghiem/DM_LOAITHIETBIService";
 import DialogForm from "./DialogForm";
 import { Toast } from "primereact/toast";
 
@@ -19,7 +16,7 @@ const LoaiThietBi = () => {
 
   const loadData = async () => {
     try {
-      const items = await getAll_DM_LOAITHIETBI();
+      const items = await DM_LOAI_THIET_BI_Service.getAll_DM_LOAITHIETBI();
       setData(items);
     } catch (err) {
       console.error("Error loading data:", err);

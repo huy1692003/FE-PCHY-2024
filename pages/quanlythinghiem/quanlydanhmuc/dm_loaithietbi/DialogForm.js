@@ -7,7 +7,7 @@ import { Notification } from '../../../../utils/notification';
 import { Dialog } from 'primereact/dialog';
 import { DM_LOAITHIETBI } from '../../../../models/DM_LOAITB';
 import { headerStyleColumn, propSortAndFilter } from '../../../../constants/propGlobal';
-import { create_DM_LOAITHIETBI,update_DM_LOAITHIETBI } from "../../../../services/quanlythinghiem/DM_LOAITHIETBIService";
+import { DM_LOAI_THIET_BI_Service } from '../../../../services/quanlythinghiem/DM_LOAITHIETBIService';
 
 const DialogForm = ({ show, setShowDialog, isAdd, formData, loadData, toast  }) => {
     const [form, setForm] = useState(formData);  
@@ -26,7 +26,7 @@ const DialogForm = ({ show, setShowDialog, isAdd, formData, loadData, toast  }) 
     const handleSubmit = async () => {
         if (isAdd) {
             try {
-                await create_DM_LOAITHIETBI(form);
+                await DM_LOAI_THIET_BI_Service.create_DM_LOAITHIETBI(form);
                 Notification.success(toast, "Thêm mới loại thiết bị thành công");
                 loadData();
                 setShowDialog(false);
@@ -35,7 +35,7 @@ const DialogForm = ({ show, setShowDialog, isAdd, formData, loadData, toast  }) 
             }
         } else {
             try {
-                await update_DM_LOAITHIETBI(form);
+                await DM_LOAI_THIET_BI_Service.update_DM_LOAITHIETBI(form);
                 Notification.success(toast, "Cập nhật loại thiết bị thành công");
                 loadData();
                 setShowDialog(false);
