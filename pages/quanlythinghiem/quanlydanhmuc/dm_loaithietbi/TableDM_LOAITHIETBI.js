@@ -109,6 +109,7 @@ const TableDM_LoaiThietBi = ({
         message="Bạn có chắc chắn muốn xóa mục này?"
         header="Xác nhận xóa"
         icon="pi pi-exclamation-triangle"
+        acceptClassName="p-button-danger"
         accept={handleDelete}
         reject={() => setVisible(false)}
       />
@@ -119,6 +120,7 @@ const TableDM_LoaiThietBi = ({
         message={`Bạn có chắc chắn muốn xóa ${selected.length} mục đã chọn?`}
         header="Xác nhận xóa nhiều"
         icon="pi pi-exclamation-triangle"
+        acceptClassName="p-button-danger"
         accept={handleDeleteSelected}
         reject={() => setVisibleMultiple(false)}
       />

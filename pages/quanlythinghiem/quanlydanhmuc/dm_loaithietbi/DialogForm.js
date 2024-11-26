@@ -1,13 +1,10 @@
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { useState, useEffect } from 'react';
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
 import { Notification } from '../../../../utils/notification';
 import { Dialog } from 'primereact/dialog';
 import { DM_LOAITHIETBI } from '../../../../models/DM_LOAITB';
-import { headerStyleColumn, propSortAndFilter } from '../../../../constants/propGlobal';
-import { DM_LOAI_THIET_BI_Service } from '../../../../services/quanlythinghiem/DM_LOAITHIETBIService';
+import { DM_LOAI_THIET_BI_Service } from "../../../../services/quanlythinghiem/DM_LOAITHIETBIService";
 
 const DialogForm = ({ show, setShowDialog, isAdd, formData, loadData, toast  }) => {
     const [form, setForm] = useState(formData);  

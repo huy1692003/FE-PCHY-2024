@@ -1,6 +1,5 @@
 import { useEffect, useState, useRef } from "react";
 
-import { Button } from "primereact/button";
 import TableDM_LoaiThietBi from "./TableDM_LOAITHIETBI";
 import { DM_LOAITHIETBI } from "../../../../models/DM_LOAITB";
 import { DM_LOAI_THIET_BI_Service } from "../../../../services/quanlythinghiem/DM_LOAITHIETBIService";
