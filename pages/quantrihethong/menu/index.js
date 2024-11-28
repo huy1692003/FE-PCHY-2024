@@ -326,7 +326,8 @@ const Menu = () => {
     const map = {};
     const roots = [];
     let parentCounter = 0;
-
+  
+    // Tạo map chứa các item
     menuItems.forEach((item) => {
       map[item.id] = {
         key: item.id,
@@ -336,29 +337,33 @@ const Menu = () => {
           duong_dan: item.duong_dan,
           parent_id: item.parent_id,
           icon: item.icon,
-          stt: ''
+          stt: 0, // Mặc định là 0
         },
         children: [],
       };
     });
-
-    menuItems.forEach((item) => {
-      if (item.parent_id === null) {
-        parentCounter++;
-        map[item.id].data.stt = parentCounter.toString();
-        roots.push(map[item.id]);
-      } else {
-        if (map[item.parent_id]) {
-          const parentStt = map[item.parent_id].data.stt;
-          const childIndex = map[item.parent_id].children.length + 1;
-          map[item.id].data.stt = `${parentStt}.${childIndex}`;
-          map[item.parent_id].children.push(map[item.id]);
+  
+    // Xử lý cha trước con
+    menuItems
+      .sort((a, b) => (a.parent_id === null ? -1 : 1)) // Ưu tiên cha trước
+      .forEach((item) => {
+        if (item.parent_id === null) {
+          parentCounter++;
+          map[item.id].data.stt = parentCounter; // Đánh số cha
+          roots.push(map[item.id]); // Thêm vào danh sách gốc
+        } else {
+          if (map[item.parent_id]) {
+            const parentStt = map[item.parent_id].data.stt; // Lấy stt của cha
+            const childIndex = map[item.parent_id].children.length + 1; // Số thứ tự con
+            map[item.id].data.stt = `${parentStt}.${childIndex}`; // Đặt số thứ tự cho con
+            map[item.parent_id].children.push(map[item.id]); // Thêm vào con của cha
+          }
         }
-      }
-    });
-
+      });
+  
     return roots;
   };
+  
 
   return (
     <React.Fragment>

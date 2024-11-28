@@ -43,7 +43,6 @@ const TableDM_TruongYCTN = ({ data, setShowDialog, setIsAdd, setFormData ,select
       onSelectionChange={(e) => setSelected(e.value)}
       selectionMode="multiple"
     >
-      <Column headerStyle={headerStyleColumn} field="id" header="ID"></Column>
       <Column
         selectionMode="multiple"
         headerStyle={headerStyleColumn}
@@ -59,6 +58,9 @@ const TableDM_TruongYCTN = ({ data, setShowDialog, setIsAdd, setFormData ,select
         headerStyle={headerStyleColumn}
         field="ma_code"
         header="Mã"
+        body={(rowData) => {
+          return <b>{rowData.ma_code.toUpperCase()}</b>;
+        }}
       ></Column>
       <Column
         headerStyle={headerStyleColumn}

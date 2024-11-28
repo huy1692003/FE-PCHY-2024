@@ -11,31 +11,12 @@ import { DM_LOAI_YCTN } from '../../../../models/DM_LOAI_YCTN';
 import { apiClient } from '../../../../constants/api';
 import axios from 'axios';
 import { headerStyleColumn, propSortAndFilter } from '../../../../constants/propGlobal';
+import { DM_TRUONG_YCTN_Service } from '../../../../services/quanlythinghiem/DM_TRUONG_YCTN_Service';
 
-const fieldList = [
-    { id: 1, ten_truong: "Name", vi_tri: 1, ma_code: "Name" },
-    { id: 2, ten_truong: "Code", vi_tri: 2, ma_code: "Code" },
-    { id: 3, ten_truong: "Tổng giá trị", vi_tri: 3, ma_code: "TongGiaTri" },
-    { id: 4, ten_truong: "Nội dung", vi_tri: 4, ma_code: "NoiDung" },
-    { id: 5, ten_truong: "Id khách hàng", vi_tri: 5, ma_code: "IdKhachHang" },
-    { id: 6, ten_truong: "Loại tài sản", vi_tri: 6, ma_code: "LoaiTaiSan" },
-    { id: 7, ten_truong: "Ngày tạo", vi_tri: 7, ma_code: "CreatedDate" },
-    { id: 8, ten_truong: "Ngày xảy ra sự cố", vi_tri: 8, ma_code: "NgayXayRaSuCo" },
-    { id: 9, ten_truong: "Ngày ký hợp đồng", vi_tri: 9, ma_code: "NgayKyHopDong" },
-    { id: 10, ten_truong: "Giá trị dự toán trước thuế", vi_tri: 10, ma_code: "GiaTriDuToan_TruocThue" },
-    { id: 11, ten_truong: "Giá trị dự toán thuế", vi_tri: 11, ma_code: "GiaTriDuToan_Thue" },
-    { id: 12, ten_truong: "Phần trăm thuế", vi_tri: 12, ma_code: "PhanTram_Thue" },
-    { id: 13, ten_truong: "Giá trị dự toán sau thuế", vi_tri: 13, ma_code: "GiaTriDuToan_SauThue" },
-    { id: 14, ten_truong: "Giá trị chiết giảm", vi_tri: 14, ma_code: "GiaTriDuToan_ChietGiam" },
-    { id: 15, ten_truong: "Phần trăm chiết giảm", vi_tri: 15, ma_code: "PhanTram_ChietGiam" },
-    { id: 16, ten_truong: "Giá trị dự toán sau chiết giảm", vi_tri: 16, ma_code: "GiaTriDuToan_SauChietGiam" },
-    { id: 17, ten_truong: "FileUpload", vi_tri: 17, ma_code: "FileUpload" },
-    { id: 18, ten_truong: "test", vi_tri: 18, ma_code: "test" }
-];
 
 const DialogForm = ({ show, setShow, isAdd, formData, ListYCTN, loadData, toast, setListYCTN }) => {
     const [form, setForm] = useState(formData);
-    const [fields, setFields] = useState(fieldList);
+    const [fields, setFields] = useState([]);
     const [selectedFields, setSelectedFields] = useState([]);
     const [listSelectedOld, setListSelectedOld] = useState([])
 
@@ -46,29 +27,44 @@ const DialogForm = ({ show, setShow, isAdd, formData, ListYCTN, loadData, toast,
             [name]: value
         }));
     };
+    
+    const get_DM_TRUONG_YCTN = async () => {
+        let res = await DM_TRUONG_YCTN_Service.getAll_DM_TRUONG_YCTN();
+        setFields(res)
+    }
 
     const get_PHAN_MIEN_YCTN_BY_LOAI_YCTN = async (id_loai_yctn) => {
         console.log(id_loai_yctn)
         let res = await DM_LOAI_YCTNService.get_PHAN_MIEN_YCTN_BY_LOAI_YCTN(id_loai_yctn);
         setListSelectedOld(res)
+        console.log(res)
         const matchedFields = res.map(record => {
-            return fieldList.find(field => field.id === record.ma_truong_yctn);
+            return fields.find(field => field.id === record.ma_truong_yctn+"");
         }).filter(Boolean); // Loại bỏ giá trị null (nếu không khớp)
         setSelectedFields(matchedFields);
     }
 
     useEffect(() => {
+        // Đặt lại dữ liệu form khi formData thay đổi
         setForm(formData)
-        if (!isAdd && formData.id) {
-            // console.log(formData.id)
-            setSelectedFields([])            
-            get_PHAN_MIEN_YCTN_BY_LOAI_YCTN(formData.id)
-            // console.log(listSelectedOld)
+        
+        // Chỉ tải dữ liệu khi dialog được hiển thị
+        if (show) {
+            // Lấy danh sách các trường
+            get_DM_TRUONG_YCTN()
+
+            // Nếu đang chỉnh sửa bản ghi hiện có
+            if (!isAdd && formData.id) {
+                // Đặt lại các trường đã chọn trước khi tải
+                setSelectedFields([])
+                // Lấy các trường đã chọn cho bản ghi này
+                get_PHAN_MIEN_YCTN_BY_LOAI_YCTN(formData.id)
+            } else {
+                // Xóa các trường đã chọn cho bản ghi mới
+                setSelectedFields([])
+            }
         }
-        else {
-            setSelectedFields([])
-        }
-    }, [formData])
+    }, [formData, show, isAdd])
 
 
     const validateForm = () => {
@@ -143,6 +139,7 @@ const DialogForm = ({ show, setShow, isAdd, formData, ListYCTN, loadData, toast,
 
         };
         loadData();
+        setShow(false)
     }
   
     const renderHeader = () => {
@@ -209,7 +206,6 @@ const DialogForm = ({ show, setShow, isAdd, formData, ListYCTN, loadData, toast,
                         name="key_word"
                         value={form.key_word}
                         onChange={handleChange}
-                        disabled={!isAdd}
                     />
                 </div>
 
@@ -224,10 +220,10 @@ const DialogForm = ({ show, setShow, isAdd, formData, ListYCTN, loadData, toast,
                         scrollHeight="400px"
                         showGridlines
                     >
-                        <Column {...headerStyleColumn} field="vi_tri" header="STT" style={{ width: '4rem' }}></Column>
-                        <Column {...propSortAndFilter} field="ten_truong" header="Tên trường"></Column>
-                        <Column {...headerStyleColumn} field="ma_code" header="Mã code"></Column>
-                        <Column {...headerStyleColumn} selectionMode="multiple"  header="Phân miền" headerStyle={{width:"8rem"}}></Column>
+                        <Column headerStyle={headerStyleColumn} field="vi_tri" header="STT" style={{ width: '4rem' }}></Column>
+                        <Column headerStyle={headerStyleColumn} {...propSortAndFilter} field="ten_truong" header="Tên trường"></Column>
+                        <Column headerStyle={headerStyleColumn} {...propSortAndFilter} field="ma_code" header="Mã code"></Column>
+                        <Column selectionMode="multiple" headerStyle={headerStyleColumn} header="Phân miền" style={{width:"8rem"}}></Column>
                     </DataTable>
                 </div>
             </div>

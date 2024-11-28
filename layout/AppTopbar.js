@@ -110,23 +110,25 @@ const AppTopbar = forwardRef((props, ref) => {
                 />
             </Link>
 
-            <button
+            <Button
+                tooltip="Nhấn để đóng hoặc mở menu"
                 ref={menubuttonRef}
                 type="button"
                 className="p-link layout-menu-button layout-topbar-button"
                 onClick={onMenuToggle}
             >
                 <i className="pi pi-bars" />
-            </button>
+            </Button>
 
-            <button
+            <Button
+
                 ref={topbarmenubuttonRef}
                 type="button"
                 className="p-link layout-topbar-menu-button layout-topbar-button"
                 onClick={showProfileSidebar}
             >
                 <i className="pi pi-ellipsis-v" />
-            </button>
+            </Button>
 
             <div
                 ref={topbarmenuRef}
@@ -136,6 +138,7 @@ const AppTopbar = forwardRef((props, ref) => {
                 })}
             >
                 <button
+                
                     type="button"
                     className="p-link layout-topbar-button mr-2"
                     onClick={(e) => overlayPanelRef.current.toggle(e)}
@@ -152,6 +155,7 @@ const AppTopbar = forwardRef((props, ref) => {
                 </button>
 
                 <OverlayPanel
+                
                     ref={overlayPanelRef}
                     id="overlay_panel"
                     style={{ width: "300px" }}

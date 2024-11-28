@@ -21,6 +21,7 @@ const LoginPage = () => {
     const [usernameError, setUsernameError] = useState('')
     const [passwordError, setPasswordError] = useState('')
     const { layoutConfig } = useContext(LayoutContext);
+    const [loading, setLoading] = useState(false);
 
     const router = useRouter();
     const containerClassName = classNames('flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden', { 'p-input-filled': layoutConfig.inputStyle === 'filled' });
@@ -29,6 +30,7 @@ const LoginPage = () => {
     const toast = useRef(null);
 
     const handleLogin = async () => {
+        setLoading(true);
         try {
             const data = { ten_dang_nhap: username, mat_khau: password }
             const response = await login_HT_NGUOIDUNG(data)
@@ -43,8 +45,9 @@ const LoginPage = () => {
             }
         } catch (error) {
             console.log(error);
-
             toast.current.show({ severity: 'error', summary: 'Đăng nhập thất bại', detail: 'Thông tin tài khoản hoặc mật khẩu không chính xác!', life: 4000 })
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -132,13 +135,13 @@ const LoginPage = () => {
                                 </Link>
                             </div>
                             <div className="text-center">
-                                <Button label="Đăng nhập" className="w-5 h-3rem shadow-6 bg-blue-700 hover:bg-blue-700 hover:opacity-80" onClick={handleLogin}></Button>
+                                <Button loading={loading} label="Đăng nhập" className="w-5 h-3rem shadow-6 bg-blue-700 hover:bg-blue-700 hover:opacity-80" onClick={handleLogin}></Button>
                             </div>
                         </div>
                     </div>
                     <div className="text-center py-4 bg-indigo-900">
                         <div className="text-center text-white">
-                            <small className="text-center">Copyright © {currentYear} <span className="font-bold text-sm">Công ty Điện lực Hưng Yên</span></small>
+                            <small className="text-center text-lg lg:text-xl">Copyright © {currentYear} <span className="font-bold text-base lg:text-xl">Công ty Điện lực Hưng Yên</span></small>
                         </div>
                     </div>
                 </div>

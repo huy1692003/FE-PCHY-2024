@@ -3,7 +3,6 @@ import { apiClient } from "../../constants/api";
 export const DM_TRUONG_YCTN_Service = {
     getAll_DM_TRUONG_YCTN: async () => {
         const res = await apiClient.get("DM_TRUONG_YCTN/getAll_DM_TRUONG_YCTN");
-        console.log(res)
         return res?.data;
     },
 
