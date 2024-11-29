@@ -86,8 +86,6 @@ const DM_LOAI_TAI_SAN = () => {
       <Toast ref={toast} />
       <DialogForm
         loadData={loadData}
-        // ListYCTN={data}
-        // setListYCTN={setData}
         toast={toast}
         show={showDialog}
         setShowDialog={setShowDialog}
