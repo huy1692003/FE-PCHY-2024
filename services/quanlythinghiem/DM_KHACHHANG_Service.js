@@ -8,6 +8,12 @@ export const DM_KHACHHANG_Service = {
     );
     return res.data;
   },
+  get_ALL_DM_KHACHHANG: async () => {
+    const res = await apiClient.get(
+      "/DM_KHACH_HANG/getAll_DM_KHACH_HANG"  
+    );
+    return res.data;
+  },
 
   create_DM_KHACHHANG: async (data) => {
     const res = await apiClient.post(

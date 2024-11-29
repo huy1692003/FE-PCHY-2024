@@ -1,4 +1,4 @@
-const DM_YCTN = {
+const QLTN_YCTN = {
     id: null,
     ten_yctn: null,
     ma_yctn: null,
@@ -33,8 +33,8 @@ const DM_YCTN = {
     phan_tram_thue: 0,
     phan_tram_chiet_giam: 0,
     ngay_ks_lap_pa_thi_cong: null,
-    ngay_tao: null,
+    ngay_tao: new Date(),
     don_vi_thuc_hien: null
 }
 
-export default DM_YCTN;
+export default QLTN_YCTN;

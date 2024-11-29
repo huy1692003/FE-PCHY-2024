@@ -10,7 +10,7 @@ const InputFile = ({ onChange, label = "Upload file", className, nameField, setF
         if (file) {
             setSelectedFile(file);
             const formData = new FormData();
-            formData.append(nameField || 'file', file);
+            formData.append('file', file);
             if (setFormData) {
                 setFormData(prev => ({
                     ...prev,

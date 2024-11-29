@@ -19,6 +19,27 @@ const QLTN_YCTNService = {
         } catch (error) {
             throw new Error(error.response ? error.response.data : 'Error assigning YCTN');
         }
+    },
+
+    // Tìm kiếm theo mã YCTN
+    search_Ma_YCTN: async (maYCTN) => {
+        try {
+            const res = await apiClient.get(`/QLTN_YCTN/SearchMaYCTN?maYCTN=${maYCTN}`);
+            return res?.data;
+        } catch (error) {
+            throw new Error(error.response ? error.response.data : 'Error searching YCTN');
+        }
+    },
+
+    // Lấy thông tin YCTN theo mã
+    get_QLTN_YCTN_ByMAYCTN: async (MA_YCTN) => {
+        try {
+            const res = await apiClient.get(`/QLTN_YCTN/GetByMAYCTN?MA_YCTN=${MA_YCTN}`);
+            return res?.data;
+        } catch (error) {
+            throw new Error(error.response ? error.response.data : 'Error getting YCTN by ID');
+        }
     }
 };
+
 export default QLTN_YCTNService;

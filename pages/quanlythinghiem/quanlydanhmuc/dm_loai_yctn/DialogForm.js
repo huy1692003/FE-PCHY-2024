@@ -34,31 +34,30 @@ const DialogForm = ({ show, setShow, isAdd, formData, ListYCTN, loadData, toast,
     }
 
     const get_PHAN_MIEN_YCTN_BY_LOAI_YCTN = async (id_loai_yctn) => {
-        console.log(id_loai_yctn)
         let res = await DM_LOAI_YCTNService.get_PHAN_MIEN_YCTN_BY_LOAI_YCTN(id_loai_yctn);
         setListSelectedOld(res)
-        console.log(res)
-        const matchedFields = res.map(record => {
-            return fields.find(field => field.id === record.ma_truong_yctn+"");
-        }).filter(Boolean); // Loại bỏ giá trị null (nếu không khớp)
-        setSelectedFields(matchedFields);
+        
     }
 
     useEffect(() => {
-        // Đặt lại dữ liệu form khi formData thay đổi
-        setForm(formData)
-        
-        // Chỉ tải dữ liệu khi dialog được hiển thị
-        if (show) {
-            // Lấy danh sách các trường
-            get_DM_TRUONG_YCTN()
+        const matchedFields = listSelectedOld.map(record => {
+            return fields.find(field => field.id === record.ma_truong_yctn+"");
+        }); // Loại bỏ giá trị null (nếu không khớp)
+        setSelectedFields(matchedFields);
+    }, [listSelectedOld])
 
+    
+    useEffect(() => {
+        // Đặt lại dữ liệu form khi formData thay đổi
+        setForm(formData)        
+        // Chỉ tải dữ liệu khi dialog được hiển thị
+        if (show) {            // Lấy danh sách các trường
+            get_DM_TRUONG_YCTN()
             // Nếu đang chỉnh sửa bản ghi hiện có
-            if (!isAdd && formData.id) {
-                // Đặt lại các trường đã chọn trước khi tải
-                setSelectedFields([])
+            if (!isAdd && formData.id) {  
                 // Lấy các trường đã chọn cho bản ghi này
                 get_PHAN_MIEN_YCTN_BY_LOAI_YCTN(formData.id)
+                
             } else {
                 // Xóa các trường đã chọn cho bản ghi mới
                 setSelectedFields([])
