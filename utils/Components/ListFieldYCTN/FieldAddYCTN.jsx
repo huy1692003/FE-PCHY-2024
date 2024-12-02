@@ -17,7 +17,7 @@ import { useRouter } from "next/router";
 import { DM_LOAI_TAISANService } from "../../../services/quanlythinghiem/DM_LOAI_TAISANService";
 import { DM_KHACHHANG_Service } from "../../../services/quanlythinghiem/DM_KHACHHANG_Service";
 
-const FormField = ({ label, className, style, placeholder, value, onChange, id, isCalendar = false, isNumber = false,row=5, isFileUpload = false, isDropdown = false, isTextArea = false, options = [], prefix, isDisabled = false, styleField, props, mode, currency, locale, childrenIPNumber, optionsValue, optionsLabel }) => (
+export const FormField = ({ label, className, style, placeholder, value, onChange, id, isCalendar = false, isNumber = false,row=5, isFileUpload = false, isDropdown = false, isTextArea = false, options = [], prefix, isDisabled = false, styleField, props, mode, currency, locale, childrenIPNumber, optionsValue, optionsLabel }) => (
     <div className={className} style={style}>
         <label className='font-medium text-sm my-3 block' htmlFor={id}>{label}</label>
         {isCalendar ? (

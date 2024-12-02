@@ -24,21 +24,21 @@ const FormField = ({ label, className, style, placeholder, value, onChange, id, 
             <Calendar id={id} name={id} value={new Date(value)} showIcon className="w-full flex align-items-center justify-content-start p-disabled-custom" disabled={true} />
         ) : isNumber ? (
             <div className="p-inputgroup">
-                <InputNumber id={id} name={id} value={value}  className="w-full" disabled={true} style={{ opacity: 1}} />
+                <InputNumber id={id} name={id} value={value} className="w-full" disabled={true} style={{ opacity: 1 }} />
                 <span className="p-inputgroup-addon" style={{ backgroundColor: "#6366F1", color: "white" }}>{childrenIPNumber}</span>
             </div>
         ) : isDropdown ? (
-            <Dropdown  {...props} id={id} name={id} value={value} options={options}  showClear  className="w-full" disabled  filter optionValue={optionsValue} optionLabel={optionsLabel} placeholder="--Mời chọn--" style={{opacity: 1}} />
+            <Dropdown  {...props} id={id} name={id} value={value} options={options} showClear className="w-full" disabled filter optionValue={optionsValue} optionLabel={optionsLabel} placeholder="--Mời chọn--" style={{ opacity: 1 }} />
         ) : isTextArea ? (
-            <InputTextarea id={id} name={id} value={value} rows={5} className="w-full" disabled={true} autoResize style={{ opacity: 1}} />
+            <InputTextarea id={id} name={id} value={value} rows={5} className="w-full" disabled={true} autoResize style={{ opacity: 1 }} />
         ) : (
-            <InputText style={{...styleField , opacity: 1}} id={id} name={id} value={value}  className="w-full" disabled={true} />
+            <InputText style={{ ...styleField, opacity: 1 }} id={id} name={id} value={value} className="w-full" disabled={true} />
         )}
     </div>
 );
 
 
-const ThongTinYCTN = ({loai_yctn,formData}) => {
+const ThongTinYCTN = ({ loai_yctn, formData }) => {
 
     const [fieldbyLoaiYCTN, setFieldbyLoaiYCTN] = useState([]);
     const [fields, setFields] = useState([]);
@@ -46,7 +46,7 @@ const ThongTinYCTN = ({loai_yctn,formData}) => {
     const [dm_LTS, setDM_LTS] = useState([]);
     const [dm_KH, setDM_KH] = useState([]);
     // Chuyển các state thành useMemo
-    
+
 
     const getAllDanhMuc = async () => {
         try {
@@ -73,7 +73,7 @@ const ThongTinYCTN = ({loai_yctn,formData}) => {
         setFieldCurrent(res);
     }, [fieldbyLoaiYCTN, fields]);
 
- 
+
     console.log(formData)
     const getAllFields = async () => {
         let res = await DM_TRUONG_YCTN_Service.getAll_DM_TRUONG_YCTN();
@@ -83,69 +83,91 @@ const ThongTinYCTN = ({loai_yctn,formData}) => {
     const getFieldByLoaiYCTN = async () => {
         let res = await DM_LOAI_YCTNService.get_PHAN_MIEN_YCTN_BY_LOAI_YCTN(loai_yctn.id)
         setFieldbyLoaiYCTN(res);
-    }   
+    }
 
     const fieldInput = [
-        
+
         {
             stt: 2,
-            key: "ten_yctn", 
-            element: <FormField label="Tên YCTN" id="ten_yctn" value={formData?.ten_yctn}  />
+            key: "ten_yctn",
+            element: <FormField label="Tên YCTN" id="ten_yctn" value={formData?.ten_yctn} />
         },
         {
             stt: 3,
             key: "noi_dung",
-            element: <FormField label="Nội dung" id="noi_dung" value={formData?.ten_yctn}  />
+            element: <FormField label="Nội dung" id="noi_dung" value={formData?.ten_yctn} />
         },
         {
             stt: 4,
             key: "id_khach_hang",
-            element: <FormField  label="Khách hàng / Đơn vị điện lực" id="id_khach_hang" value={Number.parseInt(formData?.id_khach_hang)} isDropdown options={dm_KH} optionsLabel="ten_kh" optionsValue="id"  />
-        },
-        {
-            stt: 5,
-            key: "loai_tai_san",
-            element: <FormField label="Loại tài sản" id="loai_tai_san" value={Number.parseInt(formData.loai_tai_san)} isDropdown options={dm_LTS} optionsLabel="ten_lts" optionsValue="id"  />
+            element: <div className="flex gap-4">
+                <div style={{ width: "49%" }}>
+                    <FormField 
+                        label="Khách hàng / Đơn vị điện lực" 
+                        id="id_khach_hang" 
+                        value={Number.parseInt(formData?.id_khach_hang)} 
+                        isDropdown 
+                        options={dm_KH} 
+                        optionsLabel="ten_kh" 
+                        optionsValue="id" 
+                    />
+                </div>
+                <div style={{ width: "49%" }}>
+                    <FormField 
+                        label="Loại tài sản" 
+                        id="loai_tai_san" 
+                        value={Number.parseInt(formData.loai_tai_san)} 
+                        isDropdown 
+                        options={dm_LTS} 
+                        optionsLabel="ten_lts" 
+                        optionsValue="id" 
+                    />
+                </div>
+            </div>
         },
         {
             stt: 6,
             key: "ngay_tao",
-            element: <FormField label="Ngày tạo" id="ngay_tao" value={formData?.ngay_tao}  isCalendar />
+            element: <FormField label="Ngày tạo" id="ngay_tao" value={formData?.ngay_tao} isCalendar />
         },
         {
             stt: 7,
             key: "ngay_ky_hop_dong",
-            element: <FormField label="Ngày ký hợp đồng" id="ngay_ky_hop_dong" value={formData?.ngay_ky_hop_dong}  isCalendar />
+            element: <FormField label="Ngày ký hợp đồng" id="ngay_ky_hop_dong" value={formData?.ngay_ky_hop_dong} isCalendar />
         },
         {
             stt: 8,
             key: "ngay_xay_ra_su_co",
-            element: <FormField label="Ngày xảy ra sự cố" id="ngay_xay_ra_su_co" value={formData?.ngay_xay_ra_su_co}  isCalendar />
+            element: <FormField label="Ngày xảy ra sự cố" id="ngay_xay_ra_su_co" value={formData?.ngay_xay_ra_su_co} isCalendar />
         },
         {
             stt: 9,
             key: "gtdt_truoc_thue",
-            element: <FormField label={<>Giá trị dự toán trước thuế <span className="text-lg text-red-500">*</span></>} id="gtdt_truoc_thue" value={formData?.gtdt_truoc_thue}  isNumber childrenIPNumber={"(VNĐ)"} />
+            element: <FormField label={<>Giá trị dự toán trước thuế <span className="text-lg text-red-500">*</span></>} id="gtdt_truoc_thue" value={formData?.gtdt_truoc_thue} isNumber childrenIPNumber={"(VNĐ)"} />
         },
         {
             stt: 10,
             key: "gtdt_chiet_giam",
-            element: <FormField label={<>Giá trị chiết giảm <span className="text-lg text-red-500">*</span></>} id="gtdt_chiet_giam" value={formData?.gtdt_chiet_giam}  isNumber childrenIPNumber={"(VNĐ)"} />
+            element: <div className="flex gap-4">
+                <div style={{ width: "49%" }}>
+                    <FormField label={<>Giá trị chiết giảm <span className="text-lg text-red-500">*</span></>} id="gtdt_chiet_giam" value={formData?.gtdt_chiet_giam} isNumber childrenIPNumber={"(VNĐ)"} />
+                </div>
+                <div style={{ width: "49%" }}>
+                    <FormField label={<>Giá trị sau chiết giảm <span className="text-lg text-red-500">*</span></>} id="gtdt_sau_chiet_giam" value={formData?.gtdt_sau_chiet_giam} isNumber childrenIPNumber={"(VNĐ)"}  />
+                </div>
+            </div>
         },
         {
             stt: 11,
-            key: "gtdt_sau_chiet_giam",
-            element: <FormField label="Giá trị sau chiết giảm" id="gtdt_sau_chiet_giam" value={formData?.gtdt_sau_chiet_giam}  isNumber childrenIPNumber={"(VNĐ)"} isDisabled={true} />
-        },
-        {
-            stt: 12,
             key: "gtdt_thue",
-            element: <FormField label={<>Thuế <span className="text-lg text-red-500">*</span></>} id="gtdt_thue" value={formData?.gtdt_thue}  isNumber childrenIPNumber={"(VNĐ)"} />
-        },
-        {
-            stt: 13,
-            key: "gtdt_sau_thue",
-            element: <FormField label="Giá trị dự toán sau thuế" id="gtdt_sau_thue" value={formData?.gtdt_sau_thue}  isNumber childrenIPNumber={"(VNĐ)"} isDisabled={true} />
+            element: <div className="flex gap-4">
+                <div style={{ width: "49%" }}>
+                    <FormField label={<>Thuế <span className="text-lg text-red-500">*</span></>} id="gtdt_thue" value={formData?.gtdt_thue} isNumber childrenIPNumber={"(VNĐ)"} />
+                </div>
+                <div style={{ width: "49%" }}>
+                    <FormField label={<>Giá trị dự toán sau thuế <span className="text-lg text-red-500">*</span></>} id="gtdt_sau_thue" value={formData?.gtdt_sau_thue} isNumber childrenIPNumber={"(VNĐ)"}  />
+                </div>
+            </div>
         }
     ];
 
@@ -154,25 +176,25 @@ const ThongTinYCTN = ({loai_yctn,formData}) => {
         return fieldByYCTN.map(item => fields.find(field => field.id === item.ma_truong_yctn + ""));
     }
 
-   
+
 
     return (
         <div className="">
 
-<div>
+            <div>
                 {fieldInput.map(field => {
                     if (fieldCurrent.find(i => i?.ma_code === field.key)) {
                         return <div key={field.stt}>{field.element}</div>
                     }
-                    
+
                 })}
-            </div>  
-           
+            </div>
+
         </div>
 
     );
-    
-    
+
+
 };
 
 export default memo(ThongTinYCTN);
