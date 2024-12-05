@@ -1,6 +1,6 @@
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
-import { QLTN_THIET_BI_YCTN_Service } from "../../../../services/quanlythinghiem/QLTN_THIET_BI_YCTN";
+import { QLTN_THIET_BI_YCTN_Service } from "../../../../services/quanlythinghiem/QLTN_THIET_BI_YCTN_Service";
 import { useState, useRef, useEffect } from "react";
 import { Toast } from "primereact/toast";
 import { DM_LOAI_THIET_BI_Service } from "../../../../services/quanlythinghiem/DM_LOAITHIETBIService";

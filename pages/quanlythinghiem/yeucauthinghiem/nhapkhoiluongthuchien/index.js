@@ -9,7 +9,7 @@ import DialogForm_ImportFIle from "./DialogForm_ImportFIle";
 import { useRouter } from "next/router";
 import FillThongTinYCTN from "../../../../utils/Components/FilterYCTN/FillThongTinYCTN";
 import ThongTinYCTN from "../../../../utils/Components/ListFieldYCTN/ThongTinYCTN";
-import { QLTN_THIET_BI_YCTN_Service } from "../../../../services/quanlythinghiem/QLTN_THIET_BI_YCTN";
+import { QLTN_THIET_BI_YCTN_Service } from "../../../../services/quanlythinghiem/QLTN_THIET_BI_YCTN_Service";
 import useThongTinYCTN from "../../../../hooks/useThongTinYCTN";
 const NhapKhoiLuongThucHien = () => {
 
@@ -34,6 +34,7 @@ const NhapKhoiLuongThucHien = () => {
 
   const user = JSON.parse(sessionStorage.getItem("user"))?.ten_dang_nhap || "";
 
+  
   const LoatArrThietBi = async () => {
     setArrThietbi(arrThietbi);
   }
@@ -138,6 +139,13 @@ const NhapKhoiLuongThucHien = () => {
                     outlined
                     onClick={() => {
                         setArrThietbi([]);
+                    }}
+                    />
+                    <Button
+                    label="Lưu và chuyển bước"
+                    style={{ backgroundColor: "#1445a7" }}
+                    onClick={() => {
+                        ThemMoiThietBi_YCTN();
                     }}
                     />
                 </div>
