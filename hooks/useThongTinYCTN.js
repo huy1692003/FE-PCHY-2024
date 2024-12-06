@@ -16,15 +16,18 @@ import QLTN_YCTNService from "../services/quanlythinghiem/QLTN_YCTNService";
  */
 const useThongTinYCTN = () => {
     // State lưu mã yêu cầu thí nghiệm
+    const router = useRouter();
     const [ma_yctn, setMaYCTN] = useState(null);
     // State lưu thông tin chi tiết yêu cầu thí nghiệm
     const [thongTinYCTN, setThongTinYCTN] = useState(null);
-    const router = useRouter();
 
     // Effect lấy mã YCTN từ query parameter
     useEffect(() => {
         if (router.query.code) {
             setMaYCTN(router.query.code);
+        }
+        else{
+            setMaYCTN(null);
         }
     }, [router.query.code]);
 

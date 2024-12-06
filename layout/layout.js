@@ -10,6 +10,7 @@ import AppConfig from './AppConfig';
 import { LayoutContext } from './context/layoutcontext';
 import PrimeReact from 'primereact/api';
 import { Message } from 'primereact/message';
+import { Button } from 'primereact/button';
 
 import { locale, addLocale, updateLocaleOption, updateLocaleOptions, localeOption, localeOptions } from 'primereact/api';
 import vi from '../constants/local';
@@ -23,6 +24,7 @@ const Layout = (props) => {
     const topbarRef = useRef(null);
     const sidebarRef = useRef(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [showScrollTop, setShowScrollTop] = useState(false);
 
     const router = useRouter();
     const [bindMenuOutsideClickListener, unbindMenuOutsideClickListener] = useEventListener({
@@ -70,6 +72,19 @@ const Layout = (props) => {
     const unblockBodyScroll = () => {
         DomHandler.removeClass('blocked-scroll');
     };
+
+    const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setShowScrollTop(window.pageYOffset > window.innerHeight);
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
     useMountEffect(() => {
         PrimeReact.ripple = true;
@@ -154,6 +169,28 @@ const Layout = (props) => {
                     </div>
                     <AppConfig />
                     <div className="layout-mask"></div>
+                    {showScrollTop && (
+                        <Button 
+                            tooltip='Lên đầu trang'
+                            tooltipOptions={{
+                                showDelay: 1000,
+                                hideDelay: 300,
+                                position: 'left'
+                            }}
+                            icon="pi pi-angle-up" 
+                            onClick={scrollToTop}
+                            style={{
+                                position: 'fixed',
+                                bottom: '20px',
+                                right: '20px',
+                                zIndex: 1000,
+                                backgroundColor: '#1445A7',
+                            }}
+                            
+                           
+                            severity="secondary"
+                        />
+                    )}
                 </div>
             </React.Fragment>
         ) : ""

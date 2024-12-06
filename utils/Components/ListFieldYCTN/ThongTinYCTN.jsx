@@ -16,6 +16,7 @@ import { useRouter } from "next/router";
 import { InputTextarea } from "primereact/inputtextarea";
 import { DM_LOAI_TAISANService } from "../../../services/quanlythinghiem/DM_LOAI_TAISANService";
 import { DM_KHACHHANG_Service } from "../../../services/quanlythinghiem/DM_KHACHHANG_Service";
+
 const FormField = ({
   label,
   className,
@@ -111,6 +112,7 @@ const FormField = ({
       />
     )}
   </div>
+
 );
 
 export { FormField };
@@ -134,6 +136,7 @@ const ThongTinYCTN = ({ loai_yctn, formData , children}) => {
     } catch (err) {
       setDM_LTS([]);
       setDM_KH([]);
+
     }
   };
   // Lấy danh sách trường dữ liệu và các trường tương ứng với loai_yctn
@@ -142,6 +145,7 @@ const ThongTinYCTN = ({ loai_yctn, formData , children}) => {
     getFieldByLoaiYCTN();
     getAllDanhMuc();
   }, [loai_yctn]);
+
 
   useEffect(() => {
     let res = findMatchingFields(fields, fieldbyLoaiYCTN);
@@ -154,182 +158,116 @@ const ThongTinYCTN = ({ loai_yctn, formData , children}) => {
     setFields(res);
   };
 
-  const getFieldByLoaiYCTN = async () => {
-    let res = await DM_LOAI_YCTNService.get_PHAN_MIEN_YCTN_BY_LOAI_YCTN(
-      loai_yctn.id
-    );
-    setFieldbyLoaiYCTN(res);
-  };
+    const getFieldByLoaiYCTN = async () => {
+        let res = await DM_LOAI_YCTNService.get_PHAN_MIEN_YCTN_BY_LOAI_YCTN(loai_yctn.id)
+        setFieldbyLoaiYCTN(res);
+    }
 
-  const fieldInput = [
-    {
-      stt: 2,
-      key: "ten_yctn",
-      element: (
-        <FormField label="Tên YCTN" id="ten_yctn" value={formData?.ten_yctn} />
-      ),
-    },
-    {
-      stt: 3,
-      key: "noi_dung",
-      element: (
-        <FormField label="Nội dung" id="noi_dung" value={formData?.ten_yctn} />
-      ),
-    },
-    {
-      stt: 4,
-      key: "id_khach_hang",
-      element: (
-        <FormField
-          label="Khách hàng / Đơn vị điện lực"
-          id="id_khach_hang"
-          value={Number.parseInt(formData?.id_khach_hang)}
-          isDropdown
-          options={dm_KH}
-          optionsLabel="ten_kh"
-          optionsValue="id"
-        />
-      ),
-    },
-    {
-      stt: 5,
-      key: "loai_tai_san",
-      element: (
-        <FormField
-          label="Loại tài sản"
-          id="loai_tai_san"
-          value={Number.parseInt(formData.loai_tai_san)}
-          isDropdown
-          options={dm_LTS}
-          optionsLabel="ten_lts"
-          optionsValue="id"
-        />
-      ),
-    },
-    {
-      stt: 6,
-      key: "ngay_tao",
-      element: (
-        <FormField
-          label="Ngày tạo"
-          id="ngay_tao"
-          value={formData?.ngay_tao}
-          isCalendar
-        />
-      ),
-    },
-    {
-      stt: 7,
-      key: "ngay_ky_hop_dong",
-      element: (
-        <FormField
-          label="Ngày ký hợp đồng"
-          id="ngay_ky_hop_dong"
-          value={formData?.ngay_ky_hop_dong}
-          isCalendar
-        />
-      ),
-    },
-    {
-      stt: 8,
-      key: "ngay_xay_ra_su_co",
-      element: (
-        <FormField
-          label="Ngày xảy ra sự cố"
-          id="ngay_xay_ra_su_co"
-          value={formData?.ngay_xay_ra_su_co}
-          isCalendar
-        />
-      ),
-    },
-    {
-      stt: 9,
-      key: "gtdt_truoc_thue",
-      element: (
-        <FormField
-          label={
-            <>
-              Giá trị dự toán trước thuế{" "}
-              <span className="text-lg text-red-500">*</span>
-            </>
-          }
-          id="gtdt_truoc_thue"
-          value={formData?.gtdt_truoc_thue}
-          isNumber
-          childrenIPNumber={"(VNĐ)"}
-        />
-      ),
-    },
-    {
-      stt: 10,
-      key: "gtdt_chiet_giam",
-      element: (
-        <FormField
-          label={
-            <>
-              Giá trị chiết giảm <span className="text-lg text-red-500">*</span>
-            </>
-          }
-          id="gtdt_chiet_giam"
-          value={formData?.gtdt_chiet_giam}
-          isNumber
-          childrenIPNumber={"(VNĐ)"}
-        />
-      ),
-    },
-    {
-      stt: 11,
-      key: "gtdt_sau_chiet_giam",
-      element: (
-        <FormField
-          label="Giá trị sau chiết giảm"
-          id="gtdt_sau_chiet_giam"
-          value={formData?.gtdt_sau_chiet_giam}
-          isNumber
-          childrenIPNumber={"(VNĐ)"}
-          isDisabled={true}
-        />
-      ),
-    },
-    {
-      stt: 12,
-      key: "gtdt_thue",
-      element: (
-        <FormField
-          label={
-            <>
-              Thuế <span className="text-lg text-red-500">*</span>
-            </>
-          }
-          id="gtdt_thue"
-          value={formData?.gtdt_thue}
-          isNumber
-          childrenIPNumber={"(VNĐ)"}
-        />
-      ),
-    },
-    {
-      stt: 13,
-      key: "gtdt_sau_thue",
-      element: (
-        <FormField
-          label="Giá trị dự toán sau thuế"
-          id="gtdt_sau_thue"
-          value={formData?.gtdt_sau_thue}
-          isNumber
-          childrenIPNumber={"(VNĐ)"}
-          isDisabled={true}
-        />
-      ),
-    },
-  ];
+    const fieldInput = [
 
-  const findMatchingFields = (fields, fieldByYCTN) => {
-    // Lấy danh sách ma_truong_yctn từ fieldByYCTN
-    return fieldByYCTN.map((item) =>
-      fields.find((field) => field.id === item.ma_truong_yctn + "")
-    );
-  };
+        {
+            stt: 2,
+            key: "ten_yctn",
+            element: <FormField label="Tên YCTN" id="ten_yctn" value={formData?.ten_yctn} />
+        },
+        {
+            stt: 3,
+            key: "noi_dung",
+            element: <FormField label="Nội dung" id="noi_dung" value={formData?.ten_yctn} />
+        },
+        {
+            stt: 4,
+            key: "loai_tai_san",
+            element: loai_yctn.ma_loai_yctn === "ke_hoach_thi_nghiem" ? <FormField
+                label="Loại tài sản"
+                id="loai_tai_san"
+                value={Number.parseInt(formData.loai_tai_san)}
+                isDropdown
+                options={dm_LTS}
+                optionsLabel="ten_lts"
+                    optionsValue="id"
+                /> : <>
+                </>
+        },
+        {
+            stt: 5,
+            key: "id_khach_hang",
+            element: <div className="flex gap-4">
+                <div style={{ width: "49%" }}>
+                    <FormField
+                        label="Khách hàng / Đơn vị điện lực"
+                        id="id_khach_hang"
+                        value={Number.parseInt(formData?.id_khach_hang)}
+                        isDropdown
+                        options={dm_KH}
+                        optionsLabel="ten_kh"
+                        optionsValue="id"
+                    />
+                </div>
+                <div style={{ width: "49%" }}>
+                    <FormField
+                        label="Loại tài sản"
+                        id="loai_tai_san"
+                        value={Number.parseInt(formData.loai_tai_san)}
+                        isDropdown
+                        options={dm_LTS}
+                        optionsLabel="ten_lts"
+                        optionsValue="id"
+                    />
+                </div>
+            </div>
+        },
+        {
+            stt: 6,
+            key: "ngay_tao",
+            element: <FormField label="Ngày tạo" id="ngay_tao" value={formData?.ngay_tao} isCalendar />
+        },
+        {
+            stt: 7,
+            key: "ngay_ky_hop_dong",
+            element: <FormField label="Ngày ký hợp đồng" id="ngay_ky_hop_dong" value={formData?.ngay_ky_hop_dong} isCalendar />
+        },
+        {
+            stt: 8,
+            key: "ngay_xay_ra_su_co",
+            element: <FormField label="Ngày xảy ra sự cố" id="ngay_xay_ra_su_co" value={formData?.ngay_xay_ra_su_co} isCalendar />
+        },
+        {
+            stt: 9,
+            key: "gtdt_truoc_thue",
+            element: <FormField label={<>Giá trị dự toán trước thuế <span className="text-lg text-red-500">*</span></>} id="gtdt_truoc_thue" value={formData?.gtdt_truoc_thue} isNumber childrenIPNumber={"(VNĐ)"} />
+        },
+        {
+            stt: 10,
+            key: "gtdt_chiet_giam",
+            element: <div className="flex gap-4">
+                <div style={{ width: "49%" }}>
+                    <FormField label={<>Giá trị chiết giảm <span className="text-lg text-red-500">*</span></>} id="gtdt_chiet_giam" value={formData?.gtdt_chiet_giam} isNumber childrenIPNumber={"(VNĐ)"} />
+                </div>
+                <div style={{ width: "49%" }}>
+                    <FormField label={<>Giá trị sau chiết giảm <span className="text-lg text-red-500">*</span></>} id="gtdt_sau_chiet_giam" value={formData?.gtdt_sau_chiet_giam} isNumber childrenIPNumber={"(VNĐ)"} />
+                </div>
+            </div>
+        },
+        {
+            stt: 11,
+            key: "gtdt_thue",
+            element: <div className="flex gap-4">
+                <div style={{ width: "49%" }}>
+                    <FormField label={<>Thuế <span className="text-lg text-red-500">*</span></>} id="gtdt_thue" value={formData?.gtdt_thue} isNumber childrenIPNumber={"(VNĐ)"} />
+                </div>
+                <div style={{ width: "49%" }}>
+                    <FormField label={<>Giá trị dự toán sau thuế <span className="text-lg text-red-500">*</span></>} id="gtdt_sau_thue" value={formData?.gtdt_sau_thue} isNumber childrenIPNumber={"(VNĐ)"} />
+                </div>
+            </div>
+        }
+    ];
+
+    const findMatchingFields = (fields, fieldByYCTN) => {
+        // Lấy danh sách ma_truong_yctn từ fieldByYCTN      
+        return fieldByYCTN.map(item => fields.find(field => field.id === item.ma_truong_yctn + ""));
+    }
+
 
   return (
     <div className="">
@@ -343,6 +281,7 @@ const ThongTinYCTN = ({ loai_yctn, formData , children}) => {
       </div>
     </div>
   );
+
 };
 
 export default memo(ThongTinYCTN);

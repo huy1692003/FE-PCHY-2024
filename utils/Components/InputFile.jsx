@@ -1,7 +1,7 @@
 import { memo, useRef, useState } from "react"
 import { Button } from 'primereact/button'
 
-const InputFile = ({ onChange, label = "Upload file", className, nameField, setFormData }) => {
+const InputFile = ({ onChange, label = "Upload file", className, nameField, setFormData, showSelectedFile = true }) => {
     const [selectedFile, setSelectedFile] = useState(null);
     const fileInputRef = useRef(null);
 
@@ -23,47 +23,25 @@ const InputFile = ({ onChange, label = "Upload file", className, nameField, setF
         }
     }
 
-    const handleRemoveFile = () => {
-        setSelectedFile(null);
-        fileInputRef.current.value = '';
-        if (setFormData) {
-            setFormData(prev => ({
-                ...prev,
-                [nameField || 'file']: null
-            }));
-        }
-        if (onChange) {
-            onChange(null);
-        }
-    }
-
     return (
-        <div className={`flex flex-column gap-2 ${className}`}>           
-            <div className="flex align-items-center gap-2">
-                <input
-                    type="file"
-                    ref={fileInputRef}
-                    onChange={handleFileSelect}
-                    className="hidden"
-                />
-                <Button
-                    onClick={() => fileInputRef.current.click()}
-                    severity="info"
-                    icon="pi pi-upload"
-                    label="Chọn file"
-                />
-                {selectedFile && (
-                    <span className="ml-5 flex align-items-center gap-2">
-                       
-                        <span className="text-base">{selectedFile.name}</span>
-                        <Button
-                            onClick={handleRemoveFile}
-                            severity="danger"
-                            icon="pi pi-trash"
-                            label="Xóa file"
-                        />
-                    </span>
-                )}
+        <div className={`flex flex-column gap-2 ${className}`}>
+            <div className="flex flex-column gap-2">
+                <span>
+                    <input
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleFileSelect}
+                        className="hidden"
+                    />
+                    <Button 
+                        tooltip="Nhấn vào để thay đổi File"
+                        onClick={() => fileInputRef.current.click()}
+                        severity="info"
+                        style={{ width: '99%' }}
+                        icon={"pi pi-upload"}
+                        label={selectedFile ? selectedFile.name : "Chọn file"}
+                    />
+                </span>
             </div>
         </div>
     )

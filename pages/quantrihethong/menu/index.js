@@ -345,7 +345,14 @@ const Menu = () => {
   
     // Xử lý cha trước con
     menuItems
-      .sort((a, b) => (a.parent_id === null ? -1 : 1)) // Ưu tiên cha trước
+      .sort((a, b) => {
+        if (a.parent_id === null && b.parent_id === null) {
+          return 0;
+        }
+        if (a.parent_id === null) return -1;
+        if (b.parent_id === null) return 1;
+        return a.ten_menu.localeCompare(b.ten_menu); // Sắp xếp con theo tên
+      })
       .forEach((item) => {
         if (item.parent_id === null) {
           parentCounter++;
@@ -353,6 +360,11 @@ const Menu = () => {
           roots.push(map[item.id]); // Thêm vào danh sách gốc
         } else {
           if (map[item.parent_id]) {
+            // Sắp xếp children theo tên trước khi thêm vào
+            map[item.parent_id].children.sort((a, b) => 
+              a.data.ten_menu.localeCompare(b.data.ten_menu)
+            );
+            
             const parentStt = map[item.parent_id].data.stt; // Lấy stt của cha
             const childIndex = map[item.parent_id].children.length + 1; // Số thứ tự con
             map[item.id].data.stt = `${parentStt}.${childIndex}`; // Đặt số thứ tự cho con
@@ -360,7 +372,7 @@ const Menu = () => {
           }
         }
       });
-  
+
     return roots;
   };
   

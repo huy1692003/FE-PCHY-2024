@@ -36,7 +36,8 @@ const QLTN_YCTNService = {
     // Tìm kiếm theo mã YCTN
     search_Ma_YCTN: async (maYCTN) => {
         try {
-            const res = await apiClient.get(`/QLTN_YCTN/SearchMaYCTN?maYCTN=${maYCTN}`);
+            const url = maYCTN ? `/QLTN_YCTN/SearchMaYCTN?maYCTN=${maYCTN}` : '/QLTN_YCTN/SearchMaYCTN';
+            const res = await apiClient.get(url);
             return res?.data;
         } catch (error) {
             throw new Error(error.response ? error.response.data : 'Error searching YCTN');

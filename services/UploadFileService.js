@@ -6,7 +6,7 @@ const UploadFileService = {
         return res.data;
     },
     file: async (formData,typeFile = "fileYCTN") => {       
-        const res = await apiClient.post("/Upload/file", formData);
+        const res = await apiClient.post(`/Upload/file?typeFile=${typeFile}`, formData);
         return res.data;
     },
 
