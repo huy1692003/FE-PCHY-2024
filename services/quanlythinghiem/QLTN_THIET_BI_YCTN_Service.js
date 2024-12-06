@@ -1,8 +1,8 @@
 import { apiClient } from "../../constants/api";
 
 export const QLTN_THIET_BI_YCTN_Service = {
-    getAll_QLTN_THIET_BI_YCTN: async () => {
-        const res = await apiClient.get("QLTN_THIET_BI_YCTN/getAll_QLTN_THIET_BI_YCTN");
+    getAll_QLTN_THIET_BI_YCTN_byMA_YCTN: async (data) => {
+        const res = await apiClient.post('/QLTN_THIET_BI_YCTN_/getAll_thietbi_byMA_YCTN',data);
         return res?.data;
     },
 
