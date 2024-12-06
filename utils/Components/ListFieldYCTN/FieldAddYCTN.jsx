@@ -149,113 +149,323 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, isEdit = false }) => {
     };
 
     const fieldInput = [
-        {
-            stt: 1,
-            key: "ma_yctn",
-            element: <FormField label={<>Mã yêu cầu <span className="text-sm">(STT sẽ được hệ thống quy định)</span> <span className="text-lg text-red-500">*</span></>} id="ma_yctn" value={formData?.ma_yctn} isDisabled={true} />
-        },
-        {
-            stt: 2,
-            key: "ten_yctn",
-            element: <FormField label="Tên YCTN" id="ten_yctn"  value={formData?.ten_yctn||""} onChange={handleInputChange} />
-        },
-        {
-            stt: 3,
-            key: "noi_dung",
-            element: <FormField label="Nội dung" id="noi_dung" value={formData?.noi_dung||""} isTextArea onChange={handleInputChange} />
-        },
-        {
-            stt: 4,
-            key: "id_khach_hang",
-            element: <FormField isDropdown label="Khách hàng / Đơn vị điện lực" id="id_khach_hang" value={formData?.id_khach_hang} optionsValue="id" options={dm_KH} optionsLabel="ten_kh" onChange={handleInputChange} />
-        },
-        {
-            stt: 5,
-            key: "loai_tai_san",
-            element: <FormField label="Loại tài sản" id="loai_tai_san" value={formData.loai_tai_san} onChange={handleInputChange} isDropdown options={dm_LTS} optionsLabel="ten_lts" optionsValue="id" />
-        },
-        {
-            stt: 6,
-            key: "ngay_tao",
-            element: <FormField label="Ngày tạo" id="ngay_tao" value={formData?.ngay_tao} onChange={handleInputChange} isCalendar />
-        },
-        {
-            stt: 7,
-            key: "ngay_ky_hop_dong",
-            element: <FormField label="Ngày ký hợp đồng" id="ngay_ky_hop_dong" value={formData?.ngay_ky_hop_dong} onChange={handleInputChange} isCalendar />
-        },
-        {
-            stt: 8,
-            key: "ngay_xay_ra_su_co",
-            element: <FormField label="Ngày xảy ra sự cố" id="ngay_xay_ra_su_co" value={formData?.ngay_xay_ra_su_co} onChange={handleInputChange} isCalendar />
-        },
-        {
-            stt: 9,
-            key: "gtdt_truoc_thue",
-            element: <FormField label="Giá trị trước thuế" id="gtdt_truoc_thue" value={formData?.gtdt_truoc_thue} onChange={handleInputChange} isNumber childrenIPNumber={"(VNĐ)"} />
-        },
-        {
-            stt: 10,
-            key: "phan_tram_chiet_giam",
-            element: <div className="flex gap-4">
-                <div style={{ width: "20%" }}>
-                    <label className='font-medium text-sm my-3 block' htmlFor="phan_tram_chiet_giam">Phần trăm chiết giảm</label>
-                    <div className="p-inputgroup">
-                        <InputNumber id="phan_tram_chiet_giam" name="phan_tram_chiet_giam" value={formData.phan_tram_chiet_giam} onChange={(e) => handleInputChange("phan_tram_chiet_giam", e.value)} className="w-full" mode={"decimal"} min={0} minFractionDigits={1} maxFractionDigits={2} />
-                        <span className="p-inputgroup-addon" style={{ backgroundColor: "#6366F1", color: "white" }}>%</span>
-                    </div>
-                </div>
-                <div style={{ width: "38%" }}>
-                    <label className='font-medium text-sm my-3 block' htmlFor="gtdt_chiet_giam">Giá trị chiết giảm</label>
-                    <div className="p-inputgroup">
-                        <InputNumber id="gtdt_chiet_giam" name="gtdt_chiet_giam" value={formData.gtdt_chiet_giam} onChange={(e) => handleInputChange("gtdt_chiet_giam", e.value)} className="w-full" min={0} />
-                        <span className="p-inputgroup-addon" style={{ backgroundColor: "#6366F1", color: "white" }}>VNĐ</span>
-                    </div>
-                </div>
-                <div style={{ width: "39%" }}>
-                    <label className='font-medium text-sm my-3 block' htmlFor="gtdt_sau_chiet_giam">Giá trị sau chiết giảm</label>
-                    <div className="p-inputgroup">
-                        <InputNumber id="gtdt_sau_chiet_giam" disabled name="gtdt_sau_chiet_giam" value={formData.gtdt_sau_chiet_giam} onChange={(e) => handleInputChange("gtdt_sau_chiet_giam", e.value)} className="w-full" min={0} />
-                        <span className="p-inputgroup-addon" style={{ backgroundColor: "#6366F1", color: "white" }}>VNĐ</span>
-                    </div>
-                </div>
+      {
+        stt: 1,
+        key: "ma_yctn",
+        element: (
+          <FormField
+            label={
+              <>
+                Mã yêu cầu{" "}
+                <span className="text-sm">(STT sẽ được hệ thống quy định)</span>{" "}
+                <span className="text-lg text-red-500">*</span>
+              </>
+            }
+            id="ma_yctn"
+            value={formData?.ma_yctn}
+            isDisabled={true}
+          />
+        ),
+      },
+      {
+        stt: 2,
+        key: "ten_yctn",
+        element: (
+          <FormField
+            label="Tên YCTN"
+            id="ten_yctn"
+            value={formData?.ten_yctn || ""}
+            onChange={handleInputChange}
+          />
+        ),
+      },
+      {
+        stt: 3,
+        key: "noi_dung",
+        element: (
+          <FormField
+            label="Nội dung"
+            id="noi_dung"
+            value={formData?.noi_dung || ""}
+            isTextArea
+            onChange={handleInputChange}
+          />
+        ),
+      },
+      {
+        stt: 4,
+        key: "id_khach_hang",
+        element: (
+          <FormField
+            isDropdown
+            label="Khách hàng / Đơn vị điện lực"
+            id="id_khach_hang"
+            value={formData?.id_khach_hang}
+            optionsValue="id"
+            options={dm_KH}
+            optionsLabel="ten_kh"
+            onChange={handleInputChange}
+          />
+        ),
+      },
+      {
+        stt: 5,
+        key: "loai_tai_san",
+        element: (
+          <FormField
+            label="Loại tài sản"
+            id="loai_tai_san"
+            value={formData.loai_tai_san}
+            onChange={handleInputChange}
+            isDropdown
+            options={dm_LTS}
+            optionsLabel="ten_lts"
+            optionsValue="id"
+          />
+        ),
+      },
+      {
+        stt: 6,
+        key: "ngay_tao",
+        element: (
+          <FormField
+            label="Ngày tạo"
+            id="ngay_tao"
+            value={formData?.ngay_tao}
+            onChange={handleInputChange}
+            isCalendar
+          />
+        ),
+      },
+      {
+        stt: 7,
+        key: "ngay_ky_hop_dong",
+        element: (
+          <FormField
+            label="Ngày ký hợp đồng"
+            id="ngay_ky_hop_dong"
+            value={formData?.ngay_ky_hop_dong}
+            onChange={handleInputChange}
+            isCalendar
+          />
+        ),
+      },
+      {
+        stt: 8,
+        key: "ngay_xay_ra_su_co",
+        element: (
+          <FormField
+            label="Ngày xảy ra sự cố"
+            id="ngay_xay_ra_su_co"
+            value={formData?.ngay_xay_ra_su_co}
+            onChange={handleInputChange}
+            isCalendar
+          />
+        ),
+      },
+      {
+        stt: 9,
+        key: "gtdt_truoc_thue",
+        element: (
+          <FormField
+            label="Giá trị trước thuế"
+            id="gtdt_truoc_thue"
+            value={formData?.gtdt_truoc_thue}
+            onChange={handleInputChange}
+            isNumber
+            childrenIPNumber={"(VNĐ)"}
+          />
+        ),
+      },
+      {
+        stt: 10,
+        key: "phan_tram_chiet_giam",
+        element: (
+          <div className="flex gap-4">
+            <div style={{ width: "20%" }}>
+              <label
+                className="font-medium text-sm my-3 block"
+                htmlFor="phan_tram_chiet_giam"
+              >
+                Phần trăm chiết giảm
+              </label>
+              <div className="p-inputgroup">
+                <InputNumber
+                  id="phan_tram_chiet_giam"
+                  name="phan_tram_chiet_giam"
+                  value={formData.phan_tram_chiet_giam}
+                  onChange={(e) =>
+                    handleInputChange("phan_tram_chiet_giam", e.value)
+                  }
+                  className="w-full"
+                  mode={"decimal"}
+                  min={0}
+                  minFractionDigits={1}
+                  maxFractionDigits={2}
+                />
+                <span
+                  className="p-inputgroup-addon"
+                  style={{ backgroundColor: "#6366F1", color: "white" }}
+                >
+                  %
+                </span>
+              </div>
             </div>
-        },
-        {
-            stt: 11,
-            key: "phan_tram_thue", 
-            element: <div className="flex gap-4">
-                <div style={{ width: "20%" }}>
-                    <label className='font-medium text-sm my-3 block' htmlFor="phan_tram_thue">Phần trăm thuế</label>
-                    <div className="p-inputgroup">
-                        <InputNumber mode={"decimal"} min={0} minFractionDigits={1} maxFractionDigits={2} id="phan_tram_thue" name="phan_tram_thue" value={formData.phan_tram_thue} onChange={(e) => handleInputChange("phan_tram_thue", e.value)} className="w-full" />
-                        <span className="p-inputgroup-addon" style={{ backgroundColor: "#6366F1", color: "white" }}>%</span>
-                    </div>
-                </div>
-                <div style={{ width: "38%" }}>
-                    <label className='font-medium text-sm my-3 block' htmlFor="gtdt_thue">Giá trị thuế</label>
-                    <div className="p-inputgroup">
-                        <InputNumber id="gtdt_thue" name="gtdt_thue" value={formData.gtdt_thue} onChange={(e) => handleInputChange("gtdt_thue", e.value)} className="w-full" min={0} />
-                        <span className="p-inputgroup-addon" style={{ backgroundColor: "#6366F1", color: "white" }}>VNĐ</span>
-                    </div>
-                </div>
-                <div style={{ width: "39%" }}>
-                    <label className='font-medium text-sm my-3 block' htmlFor="gtdt_sau_thue">Giá trị sau thuế</label>
-                    <div className="p-inputgroup">
-                        <InputNumber id="gtdt_sau_thue" disabled name="gtdt_sau_thue" value={formData.gtdt_sau_thue} onChange={(e) => handleInputChange("gtdt_sau_thue", e.value)} className="w-full" min={0} />
-                        <span className="p-inputgroup-addon" style={{ backgroundColor: "#6366F1", color: "white" }}>VNĐ</span>
-                    </div>
-                </div>
+            <div style={{ width: "38%" }}>
+              <label
+                className="font-medium text-sm my-3 block"
+                htmlFor="gtdt_chiet_giam"
+              >
+                Giá trị chiết giảm
+              </label>
+              <div className="p-inputgroup">
+                <InputNumber
+                  id="gtdt_chiet_giam"
+                  name="gtdt_chiet_giam"
+                  value={formData.gtdt_chiet_giam}
+                  onChange={(e) =>
+                    handleInputChange("gtdt_chiet_giam", e.value)
+                  }
+                  className="w-full"
+                  min={0}
+                />
+                <span
+                  className="p-inputgroup-addon"
+                  style={{ backgroundColor: "#6366F1", color: "white" }}
+                >
+                  VNĐ
+                </span>
+              </div>
             </div>
-        },
-        {
-            stt: 16,
-            key: "file_upload",
-            element: <>
-                <label className='font-bold text-sm my-3 block' htmlFor="file_upload">Upload file</label>
-                <InputFile nameField="file_upload" setFormData={setFormData} />
-            </>
-        }
+            <div style={{ width: "39%" }}>
+              <label
+                className="font-medium text-sm my-3 block"
+                htmlFor="gtdt_sau_chiet_giam"
+              >
+                Giá trị sau chiết giảm
+              </label>
+              <div className="p-inputgroup">
+                <InputNumber
+                  id="gtdt_sau_chiet_giam"
+                  disabled
+                  name="gtdt_sau_chiet_giam"
+                  value={formData.gtdt_sau_chiet_giam}
+                  onChange={(e) =>
+                    handleInputChange("gtdt_sau_chiet_giam", e.value)
+                  }
+                  className="w-full"
+                  min={0}
+                />
+                <span
+                  className="p-inputgroup-addon"
+                  style={{ backgroundColor: "#6366F1", color: "white" }}
+                >
+                  VNĐ
+                </span>
+              </div>
+            </div>
+          </div>
+        ),
+      },
+      {
+        stt: 11,
+        key: "phan_tram_thue",
+        element: (
+          <div className="flex gap-4">
+            <div style={{ width: "20%" }}>
+              <label
+                className="font-medium text-sm my-3 block"
+                htmlFor="phan_tram_thue"
+              >
+                Phần trăm thuế
+              </label>
+              <div className="p-inputgroup">
+                <InputNumber
+                  mode={"decimal"}
+                  min={0}
+                  minFractionDigits={1}
+                  maxFractionDigits={2}
+                  id="phan_tram_thue"
+                  name="phan_tram_thue"
+                  value={formData.phan_tram_thue}
+                  onChange={(e) => handleInputChange("phan_tram_thue", e.value)}
+                  className="w-full"
+                />
+                <span
+                  className="p-inputgroup-addon"
+                  style={{ backgroundColor: "#6366F1", color: "white" }}
+                >
+                  %
+                </span>
+              </div>
+            </div>
+            <div style={{ width: "38%" }}>
+              <label
+                className="font-medium text-sm my-3 block"
+                htmlFor="gtdt_thue"
+              >
+                Giá trị thuế
+              </label>
+              <div className="p-inputgroup">
+                <InputNumber
+                  id="gtdt_thue"
+                  name="gtdt_thue"
+                  value={formData.gtdt_thue}
+                  onChange={(e) => handleInputChange("gtdt_thue", e.value)}
+                  className="w-full"
+                  min={0}
+                />
+                <span
+                  className="p-inputgroup-addon"
+                  style={{ backgroundColor: "#6366F1", color: "white" }}
+                >
+                  VNĐ
+                </span>
+              </div>
+            </div>
+            <div style={{ width: "39%" }}>
+              <label
+                className="font-medium text-sm my-3 block"
+                htmlFor="gtdt_sau_thue"
+              >
+                Giá trị sau thuế
+              </label>
+              <div className="p-inputgroup">
+                <InputNumber
+                  id="gtdt_sau_thue"
+                  disabled
+                  name="gtdt_sau_thue"
+                  value={formData.gtdt_sau_thue}
+                  onChange={(e) => handleInputChange("gtdt_sau_thue", e.value)}
+                  className="w-full"
+                  min={0}
+                />
+                <span
+                  className="p-inputgroup-addon"
+                  style={{ backgroundColor: "#6366F1", color: "white" }}
+                >
+                  VNĐ
+                </span>
+              </div>
+            </div>
+          </div>
+        ),
+      },
+      {
+        stt: 16,
+        key: "file_upload",
+        element: (
+          <>
+            <label
+              className="font-bold text-sm my-3 block"
+              htmlFor="file_upload"
+            >
+              Upload file
+            </label>
+            <InputFile nameField="file_upload" setFormData={setFormData} />
+          </>
+        ),
+      },
     ];
 
     const findMatchingFields = (fields, fieldByYCTN) => {
