@@ -13,32 +13,34 @@ import UploadFileService from "../../../../services/UploadFileService";
 import { Toast } from "primereact/toast";
 import { Notification } from "../../../../utils/notification";
 const GiaoNhiemVu = () => {
-    const {ma_yctn,thongTinYCTN}=useThongTinYCTN();
-    const [formData,setFormData] = useState(QLTN_YCTN);
-    const user = JSON.parse(sessionStorage.getItem("user"))?.ten_dang_nhap||"";
+    const { ma_yctn, thongTinYCTN } = useThongTinYCTN();
+    const [formData, setFormData] = useState(QLTN_YCTN);
+    const user = JSON.parse(sessionStorage.getItem("user"))?.ten_dang_nhap || "";
     const toast = useRef(null);
     useEffect(() => {
-        if(thongTinYCTN){
-            setFormData({...thongTinYCTN, nguoi_giao_nhiem_vu: user, ngay_giao_nv: new Date()});
+        if (thongTinYCTN) {
+            setFormData({ ...thongTinYCTN, nguoi_giao_nhiem_vu: formData?.nguoi_giao_nhiem_vu || user, ngay_giao_nv: new Date() });
         }
     }, [thongTinYCTN]);
 
-  
+
     const onSubmit = async () => {
         try {
             if (formData.file_dinh_kem_giao_nv) {
-                let resUpload = await UploadFileService.file(formData.file_dinh_kem_giao_nv,"fileGiaoNV")
+                let resUpload = await UploadFileService.file(formData.file_dinh_kem_giao_nv, "fileGiaoNV")
                 formData.file_dinh_kem_giao_nv = resUpload.filePath
             }
             console.log(formData);
             await QLTN_YCTNService.giao_nhiem_vu_YCTN(formData);
             Notification.success(toast, "Giao nhiệm vụ thành công");
+            
             // router.back();
         } catch (err) {
             console.log(err);
             Notification.error(toast, "Giao nhiệm vụ thất bại");
         }
     }
+    console.log(thongTinYCTN);
     return (
         <>
             <Head>
@@ -46,14 +48,19 @@ const GiaoNhiemVu = () => {
             </Head>
             <Toast ref={toast} />
             <Panel header={<h3 className="text-xl font-bold">Giao nhiệm vụ thí nghiệm</h3>} className="mt-3">
-                <FillThongTinYCTN Element= {thongTinYCTN ? <ThongTinYCTN loai_yctn={thongTinYCTN.loai_yctn_model} formData={thongTinYCTN}/> : <></>}/>
-                 {thongTinYCTN && <Panel header={<h3 className="text-base font-bold">Thông tin giao nhiệm vụ</h3>}>
-                    <FieldGiaoNV formData={formData} setFormData={setFormData}/>
-                 </Panel>}
-                 
-                 <div className="flex justify-content-end mt-6">
-                    <Button label="Lưu" icon="pi pi-save" onClick={onSubmit} />
-                 </div>
+                <FillThongTinYCTN Element={thongTinYCTN ? <ThongTinYCTN loai_yctn={thongTinYCTN.loai_yctn_model} formData={thongTinYCTN} /> : <></>} />
+                {thongTinYCTN && <Panel header={<h3 className="text-base font-bold">Thông tin giao nhiệm vụ</h3>}>
+                    <FieldGiaoNV formData={formData} setFormData={setFormData} />
+                </Panel>}
+
+                <div className="flex justify-content-end mt-6">
+                    {
+                        thongTinYCTN &&
+                        <div>
+                            {thongTinYCTN?.crr_step === 2 ? <Button label="Bước tiếp theo : Nhập khối lượng thực hiện" icon="pi pi-arrow-right" /> : <Button label="Lưu" icon="pi pi-save" onClick={onSubmit} />}
+                        </div>
+                    }
+                </div>
 
             </Panel>
         </>

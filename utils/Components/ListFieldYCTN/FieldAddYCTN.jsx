@@ -166,13 +166,47 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, isEdit = false }) => {
         },
         {
             stt: 4,
-            key: "id_khach_hang",
-            element: <FormField isDropdown label="Khách hàng / Đơn vị điện lực" id="id_khach_hang" value={formData?.id_khach_hang} optionsValue="id" options={dm_KH} optionsLabel="ten_kh" onChange={handleInputChange} />
+            key: "loai_tai_san", 
+            element: loai_yctn.ma_loai_yctn === "ke_hoach_thi_nghiem" ? <FormField
+                label="Loại tài sản"
+                id="loai_tai_san"
+                value={Number.parseInt(formData.loai_tai_san)} 
+                isDropdown
+                options={dm_LTS}
+                optionsLabel="ten_lts"
+                optionsValue="id"
+                onChange={handleInputChange}
+            /> : <></>
         },
         {
             stt: 5,
-            key: "loai_tai_san",
-            element: <FormField label="Loại tài sản" id="loai_tai_san" value={formData.loai_tai_san} onChange={handleInputChange} isDropdown options={dm_LTS} optionsLabel="ten_lts" optionsValue="id" />
+            key: "id_khach_hang",
+            element: <div className="flex gap-4">
+                <div style={{ width: "49%" }}>
+                    <FormField
+                        label="Khách hàng / Đơn vị điện lực"
+                        id="id_khach_hang"
+                        value={Number.parseInt(formData?.id_khach_hang)}
+                        isDropdown
+                        options={dm_KH}
+                        optionsLabel="ten_kh"
+                        optionsValue="id"
+                        onChange={handleInputChange}
+                    />
+                </div>
+                <div style={{ width: "49%" }}>
+                    <FormField
+                        label="Loại tài sản"
+                        id="loai_tai_san"
+                        value={Number.parseInt(formData.loai_tai_san)}
+                        isDropdown
+                        options={dm_LTS}
+                        optionsLabel="ten_lts"
+                        optionsValue="id"
+                        onChange={handleInputChange}
+                    />
+                </div>
+            </div>
         },
         {
             stt: 6,
@@ -297,7 +331,7 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, isEdit = false }) => {
             <br />
             <br />
             <div style={{ borderTop: "1px solid #ccc" }} className='flex justify-content-end gap-2 mt-10 pt-5'>
-                <Button label="Quay lại" icon="pi pi-times" className='p-button-danger' onClick={() => router.back()} />
+                <Button label="Quay lại" icon="pi pi-arrow-left" className='p-button-danger' onClick={() => router.back()} />
                 {loai_yctn && <Button label={"Tạo mới " + loai_yctn?.ten_loai_yc} icon="pi pi-check" onClick={handleSubmit} />}
             </div>
         </div>

@@ -24,7 +24,6 @@ const FillThongTinYCTN = ({ Element }) => {
         searchYCTN();
     }, []);
 
-    console.log(listMa_YCTN);
 
     useEffect(() => {
         if (router.query.code && router.query.code !== "" && listMa_YCTN.length > 0) {
@@ -32,7 +31,7 @@ const FillThongTinYCTN = ({ Element }) => {
             setMaYCTNCurrent(res);
 
         }
-    }, [router.query.code]);
+    }, [router.query.code, listMa_YCTN]);
 
 
     useEffect(() => {

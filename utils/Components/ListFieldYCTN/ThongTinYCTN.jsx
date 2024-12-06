@@ -99,28 +99,42 @@ const ThongTinYCTN = ({ loai_yctn, formData }) => {
         },
         {
             stt: 4,
+            key: "loai_tai_san",
+            element: loai_yctn.ma_loai_yctn === "ke_hoach_thi_nghiem" ? <FormField
+                label="Loại tài sản"
+                id="loai_tai_san"
+                value={Number.parseInt(formData.loai_tai_san)}
+                isDropdown
+                options={dm_LTS}
+                optionsLabel="ten_lts"
+                    optionsValue="id"
+                /> : <>
+                </>
+        },
+        {
+            stt: 5,
             key: "id_khach_hang",
             element: <div className="flex gap-4">
                 <div style={{ width: "49%" }}>
-                    <FormField 
-                        label="Khách hàng / Đơn vị điện lực" 
-                        id="id_khach_hang" 
-                        value={Number.parseInt(formData?.id_khach_hang)} 
-                        isDropdown 
-                        options={dm_KH} 
-                        optionsLabel="ten_kh" 
-                        optionsValue="id" 
+                    <FormField
+                        label="Khách hàng / Đơn vị điện lực"
+                        id="id_khach_hang"
+                        value={Number.parseInt(formData?.id_khach_hang)}
+                        isDropdown
+                        options={dm_KH}
+                        optionsLabel="ten_kh"
+                        optionsValue="id"
                     />
                 </div>
                 <div style={{ width: "49%" }}>
-                    <FormField 
-                        label="Loại tài sản" 
-                        id="loai_tai_san" 
-                        value={Number.parseInt(formData.loai_tai_san)} 
-                        isDropdown 
-                        options={dm_LTS} 
-                        optionsLabel="ten_lts" 
-                        optionsValue="id" 
+                    <FormField
+                        label="Loại tài sản"
+                        id="loai_tai_san"
+                        value={Number.parseInt(formData.loai_tai_san)}
+                        isDropdown
+                        options={dm_LTS}
+                        optionsLabel="ten_lts"
+                        optionsValue="id"
                     />
                 </div>
             </div>
@@ -153,7 +167,7 @@ const ThongTinYCTN = ({ loai_yctn, formData }) => {
                     <FormField label={<>Giá trị chiết giảm <span className="text-lg text-red-500">*</span></>} id="gtdt_chiet_giam" value={formData?.gtdt_chiet_giam} isNumber childrenIPNumber={"(VNĐ)"} />
                 </div>
                 <div style={{ width: "49%" }}>
-                    <FormField label={<>Giá trị sau chiết giảm <span className="text-lg text-red-500">*</span></>} id="gtdt_sau_chiet_giam" value={formData?.gtdt_sau_chiet_giam} isNumber childrenIPNumber={"(VNĐ)"}  />
+                    <FormField label={<>Giá trị sau chiết giảm <span className="text-lg text-red-500">*</span></>} id="gtdt_sau_chiet_giam" value={formData?.gtdt_sau_chiet_giam} isNumber childrenIPNumber={"(VNĐ)"} />
                 </div>
             </div>
         },
@@ -165,7 +179,7 @@ const ThongTinYCTN = ({ loai_yctn, formData }) => {
                     <FormField label={<>Thuế <span className="text-lg text-red-500">*</span></>} id="gtdt_thue" value={formData?.gtdt_thue} isNumber childrenIPNumber={"(VNĐ)"} />
                 </div>
                 <div style={{ width: "49%" }}>
-                    <FormField label={<>Giá trị dự toán sau thuế <span className="text-lg text-red-500">*</span></>} id="gtdt_sau_thue" value={formData?.gtdt_sau_thue} isNumber childrenIPNumber={"(VNĐ)"}  />
+                    <FormField label={<>Giá trị dự toán sau thuế <span className="text-lg text-red-500">*</span></>} id="gtdt_sau_thue" value={formData?.gtdt_sau_thue} isNumber childrenIPNumber={"(VNĐ)"} />
                 </div>
             </div>
         }
