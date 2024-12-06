@@ -17,12 +17,14 @@ const AppMenu = () => {
                     label: menu.ten_menu,
                     icon: menu.icon,
                     key: menu.id,
-                    items: menu.children ? menu.children.map(child => ({
-                        label: child.ten_menu,
-                        icon: child.icon,
-                        key: child.id,
-                        command: () => handleMenuClick(child.duong_dan || '/'),
-                    })) : []
+                    items: menu.children ? menu.children
+                        .sort((a, b) => a.ten_menu.localeCompare(b.ten_menu))
+                        .map(child => ({
+                            label: child.ten_menu,
+                            icon: child.icon,
+                            key: child.id,
+                            command: () => handleMenuClick(child.duong_dan || '/'),
+                        })) : []
                 }));
 
                 setMenu(model);
@@ -37,9 +39,6 @@ const AppMenu = () => {
     const handleMenuClick = (url) => {
         router.push(url);
     };
-
-    
-    
 
     return (
         <MenuProvider>

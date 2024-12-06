@@ -1,0 +1,58 @@
+import { memo, useEffect, useRef, useState } from "react";
+import { Panel } from "primereact/panel";
+import Head from "next/head";
+import FillThongTinYCTN from "../../../../../utils/Components/FilterYCTN/FillThongTinYCTN";
+import QLTN_YCTNService from "../../../../../services/quanlythinghiem/QLTN_YCTNService";
+import ThongTinYCTN from "../../../../../utils/Components/ListFieldYCTN/ThongTinYCTN";
+import useThongTinYCTN from "../../../../../hooks/useThongTinYCTN";
+import { Button } from "primereact/button";
+import { Toast } from "primereact/toast";
+import { Notification } from "../../../../../utils/notification";
+import DanhSachThietBi from "../../../../../utils/Components/ThiNghiem/DanhSachThietBi";
+
+const ThiNghiem = () => {
+    const { ma_yctn, thongTinYCTN } = useThongTinYCTN();
+    const [formData, setFormData] = useState({});
+    const toast = useRef(null);
+
+    useEffect(() => {
+        if (thongTinYCTN) {
+            setFormData(thongTinYCTN);
+        }
+    }, [thongTinYCTN]);
+
+    const onSubmit = async () => {
+        try {
+            // TODO: Implement submit logic for thi nghiem
+            Notification.success(toast, "Thực hiện thí nghiệm thành công");
+        } catch (err) {
+            console.log(err);
+            Notification.error(toast, "Thực hiện thí nghiệm thất bại");
+        }
+    }
+
+    return (
+        <>
+            <Head>
+                <title>Thực hiện thí nghiệm</title>
+            </Head>
+            <Toast ref={toast} />
+            <Panel header={<h3 className="text-xl font-bold">Thực hiện thí nghiệm</h3>} className="mt-3">
+                <FillThongTinYCTN Element={thongTinYCTN ? <ThongTinYCTN loai_yctn={thongTinYCTN.loai_yctn_model} formData={thongTinYCTN} /> : <></>} />
+
+                <Panel header="Khối lượng thiết bị thí nghiệm" className="mt-3">
+                    <DanhSachThietBi ma_yctn={ma_yctn} />
+                </Panel>
+
+                <div className="flex justify-content-end mt-6">
+                    {
+                        thongTinYCTN &&
+                        <Button label="Bước tiếp theo:Bàn giao kết quả" icon="pi pi-save" onClick={onSubmit} />
+                    }
+                </div>
+            </Panel>
+        </>
+    );
+};
+
+export default memo(ThiNghiem);

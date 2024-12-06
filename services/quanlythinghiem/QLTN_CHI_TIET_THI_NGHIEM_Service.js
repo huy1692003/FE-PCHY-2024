@@ -9,7 +9,7 @@ const QLTN_CHI_TIET_THI_NGHIEM_Service = {
 
     // Lấy danh sách thiết bị kèm chi tiết thí nghiệm theo mã YCTN
     getAll_TBTN_byMA_YCTN: async (ma_yctn) => {
-        const res = await apiClient.post('/QLTN_CHI_TIET_THI_NGHIEM/getAll_TBTN_byMA_YCTN', ma_yctn);
+        const res = await apiClient.get(`/QLTN_CHI_TIET_THI_NGHIEM/getAll_TBTN_byMA_YCTN?ma_yctn=${ma_yctn}`);
         return res?.data;
     },
 
