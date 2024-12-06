@@ -102,7 +102,7 @@ const TableDM_LoaiThietBi = ({
   return (
     <>
       <Toast ref={toast} />
-
+      
       <ConfirmDialog
         visible={visible}
         onHide={() => setVisible(false)}

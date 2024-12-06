@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef, useState, useMemo } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { InputText } from "primereact/inputtext";
 import { InputNumber } from "primereact/inputnumber";
 import { Calendar } from "primereact/calendar";
@@ -17,68 +17,146 @@ import { InputTextarea } from "primereact/inputtextarea";
 import { DM_LOAI_TAISANService } from "../../../services/quanlythinghiem/DM_LOAI_TAISANService";
 import { DM_KHACHHANG_Service } from "../../../services/quanlythinghiem/DM_KHACHHANG_Service";
 
-const FormField = ({ label, className, style, placeholder, value, onChange, id, isCalendar = false, isNumber = false, isFileUpload = false, isDropdown = false, isTextArea = false, options = [], prefix, isDisabled = false, styleField, props, mode, currency, locale, childrenIPNumber, optionsValue, optionsLabel }) => (
-    <div className={className} style={style}>
-        <label className='font-medium text-sm my-3 block' htmlFor={id}>{label}</label>
-        {isCalendar ? (
-            <Calendar id={id} name={id} value={new Date(value)} showIcon className="w-full flex align-items-center justify-content-start p-disabled-custom" disabled={true} />
-        ) : isNumber ? (
-            <div className="p-inputgroup">
-                <InputNumber id={id} name={id} value={value} className="w-full" disabled={true} style={{ opacity: 1 }} />
-                <span className="p-inputgroup-addon" style={{ backgroundColor: "#6366F1", color: "white" }}>{childrenIPNumber}</span>
-            </div>
-        ) : isDropdown ? (
-            <Dropdown  {...props} id={id} name={id} value={value} options={options} showClear className="w-full" disabled filter optionValue={optionsValue} optionLabel={optionsLabel} placeholder="--Mời chọn--" style={{ opacity: 1 }} />
-        ) : isTextArea ? (
-            <InputTextarea id={id} name={id} value={value} rows={5} className="w-full" disabled={true} autoResize style={{ opacity: 1 }} />
-        ) : (
-            <InputText style={{ ...styleField, opacity: 1 }} id={id} name={id} value={value} className="w-full" disabled={true} />
-        )}
-    </div>
+const FormField = ({
+  label,
+  className,
+  style,
+  placeholder,
+  value,
+  onChange,
+  id,
+  isCalendar = false,
+  isNumber = false,
+  isFileUpload = false,
+  isDropdown = false,
+  isTextArea = false,
+  options = [],
+  prefix,
+  isDisabled = true,
+  styleField,
+  props,
+  mode,
+  currency,
+  locale,
+  childrenIPNumber,
+  optionsValue,
+  optionsLabel,
+}) => (
+  <div className={className} style={style}>
+    <label className="font-medium text-sm my-3 block" htmlFor={id}>
+      {label}
+    </label>
+    {isCalendar ? (
+      <Calendar
+        id={id}
+        name={id}
+        value={new Date(value)}
+        showIcon
+        onChange={onChange}
+        className="w-full flex align-items-center justify-content-start p-disabled-custom"
+        disabled={isDisabled}
+      />
+    ) : isNumber ? (
+      <div className="p-inputgroup">
+        <InputNumber
+          id={id}
+          name={id}
+          value={value}
+          className="w-full"
+          disabled={isDisabled}
+          style={{ opacity: 1 }}
+        />
+        <span
+          className="p-inputgroup-addon"
+          style={{ backgroundColor: "#6366F1", color: "white" }}
+        >
+          {childrenIPNumber}
+        </span>
+      </div>
+    ) : isDropdown ? (
+      <Dropdown
+        {...props}
+        id={id}
+        name={id}
+        value={value}
+        options={options}
+        showClear
+        className="w-full"
+        disabled={isDisabled}
+        filter
+        optionValue={optionsValue}
+        onChange={onChange}
+        optionLabel={optionsLabel}
+        placeholder="--Mời chọn--"
+        style={{ opacity: 1 }}
+      />
+    ) : isTextArea ? (
+      <InputTextarea
+        id={id}
+        name={id}
+        value={value}
+        rows={5}
+        className="w-full"
+        disabled={isDisabled}
+        autoResize
+        style={{ opacity: 1 }}
+      />
+    ) : (
+      <InputText
+        style={{ ...styleField, opacity: 1 }}
+        id={id}
+        name={id}
+        value={value}
+        className="w-full"
+        disabled={isDisabled}
+      />
+    )}
+  </div>
+
 );
 
-
-const ThongTinYCTN = ({ loai_yctn, formData }) => {
-
-    const [fieldbyLoaiYCTN, setFieldbyLoaiYCTN] = useState([]);
-    const [fields, setFields] = useState([]);
-    const [fieldCurrent, setFieldCurrent] = useState([]);
-    const [dm_LTS, setDM_LTS] = useState([]);
-    const [dm_KH, setDM_KH] = useState([]);
-    // Chuyển các state thành useMemo
+export { FormField };
 
 
-    const getAllDanhMuc = async () => {
-        try {
-            const [resLTS, resKH] = await Promise.all([
-                DM_LOAI_TAISANService.get_DM_LOAI_TAISAN(),
-                DM_KHACHHANG_Service.get_ALL_DM_KHACHHANG()
-            ]);
-            setDM_LTS(resLTS?.data);
-            setDM_KH(resKH);
-        } catch (err) {
-            setDM_LTS([]);
-            setDM_KH([]);
-        }
+const ThongTinYCTN = ({ loai_yctn, formData , children}) => {
+  const [fieldbyLoaiYCTN, setFieldbyLoaiYCTN] = useState([]);
+  const [fields, setFields] = useState([]);
+  const [fieldCurrent, setFieldCurrent] = useState([]);
+  const [dm_LTS, setDM_LTS] = useState([]);
+  const [dm_KH, setDM_KH] = useState([]);
+
+  const getAllDanhMuc = async () => {
+    try {
+      const [resLTS, resKH] = await Promise.all([
+        DM_LOAI_TAISANService.get_DM_LOAI_TAISAN(),
+        DM_KHACHHANG_Service.get_ALL_DM_KHACHHANG(),
+      ]);
+      setDM_LTS(resLTS?.data);
+      setDM_KH(resKH);
+    } catch (err) {
+      setDM_LTS([]);
+      setDM_KH([]);
+
     }
-    // Lấy danh sách trường dữ liệu và các trường tương ứng với loai_yctn  
-    useEffect(() => {
-        getAllFields();
-        getFieldByLoaiYCTN();
-        getAllDanhMuc();
-    }, [loai_yctn]);
-
-    useEffect(() => {
-        let res = findMatchingFields(fields, fieldbyLoaiYCTN);
-        setFieldCurrent(res);
-    }, [fieldbyLoaiYCTN, fields]);
+  };
+  // Lấy danh sách trường dữ liệu và các trường tương ứng với loai_yctn
+  useEffect(() => {
+    getAllFields();
+    getFieldByLoaiYCTN();
+    getAllDanhMuc();
+  }, [loai_yctn]);
 
 
-    console.log(formData)
-    const getAllFields = async () => {
-        let res = await DM_TRUONG_YCTN_Service.getAll_DM_TRUONG_YCTN();
-        setFields(res);
-    }
+  useEffect(() => {
+    let res = findMatchingFields(fields, fieldbyLoaiYCTN);
+    setFieldCurrent(res);
+  }, [fieldbyLoaiYCTN, fields]);
+
+  //console.log(formData);
+  const getAllFields = async () => {
+    let res = await DM_TRUONG_YCTN_Service.getAll_DM_TRUONG_YCTN();
+    setFields(res);
+  };
 
     const getFieldByLoaiYCTN = async () => {
         let res = await DM_LOAI_YCTNService.get_PHAN_MIEN_YCTN_BY_LOAI_YCTN(loai_yctn.id)
@@ -191,23 +269,18 @@ const ThongTinYCTN = ({ loai_yctn, formData }) => {
     }
 
 
-
-    return (
-        <div className="">
-
-            <div>
-                {fieldInput.map(field => {
-                    if (fieldCurrent.find(i => i?.ma_code === field.key)) {
-                        return <div key={field.stt}>{field.element}</div>
-                    }
-
-                })}
-            </div>
-
-        </div>
-
-    );
-
+  return (
+    <div className="">
+      <div>
+        {fieldInput.map((field) => {
+          if (fieldCurrent.find((i) => i?.ma_code === field.key)) {
+            return <div key={field.stt}>{field.element}</div>;
+          }
+        })}
+        {children}
+      </div>
+    </div>
+  );
 
 };
 

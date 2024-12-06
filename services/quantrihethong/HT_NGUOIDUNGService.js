@@ -40,8 +40,12 @@ export const HT_NGUOIDUNG_Service = {
     getMenuByIdUser:async(idUser)=>{
         const res = await apiClient.get(`/HT_NGUOIDUNG/get_HT_MENUByIdUser?userId=${idUser}`)
         return res.data
-    }
+    },
 
+    getAll: async (data = { pageIndex: '1', pageSize: '10' }) => {
+        const res = await apiClient.post("/HT_NGUOIDUNG/get_ListNguoiDung", data);
+        return res.data;
+    },
 
 
 }

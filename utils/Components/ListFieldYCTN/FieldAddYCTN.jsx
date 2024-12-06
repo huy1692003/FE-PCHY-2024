@@ -254,42 +254,161 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, isEdit = false }) => {
                     </div>
                 </div>
             </div>
-        },
-        {
-            stt: 11,
-            key: "phan_tram_thue", 
-            element: <div className="flex gap-4">
-                <div style={{ width: "20%" }}>
-                    <label className='font-medium text-sm my-3 block' htmlFor="phan_tram_thue">Phần trăm thuế</label>
-                    <div className="p-inputgroup">
-                        <InputNumber mode={"decimal"} min={0} minFractionDigits={1} maxFractionDigits={2} id="phan_tram_thue" name="phan_tram_thue" value={formData.phan_tram_thue} onChange={(e) => handleInputChange("phan_tram_thue", e.value)} className="w-full" />
-                        <span className="p-inputgroup-addon" style={{ backgroundColor: "#6366F1", color: "white" }}>%</span>
-                    </div>
-                </div>
-                <div style={{ width: "38%" }}>
-                    <label className='font-medium text-sm my-3 block' htmlFor="gtdt_thue">Giá trị thuế</label>
-                    <div className="p-inputgroup">
-                        <InputNumber id="gtdt_thue" name="gtdt_thue" value={formData.gtdt_thue} onChange={(e) => handleInputChange("gtdt_thue", e.value)} className="w-full" min={0} />
-                        <span className="p-inputgroup-addon" style={{ backgroundColor: "#6366F1", color: "white" }}>VNĐ</span>
-                    </div>
-                </div>
-                <div style={{ width: "39%" }}>
-                    <label className='font-medium text-sm my-3 block' htmlFor="gtdt_sau_thue">Giá trị sau thuế</label>
-                    <div className="p-inputgroup">
-                        <InputNumber id="gtdt_sau_thue" disabled name="gtdt_sau_thue" value={formData.gtdt_sau_thue} onChange={(e) => handleInputChange("gtdt_sau_thue", e.value)} className="w-full" min={0} />
-                        <span className="p-inputgroup-addon" style={{ backgroundColor: "#6366F1", color: "white" }}>VNĐ</span>
-                    </div>
-                </div>
+            <div style={{ width: "38%" }}>
+              <label
+                className="font-medium text-sm my-3 block"
+                htmlFor="gtdt_chiet_giam"
+              >
+                Giá trị chiết giảm
+              </label>
+              <div className="p-inputgroup">
+                <InputNumber
+                  id="gtdt_chiet_giam"
+                  name="gtdt_chiet_giam"
+                  value={formData.gtdt_chiet_giam}
+                  onChange={(e) =>
+                    handleInputChange("gtdt_chiet_giam", e.value)
+                  }
+                  className="w-full"
+                  min={0}
+                />
+                <span
+                  className="p-inputgroup-addon"
+                  style={{ backgroundColor: "#6366F1", color: "white" }}
+                >
+                  VNĐ
+                </span>
+              </div>
             </div>
-        },
-        {
-            stt: 16,
-            key: "file_upload",
-            element: <>
-                <label className='font-bold text-sm my-3 block' htmlFor="file_upload">Upload file</label>
-                <InputFile nameField="file_upload" setFormData={setFormData} />
-            </>
-        }
+            <div style={{ width: "39%" }}>
+              <label
+                className="font-medium text-sm my-3 block"
+                htmlFor="gtdt_sau_chiet_giam"
+              >
+                Giá trị sau chiết giảm
+              </label>
+              <div className="p-inputgroup">
+                <InputNumber
+                  id="gtdt_sau_chiet_giam"
+                  disabled
+                  name="gtdt_sau_chiet_giam"
+                  value={formData.gtdt_sau_chiet_giam}
+                  onChange={(e) =>
+                    handleInputChange("gtdt_sau_chiet_giam", e.value)
+                  }
+                  className="w-full"
+                  min={0}
+                />
+                <span
+                  className="p-inputgroup-addon"
+                  style={{ backgroundColor: "#6366F1", color: "white" }}
+                >
+                  VNĐ
+                </span>
+              </div>
+            </div>
+          </div>
+        ),
+      },
+      {
+        stt: 11,
+        key: "phan_tram_thue",
+        element: (
+          <div className="flex gap-4">
+            <div style={{ width: "20%" }}>
+              <label
+                className="font-medium text-sm my-3 block"
+                htmlFor="phan_tram_thue"
+              >
+                Phần trăm thuế
+              </label>
+              <div className="p-inputgroup">
+                <InputNumber
+                  mode={"decimal"}
+                  min={0}
+                  minFractionDigits={1}
+                  maxFractionDigits={2}
+                  id="phan_tram_thue"
+                  name="phan_tram_thue"
+                  value={formData.phan_tram_thue}
+                  onChange={(e) => handleInputChange("phan_tram_thue", e.value)}
+                  className="w-full"
+                />
+                <span
+                  className="p-inputgroup-addon"
+                  style={{ backgroundColor: "#6366F1", color: "white" }}
+                >
+                  %
+                </span>
+              </div>
+            </div>
+            <div style={{ width: "38%" }}>
+              <label
+                className="font-medium text-sm my-3 block"
+                htmlFor="gtdt_thue"
+              >
+                Giá trị thuế
+              </label>
+              <div className="p-inputgroup">
+                <InputNumber
+                  id="gtdt_thue"
+                  name="gtdt_thue"
+                  value={formData.gtdt_thue}
+                  onChange={(e) => handleInputChange("gtdt_thue", e.value)}
+                  className="w-full"
+                  min={0}
+                />
+                <span
+                  className="p-inputgroup-addon"
+                  style={{ backgroundColor: "#6366F1", color: "white" }}
+                >
+                  VNĐ
+                </span>
+              </div>
+            </div>
+            <div style={{ width: "39%" }}>
+              <label
+                className="font-medium text-sm my-3 block"
+                htmlFor="gtdt_sau_thue"
+              >
+                Giá trị sau thuế
+              </label>
+              <div className="p-inputgroup">
+                <InputNumber
+                  id="gtdt_sau_thue"
+                  disabled
+                  name="gtdt_sau_thue"
+                  value={formData.gtdt_sau_thue}
+                  onChange={(e) => handleInputChange("gtdt_sau_thue", e.value)}
+                  className="w-full"
+                  min={0}
+                />
+                <span
+                  className="p-inputgroup-addon"
+                  style={{ backgroundColor: "#6366F1", color: "white" }}
+                >
+                  VNĐ
+                </span>
+              </div>
+            </div>
+          </div>
+        ),
+      },
+      {
+        stt: 16,
+        key: "file_upload",
+        element: (
+          <>
+            <label
+              className="font-bold text-sm my-3 block"
+              htmlFor="file_upload"
+            >
+              Upload file
+            </label>
+            <InputFile nameField="file_upload" setFormData={setFormData} />
+          </>
+        ),
+      },
     ];
 
     const findMatchingFields = (fields, fieldByYCTN) => {
