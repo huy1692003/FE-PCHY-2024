@@ -7,6 +7,7 @@ import QLTN_YCTNService from "../services/quanlythinghiem/QLTN_YCTNService";
  * @returns {Object} Trả về object chứa:
  * - ma_yctn: Mã yêu cầu thí nghiệm từ query parameter 'code'
  * - thongTinYCTN: Thông tin chi tiết của yêu cầu thí nghiệm, bao gồm:
+ * - refeshData : cập nhật lại dữ liệu
  *   + id: ID của yêu cầu
  *   + ma_yctn: Mã yêu cầu thí nghiệm
  *   + loai_yctn_model: Model loại yêu cầu thí nghiệm
@@ -52,7 +53,7 @@ const useThongTinYCTN = () => {
         }
     };
 
-    return { ma_yctn, thongTinYCTN };
+    return { ma_yctn, thongTinYCTN , refeshData : getThongTinYCTN_byMaYCTN};
 };
 
 export default useThongTinYCTN;

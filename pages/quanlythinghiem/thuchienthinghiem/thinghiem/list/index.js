@@ -40,16 +40,17 @@ const ThiNghiem = () => {
             <Panel header={<h3 className="text-xl font-bold">Thực hiện thí nghiệm</h3>} className="mt-3">
                 <FillThongTinYCTN Element={thongTinYCTN ? <ThongTinYCTN loai_yctn={thongTinYCTN.loai_yctn_model} formData={thongTinYCTN} /> : <></>} />
 
-                <Panel header="Khối lượng thiết bị thí nghiệm" className="mt-3">
-                    <DanhSachThietBi ma_yctn={ma_yctn} />
-                </Panel>
+                {thongTinYCTN && <><Panel header="Khối lượng thiết bị thí nghiệm" className="mt-3">
+                    <DanhSachThietBi thongtinYCTN={thongTinYCTN} ma_yctn={ma_yctn} />
+                        </Panel>
 
-                <div className="flex justify-content-end mt-6">
-                    {
-                        thongTinYCTN &&
-                        <Button label="Bước tiếp theo:Bàn giao kết quả" icon="pi pi-save" onClick={onSubmit} />
-                    }
-                </div>
+                    <div className="flex justify-content-end mt-6">
+                        {
+                            thongTinYCTN &&
+                            <Button label="Bước tiếp theo:Bàn giao kết quả" icon="pi pi-save" onClick={onSubmit} />
+                        }
+                    </div>
+                </>}
             </Panel>
         </>
     );

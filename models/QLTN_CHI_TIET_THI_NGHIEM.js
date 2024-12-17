@@ -1,0 +1,16 @@
+export const QL_TN_CHI_TIET_THI_NGHIEM = {
+  id: null,
+  ma_chi_tiet_tn: null,
+  ma_tbtn: null, 
+  so_luong: null,
+  ma_loai_bb: null,
+  ma_yctn: null,
+  file_upload: null,
+  ngay_tt_tn: null,
+  ngay_tao: null,
+  nguoi_tao: null,
+  ngay_sua: null,
+  nguoi_sua: null,
+  lanthu: null,
+  trang_thai_ky: 0,
+}
