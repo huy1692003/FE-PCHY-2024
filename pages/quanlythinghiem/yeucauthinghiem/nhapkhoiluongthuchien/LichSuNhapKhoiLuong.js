@@ -8,7 +8,7 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { useEffect, useState } from "react";
 import { QLTN_THIET_BI_YCTN_Service } from "../../../../services/quanlythinghiem/QLTN_THIET_BI_YCTN_Service";
-const LichSuNhapKhoiLuong = ({ MA_YCTN }) => {
+const LichSuNhapKhoiLuong = ({ nextStep,MA_YCTN }) => {
   const [arrThietbiBD, setArrThietbiBD] = useState([]);
 
   const loadData = async () => {
@@ -28,7 +28,7 @@ const LichSuNhapKhoiLuong = ({ MA_YCTN }) => {
   useEffect(() => {
     loadData();
     // console.log("MA_YCTN",MA_YCTN)
-  }, [MA_YCTN]);
+  }, [MA_YCTN,nextStep]);
   const headerList = (options) => {
     const className = `${options.className} flex flex-wrap justify-content-between align-items-center`;
 

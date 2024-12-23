@@ -28,6 +28,7 @@ const BanGiaoKetQua = () => {
       await QLTN_YCTNService.ban_giao_ket_qua_YCTN(updatedFormData);
       Notification.success(toast, "Bàn giao thành công");
     } catch (error) {
+      console.log(error)
       Notification.error(toast, "Bàn giao thất bại");
     }
   };

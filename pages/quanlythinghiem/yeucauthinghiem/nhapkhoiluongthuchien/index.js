@@ -128,7 +128,7 @@ const NhapKhoiLuongThucHien = () => {
           }
         />
 
-        {thongTinYCTN && isCurrent === 3 && (
+        {thongTinYCTN && isCurrent === 2 && (
           <Panel headerTemplate={headerList}>
             <TableNhapKhoiLuong
               arrThietbi={arrThietbi}
@@ -153,7 +153,7 @@ const NhapKhoiLuongThucHien = () => {
                   style={{ backgroundColor: "#1445a7" }}
                   onClick={() => {
                     ThemMoiThietBi_YCTN();
-                    setIsCurrent(4);
+                    setIsCurrent(3);
                   }}
                 />
                 
@@ -170,9 +170,9 @@ const NhapKhoiLuongThucHien = () => {
           </Panel>
         )}
         
-        {thongTinYCTN && isCurrent > 3 && (
+        {thongTinYCTN && isCurrent >=3 && (
         <Panel header="Lịch sử nhập khối lượng">
-          <LichSuNhapKhoiLuong MA_YCTN={ma_yctn} />
+          <LichSuNhapKhoiLuong nextStep ={isCurrent} MA_YCTN={ma_yctn} />
         </Panel>
         )}
       </Panel>
