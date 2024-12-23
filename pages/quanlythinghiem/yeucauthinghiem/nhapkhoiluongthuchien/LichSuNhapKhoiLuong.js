@@ -17,6 +17,8 @@ const LichSuNhapKhoiLuong = ({ MA_YCTN }) => {
         await QLTN_THIET_BI_YCTN_Service.getAll_QLTN_THIET_BI_YCTN_byMA_YCTN({
           ma_yctn: MA_YCTN,
         });
+        console.log("test")
+        console.log(items)
       // console.log("TBBD",items);
       setArrThietbiBD(items);
     } catch (err) {
@@ -26,7 +28,7 @@ const LichSuNhapKhoiLuong = ({ MA_YCTN }) => {
   useEffect(() => {
     loadData();
     // console.log("MA_YCTN",MA_YCTN)
-  }, []);
+  }, [MA_YCTN]);
   const headerList = (options) => {
     const className = `${options.className} flex flex-wrap justify-content-between align-items-center`;
 
