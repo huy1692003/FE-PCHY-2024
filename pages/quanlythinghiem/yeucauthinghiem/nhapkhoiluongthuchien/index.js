@@ -46,8 +46,10 @@ const NhapKhoiLuongThucHien = () => {
     return (
       <>
         <div className={className + " mt-4"}>
+
           <span className="font-bold text-xl">Danh sách thiết bị</span>
-          <span className="font-bold text-base">Danh sách thiết bị</span>
+
+
           <div className="flex flex-wrap gap-2">
             <Button
               label="Thêm mới"
