@@ -18,7 +18,7 @@ import { formatDate, formatPrice } from "../../../../utils/FunctionFormart";
 const ChinhSuaGTHD = () => {
     const toast = useRef(null);
     const { ma_yctn, thongTinYCTN , refeshData } = useThongTinYCTN();
-    const [formData, setFormData] = useState(QLTN_YCTN);
+    const [formData, setFormData] = useState();
     const user = JSON.parse(sessionStorage.getItem("user"))?.ten_dang_nhap || "";
     const [loaiYCTN, setLoaiYCTN] = useState([]);
     const [loaiYCTN_Current, setLoaiYCTNCurrent] = useState(null)
@@ -87,7 +87,7 @@ const ChinhSuaGTHD = () => {
 
             </Panel>
 
-            <Panel header={<h3 className="text-xl font-bold">Lịch sủ chỉnh sửa hợp đồng</h3>} className="mt-3">
+            {formData&&<Panel header={<h3 className="text-xl font-bold">Lịch sửa chỉnh sửa hợp đồng</h3>} className="mt-3">
 
                 {thongTinYCTN && yctnLog &&
                     <DataTable showGridlines value={yctnLog}>
@@ -150,7 +150,7 @@ const ChinhSuaGTHD = () => {
                     </DataTable>
                 }
 
-            </Panel>
+            </Panel>}
 
         </>
     );
