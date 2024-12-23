@@ -45,7 +45,7 @@ const DonVi = () => {
     try {
       const items = await search_DM_DONVI({ pageIndex: page, pageSize, ...keyFilter });
       setArr_DONVI(items.data);
-
+      console.log(items)
       setTotalRecords(items.totalItems);
       setPageCount(Math.ceil(items.totalItems / pageSize));
     } catch (err) {

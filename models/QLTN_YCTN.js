@@ -34,7 +34,8 @@ const QLTN_YCTN = {
     phan_tram_chiet_giam: 0,
     ngay_ks_lap_pa_thi_cong: null,
     ngay_tao: new Date(),
-    don_vi_thuc_hien: null
+    don_vi_thuc_hien: null,
+    qltn_yctn_log:null
 }
 
 export default QLTN_YCTN;

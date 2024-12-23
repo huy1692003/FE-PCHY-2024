@@ -11,6 +11,7 @@ import { LayoutContext } from './context/layoutcontext';
 import PrimeReact from 'primereact/api';
 import { Message } from 'primereact/message';
 import { Button } from 'primereact/button';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 import { locale, addLocale, updateLocaleOption, updateLocaleOptions, localeOption, localeOptions } from 'primereact/api';
 import vi from '../constants/local';
@@ -193,7 +194,7 @@ const Layout = (props) => {
                     )}
                 </div>
             </React.Fragment>
-        ) : ""
+        ) : "Không có quyền truy cập !!"
     );
 };
 

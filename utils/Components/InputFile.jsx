@@ -37,12 +37,20 @@ const InputFile = ({ onChange, label = "Upload file", className, nameField, setF
                         tooltip="Nhấn vào để thay đổi File"
                         onClick={() => fileInputRef.current.click()}
                         severity="info"
-                        style={{ width: '99%' }}
+                        className="bg-white text-primary"
+                        style={{ 
+                            width: '100%',
+                            maxHeight: '40px',
+                            textOverflow: 'ellipsis',
+                            overflow: 'hidden',
+                            whiteSpace: 'nowrap'
+                        }}
                         icon={"pi pi-upload"}
                         label={selectedFile ? selectedFile.name : "Chọn file"}
                     />
                 </span>
             </div>
+          
         </div>
     )
 }

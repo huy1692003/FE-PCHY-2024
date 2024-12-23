@@ -13,6 +13,8 @@ import UploadFileService from "../../../../services/UploadFileService";
 import { Toast } from "primereact/toast";
 import { Notification } from "../../../../utils/notification";
 const GiaoNhiemVu = () => {
+
+
     const { ma_yctn, thongTinYCTN } = useThongTinYCTN();
     const [formData, setFormData] = useState(QLTN_YCTN);
     const user = JSON.parse(sessionStorage.getItem("user"))?.ten_dang_nhap || "";
@@ -42,7 +44,8 @@ const GiaoNhiemVu = () => {
     }
     console.log(thongTinYCTN);
     return (
-        <>
+
+        <div className="border-round-3xl bg-white p-3">
             <Head>
                 <title>Giao nhiệm vụ thí nghiệm</title>
             </Head>
@@ -63,7 +66,7 @@ const GiaoNhiemVu = () => {
                 </div>
 
             </Panel>
-        </>
+        </div>
     );
 };
 

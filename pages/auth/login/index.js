@@ -73,7 +73,7 @@ const LoginPage = () => {
                 <title>Đăng nhập - Phần mềm quản lý kìm chì</title>
             </Head>
             <Toast ref={toast} />
-            <div className={containerClassName}  style={{ backgroundColor: 'white' }}>
+            <div className={containerClassName} style={{ backgroundColor: 'white' }}>
                 <div className="w-11 " style={{ backgroundColor: 'white' }}>
                     <div className="grid">
                         <div className="col-12 md:col-6 relative z-5 ">
@@ -118,7 +118,7 @@ const LoginPage = () => {
                             <label htmlFor="password" className="block text-900 font-medium text-xl mb-2">
                                 Mật khẩu
                             </label>
-                            <Password inputid="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Mật khẩu" toggleMask feedback={false} className="w-full mb-2" inputClassName="w-full p-3" onBlur={handlePasswordError}></Password>
+                            <Password inputid="password" onKeyDown={(e) => e.key === "Enter" && handleLogin()} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Mật khẩu" toggleMask feedback={false} className="w-full mb-2" inputClassName="w-full p-3" onBlur={handlePasswordError}></Password>
                             {
                                 passwordError && (
                                     <Message severity='error' text={passwordError} className='mb-4 w-full' />

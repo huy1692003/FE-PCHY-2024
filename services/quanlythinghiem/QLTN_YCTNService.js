@@ -21,6 +21,37 @@ const QLTN_YCTNService = {
         }
     },
 
+
+    // Cập nhật yêu cầu thí nghiệm
+    update_QLTN_YCTN: async (data) => {
+        try {
+            const res = await apiClient.post('/QLTN_YCTN/Update', data);
+            return res?.data;
+        } catch (error) {
+            throw new Error(error.response ? error.response.data : 'Error updating YCTN');
+        }
+    },
+
+    // Xóa yêu cầu thí nghiệm
+    delete_QLTN_YCTN: async (maYCTN) => {
+        try {
+            const res = await apiClient.delete(`/QLTN_YCTN/Delete/${maYCTN}`);
+            return res?.data;
+        } catch (error) {
+            throw new Error(error.response ? error.response.data : 'Error deleting YCTN');
+        }
+    },
+
+
+    khao_sat_phuong_an_YCTN: async(data) => {
+        try {
+            const res = await apiClient.post('/QLTN_YCTN/KhaoSatPhuongAn', data);
+            return res?.data
+        } catch (error) {
+            throw new Error(error.response ? error.response.data : 'Error assigning YCTN');
+        }
+    } ,
+
     // Tìm kiếm theo mã YCTN
     search_Ma_YCTN: async (maYCTN) => {
         try {
