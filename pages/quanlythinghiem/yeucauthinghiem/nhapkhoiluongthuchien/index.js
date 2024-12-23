@@ -45,7 +45,7 @@ const NhapKhoiLuongThucHien = () => {
     return (
       <>
         <div className={className + " mt-4"}>
-          <span className="font-bold text-lg">Danh sách thiết bị</span>
+          <span className="font-bold text-xl">Danh sách thiết bị</span>
           <div className="flex flex-wrap gap-2">
         
             <Button
@@ -109,8 +109,8 @@ const NhapKhoiLuongThucHien = () => {
   }
 
   return (
-    <div className="border-round-3xl bg-white p-4">
-        <Panel header="Nhập khối lượng thực hiện" className="mt-3">
+    <div className="border-round-3xl bg-white p-3">
+        <Panel header={<h3 className="text-xl font-bold"> Nhập khối lượng thực hiện</h3>} className="mt-3">
 
             <FillThongTinYCTN Element= {thongTinYCTN ? <ThongTinYCTN loai_yctn={thongTinYCTN.loai_yctn_model} formData={thongTinYCTN}/> : <></>}/>
             

@@ -73,7 +73,7 @@ const ChinhSuaGTHD = () => {
 
     console.log(yctnLog)
     return (
-        <>
+        <div className="border-round-3xl bg-white p-3">
             <Head>
                 <title>Chỉnh sửa giá trị hợp đồng</title>
             </Head>
@@ -152,7 +152,7 @@ const ChinhSuaGTHD = () => {
 
             </Panel>}
 
-        </>
+        </div>
     );
 };
 

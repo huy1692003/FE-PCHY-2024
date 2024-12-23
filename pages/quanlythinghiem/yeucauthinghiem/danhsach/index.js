@@ -41,7 +41,7 @@ const DanhSachYCTN = () => {
         const className = `${options.className} flex flex-wrap justify-content-between align-items-center`;
 
         return (
-            <div className={className}>
+            <div className={className +" mt-3"}>
                 <span className="font-bold text-xl">Danh sách yêu cầu thí nghiệm</span>
                 <div className="flex flex-wrap gap-2">
                    

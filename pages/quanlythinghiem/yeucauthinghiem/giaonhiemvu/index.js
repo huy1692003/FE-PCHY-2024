@@ -45,7 +45,7 @@ const GiaoNhiemVu = () => {
     console.log(thongTinYCTN);
     return (
 
-        <>
+        <div className="border-round-3xl bg-white p-3">
             <Head>
                 <title>Giao nhiệm vụ thí nghiệm</title>
             </Head>
@@ -66,7 +66,7 @@ const GiaoNhiemVu = () => {
                 </div>
 
             </Panel>
-        </>
+        </div>
     );
 };
 

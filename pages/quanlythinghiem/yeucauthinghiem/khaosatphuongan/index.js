@@ -75,7 +75,7 @@ const KhaoSatPhuongAn = () => {
   //console.log(">>>> FILE PATH:", formData.file_pa_thi_cong);
 
   return (
-    <>
+    <div className="border-round-3xl bg-white p-3">
       <Toast ref={toast} />
       <Head>
         <title>Khảo sát lập phương án thi công</title>
@@ -94,7 +94,7 @@ const KhaoSatPhuongAn = () => {
                 formData={thongTinYCTN}
               >
                 <br className="mt-2"></br>
-               <Panel header={<h3 className="text-base font-bold">Lập phương án thi công</h3>}>
+               <Panel header={<p  className="text-2xl font-bold">Lập phương án thi công</p>}>
                <FieldKhaoSatPA
                   formData={formData}
                   setFormData={setFormData}
@@ -126,7 +126,7 @@ const KhaoSatPhuongAn = () => {
           }
         />
       </Panel>
-    </>
+    </div>
   );
 };
 

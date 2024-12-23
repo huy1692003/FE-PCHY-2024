@@ -34,7 +34,7 @@ const ThiNghiem = () => {
     }
 
     return (
-        <>
+        <div className="border-round-3xl bg-white p-3">
             <Head>
                 <title>Thực hiện thí nghiệm</title>
             </Head>
@@ -54,7 +54,7 @@ const ThiNghiem = () => {
                     </div>
                 </>}
             </Panel>
-        </>
+        </div>
     );
 };
 
