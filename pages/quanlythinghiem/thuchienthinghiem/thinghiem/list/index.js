@@ -9,11 +9,13 @@ import { Button } from "primereact/button";
 import { Toast } from "primereact/toast";
 import { Notification } from "../../../../../utils/notification";
 import DanhSachThietBi from "../../../../../utils/Components/ThiNghiem/DanhSachThietBi";
+import { useRouter } from "next/router";
 
 const ThiNghiem = () => {
     const { ma_yctn, thongTinYCTN } = useThongTinYCTN();
     const [formData, setFormData] = useState({});
     const toast = useRef(null);
+    const router=useRouter()
 
     useEffect(() => {
         if (thongTinYCTN) {
@@ -47,7 +49,7 @@ const ThiNghiem = () => {
                     <div className="flex justify-content-end mt-6">
                         {
                             thongTinYCTN &&
-                            <Button label="Bước tiếp theo:Bàn giao kết quả" icon="pi pi-save" onClick={onSubmit} />
+                            <Button label="Bước tiếp theo : Bàn giao kết quả" icon="pi pi-save" onClick={()=>router.push("/quanlythinghiem/thuchienthinghiem/bangiaoketqua")} />
                         }
                     </div>
                 </>}
