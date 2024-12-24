@@ -342,7 +342,6 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, isEdit = false, formData
     }
 
 
-    // Thêm mới
     const handleSubmit = async () => {
         if (formData.file_upload) {
             console.log(formData)
@@ -353,20 +352,15 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, isEdit = false, formData
         if (isAdd) {
             try {
                 console.log(formData)
-                await QLTN_YCTNService.create_QLTN_YCTN(formData)
+                 await QLTN_YCTNService.create_QLTN_YCTN(formData)
 
-      formData.file_upload = resUpload.filePath;
-    }
-    if (isAdd) {
-      try {
-        console.log(formData);
-        await QLTN_YCTNService.create_QLTN_YCTN(formData);
+                Notification.success(toast, "Tạo mới YCTN thành công")
+            } catch (err) {
+                console.log(err)
+                Notification.error(toast, "Tạo mới YCTN thất bại")
+            }
+        }
 
-        Notification.success(toast, "Tạo mới YCTN thành công");
-      } catch (err) {
-        console.log(err);
-        Notification.error(toast, "Tạo mới YCTN thất bại");
-      }
     }
 
 
