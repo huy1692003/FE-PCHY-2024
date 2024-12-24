@@ -9,11 +9,13 @@ import { Button } from "primereact/button";
 import { Toast } from "primereact/toast";
 import { Notification } from "../../../../../utils/notification";
 import DanhSachThietBi from "../../../../../utils/Components/ThiNghiem/DanhSachThietBi";
+import { useRouter } from "next/router";
 
 const ThiNghiem = () => {
     const { ma_yctn, thongTinYCTN } = useThongTinYCTN();
     const [formData, setFormData] = useState({});
     const toast = useRef(null);
+    const router=useRouter()
 
     useEffect(() => {
         if (thongTinYCTN) {
@@ -32,7 +34,7 @@ const ThiNghiem = () => {
     }
 
     return (
-        <>
+        <div className="border-round-3xl bg-white p-3">
             <Head>
                 <title>Thực hiện thí nghiệm</title>
             </Head>
@@ -40,18 +42,19 @@ const ThiNghiem = () => {
             <Panel header={<h3 className="text-xl font-bold">Thực hiện thí nghiệm</h3>} className="mt-3">
                 <FillThongTinYCTN Element={thongTinYCTN ? <ThongTinYCTN loai_yctn={thongTinYCTN.loai_yctn_model} formData={thongTinYCTN} /> : <></>} />
 
-                <Panel header="Khối lượng thiết bị thí nghiệm" className="mt-3">
-                    <DanhSachThietBi ma_yctn={ma_yctn} />
-                </Panel>
+                {thongTinYCTN && <><Panel header="Khối lượng thiết bị thí nghiệm" className="mt-3">
+                    <DanhSachThietBi thongtinYCTN={thongTinYCTN} ma_yctn={ma_yctn} />
+                        </Panel>
 
-                <div className="flex justify-content-end mt-6">
-                    {
-                        thongTinYCTN &&
-                        <Button label="Bước tiếp theo:Bàn giao kết quả" icon="pi pi-save" onClick={onSubmit} />
-                    }
-                </div>
+                    <div className="flex justify-content-end mt-6">
+                        {
+                            thongTinYCTN &&
+                            <Button label="Bước tiếp theo : Bàn giao kết quả" icon="pi pi-save" onClick={()=>router.push("/quanlythinghiem/thuchienthinghiem/bangiaoketqua")} />
+                        }
+                    </div>
+                </>}
             </Panel>
-        </>
+        </div>
     );
 };
 

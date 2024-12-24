@@ -134,7 +134,7 @@ const TableDM_KHACHHANG = ({
                     setVisible(true);
                     setSelectedId(rowData.id);
                   } }
-                style={{ backgroundColor: "#e74c3c", color: "#fff" }}
+                style={{backgroundColor: "#1445a7", color: "#fff" }}
               />
             </div>
           )}

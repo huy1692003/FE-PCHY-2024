@@ -12,6 +12,10 @@ const QLTN_CHI_TIET_THI_NGHIEM_Service = {
         const res = await apiClient.get(`/QLTN_CHI_TIET_THI_NGHIEM/getAll_TBTN_byMA_YCTN?ma_yctn=${ma_yctn}`);
         return res?.data;
     },
+    delete_QLTN_CHITIET_TN_BYID: async (ma_cttn) => {
+        const res = await apiClient.delete(`/QLTN_CHI_TIET_THI_NGHIEM/deleteCTTN/${ma_cttn}`);
+        return res?.data;
+    },
 
     // Thêm mới chi tiết thí nghiệm
     insert_QLTN_CHI_TIET_THI_NGHIEM: async (data) => {

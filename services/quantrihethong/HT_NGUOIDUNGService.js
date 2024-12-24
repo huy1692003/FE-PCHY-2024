@@ -8,8 +8,8 @@ export const login_HT_NGUOIDUNG = async (data) => {
 export const HT_NGUOIDUNG_Service = {
     search: async (data) => {
         console.log("search nd")
-        console.log({...data,ma_dviqly:JSON.parse(sessionStorage.getItem("current_MADVIQLY"))})
-        const res = await apiClient.post("/HT_NGUOIDUNG/search", {...data,ma_dviqly:JSON.parse(sessionStorage.getItem("current_MADVIQLY"))})
+        console.log({ ...data, ma_dviqly: JSON.parse(sessionStorage.getItem("current_MADVIQLY")) })
+        const res = await apiClient.post("/HT_NGUOIDUNG/search", { ...data, ma_dviqly: JSON.parse(sessionStorage.getItem("current_MADVIQLY")) })
         return res.data
     },
     delete: async (id) => {
@@ -37,13 +37,18 @@ export const HT_NGUOIDUNG_Service = {
         const res = await apiClient.post("/HT_NGUOIDUNG/resetPassword", data)
         return res.data
     },
-    getMenuByIdUser:async(idUser)=>{
+    getMenuByIdUser: async (idUser) => {
         const res = await apiClient.get(`/HT_NGUOIDUNG/get_HT_MENUByIdUser?userId=${idUser}`)
         return res.data
     },
 
-    getAll: async (data = { pageIndex: '1', pageSize: '10' }) => {
-        const res = await apiClient.post("/HT_NGUOIDUNG/get_ListNguoiDung", data);
+    getAll: async () => {
+        const res = await apiClient.post("/HT_NGUOIDUNG/search", {
+          
+            "tranG_THAI": 1,           
+            "pageIndex": 1,
+            "pageSize": 1000000
+        });
         return res.data;
     },
 

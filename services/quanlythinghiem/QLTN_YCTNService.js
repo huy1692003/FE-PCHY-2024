@@ -25,6 +25,7 @@ const QLTN_YCTNService = {
     }
   },
 
+
   khao_sat_phuong_an_YCTN: async (data) => {
     try {
       const res = await apiClient.post("/QLTN_YCTN/KhaoSatPhuongAn", data);
@@ -36,22 +37,9 @@ const QLTN_YCTNService = {
     }
   },
 
-  // Tìm kiếm theo mã YCTN
-  search_Ma_YCTN: async (maYCTN) => {
-    try {
-      const url = maYCTN
-        ? `/QLTN_YCTN/SearchMaYCTN?maYCTN=${maYCTN}`
-        : "/QLTN_YCTN/SearchMaYCTN";
-      const res = await apiClient.get(url);
-      return res?.data;
-    } catch (error) {
-      throw new Error(
-        error.response ? error.response.data : "Error searching YCTN"
-      );
-    }
-  },
+ 
 
-  // Lấy thông tin YCTN theo mã
+
   get_QLTN_YCTN_ByMAYCTN: async (MA_YCTN) => {
     try {
       const res = await apiClient.get(
@@ -64,6 +52,30 @@ const QLTN_YCTNService = {
       );
     }
   },
+  
+  
+    // Tìm kiếm theo mã YCTN
+    search_Ma_YCTN: async (maYCTN) => {
+        try {
+            const url = maYCTN ? `/QLTN_YCTN/SearchMaYCTN?maYCTN=${maYCTN}` : '/QLTN_YCTN/SearchMaYCTN';
+            const res = await apiClient.get(url);
+            return res?.data;
+        } catch (error) {
+            throw new Error(error.response ? error.response.data : 'Error searching YCTN');
+        }
+    },
+  
+
+    ban_giao_ket_qua_YCTN: async (data) => {
+        try {
+            const res = await apiClient.post('/QLTN_YCTN/BanGiaoKetQua', data);
+            return res?.data;
+        } catch (error) {
+            throw new Error(error.response ? error.response.data : 'Error assigning YCTN');
+        }
+    },
+
+ 
 
 //   searchTerm: "",
 //   maLoaiYCTN: "",
