@@ -87,4 +87,14 @@ export const QLTN_THIET_BI_YCTN_Service = {
             throw new Error('Không thể tải file mẫu. Vui lòng thử lại sau.');
         }
     }
+    ,
+    Nhap_Khoi_Luong_Phat_Sinh: async (data) => {
+        try {
+            const res = await apiClient.post('QLTN_THIET_BI_YCTN_/Nhap_Khoi_Luong_Phat_Sinh', data);
+            console.log("Phản hồi từ API:", res.data); 
+            return res.data;
+        } catch (error) {
+            throw new Error(error.response ? error.response.data : 'Error Nhap_Khoi_Luong_Phat_Sinh');
+        }
+    }
 };

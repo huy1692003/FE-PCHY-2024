@@ -21,7 +21,7 @@ const DialogForm = ({
     return (
       <div className="flex align-items-center justify-content-between">
         <span>
-          {isAdd ? "Thêm khối lượng thực hiện" : "Sửa khối lượng thực hiện"}
+          {isAdd ? "Thêm khối lượng phát sinh" : "Sửa khối lượng phát sinh"}
         </span>
         <div className="flex gap-2">
           <Button
@@ -38,6 +38,7 @@ const DialogForm = ({
             severity="secondary"
             onClick={() => {
               setShowDialog(false);
+              setFormData([]);
             }}
           />
         </div>
@@ -57,6 +58,7 @@ const DialogForm = ({
   const loadLoaiThietBi = async () => {
     try {
       const items = await DM_LOAI_THIET_BI_Service.getAll_DM_LOAITHIETBI();
+
       setArrLoaiThietBi(items);
     } catch (err) {
       console.error("Error loading data:", err);
@@ -79,7 +81,10 @@ const DialogForm = ({
           ...formData,
           id: maxId + 1,
         };
-        if (!formData.ten_thiet_bi || !formData.so_luong) {
+        if (
+          !formData.ten_thiet_bi ||
+          !formData.so_luong
+        ) {
           toast.current.show({
             severity: "error",
             summary: "Thất bại",
@@ -87,8 +92,7 @@ const DialogForm = ({
             life: 3000,
           });
           return prev;
-        }
-        else{
+        } else {
           const newArray = [...prev, newItem];
           console.log("Dữ liệu sau khi thêm:", newArray);
           toast.current.show({
@@ -102,10 +106,10 @@ const DialogForm = ({
           return newArray;
         }
       });
-
     } else {
       // Sửa dựa trên ID thay vì stt
       const index = arrThietbi.findIndex((item) => item.id === formData.id);
+
       if (index !== -1) {
         const newArr = [...arrThietbi];
         newArr[index] = formData;
@@ -122,6 +126,7 @@ const DialogForm = ({
       }
     }
   };
+  
   return (
     <Dialog
       header={renderHeader}

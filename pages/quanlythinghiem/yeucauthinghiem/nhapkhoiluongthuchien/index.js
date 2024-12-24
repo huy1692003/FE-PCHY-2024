@@ -12,15 +12,10 @@ import ThongTinYCTN from "../../../../utils/Components/ListFieldYCTN/ThongTinYCT
 import { QLTN_THIET_BI_YCTN_Service } from "../../../../services/quanlythinghiem/QLTN_THIET_BI_YCTN_Service";
 import useThongTinYCTN from "../../../../hooks/useThongTinYCTN";
 import LichSuNhapKhoiLuong from "./LichSuNhapKhoiLuong";
+
 const NhapKhoiLuongThucHien = () => {
   //   const [MaYCTN, setMaYCTN] = useState("YCTN.HD-334");
   const { ma_yctn, thongTinYCTN } = useThongTinYCTN();
-
-  //   const router = useRouter();
-  //   useEffect(() => {
-  //     setMaYCTN(router.query.code||"YCTN-666");
-  //   }, [router.query.code]);
-  //   console.log("MaYCTN:", MaYCTN);
 
   const [arrThietbi, setArrThietbi] = useState([]);
   const [showDialog, setShowDialog] = useState(false);
@@ -31,7 +26,7 @@ const NhapKhoiLuongThucHien = () => {
 
   const user = JSON.parse(sessionStorage.getItem("user"))?.ten_dang_nhap || "";
 
-  const [isCurrent, setIsCurrent] = useState();
+  const [isCurrent, setIsCurrent] = useState(thongTinYCTN?.crr_step);
 
   const LoatArrThietBi = async () => {
     setArrThietbi(arrThietbi);
@@ -40,6 +35,7 @@ const NhapKhoiLuongThucHien = () => {
   useEffect(() => {
     setIsCurrent(thongTinYCTN?.crr_step);
   }, [thongTinYCTN]);
+
   const headerList = (options) => {
     const className = `${options.className} flex flex-wrap justify-content-between align-items-center`;
 
@@ -108,13 +104,14 @@ const NhapKhoiLuongThucHien = () => {
         detail: "Thêm mới thiết bị thành công",
         life: 3000,
       });
+      setIsCurrent(3);
       // setArrThietbi([]);
     }
   };
 
   return (
     <div className="border-round-3xl bg-white p-4">
-      <Panel header="Nhập khối lượng thực hiện" className="mt-3">
+      <Panel header="Nhập khối lượng thực hiện" className="mt-3 text-xl">
         <FillThongTinYCTN
           Element={
             thongTinYCTN ? (
@@ -127,7 +124,6 @@ const NhapKhoiLuongThucHien = () => {
             )
           }
         />
-
         {thongTinYCTN && isCurrent === 2 && (
           <Panel headerTemplate={headerList}>
             <TableNhapKhoiLuong
@@ -153,7 +149,6 @@ const NhapKhoiLuongThucHien = () => {
                   style={{ backgroundColor: "#1445a7" }}
                   onClick={() => {
                     ThemMoiThietBi_YCTN();
-                    setIsCurrent(3);
                   }}
                 />
                 
