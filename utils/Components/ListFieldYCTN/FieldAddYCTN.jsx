@@ -2,7 +2,7 @@ import { memo, useEffect, useRef, useState, useLayoutEffect } from "react";
 import { InputText } from "primereact/inputtext";
 import { InputNumber } from "primereact/inputnumber";
 import { Calendar } from "primereact/calendar";
-import { InputTextarea } from 'primereact/inputtextarea';
+import { InputTextarea } from "primereact/inputtextarea";
 import { FileUpload } from "primereact/fileupload";
 import { DM_TRUONG_YCTN_Service } from "../../../services/quanlythinghiem/DM_TRUONG_YCTN_Service";
 import DM_LOAI_YCTNService from "../../../services/quanlythinghiem/DM_LOAI_YCTNService";
@@ -17,6 +17,7 @@ import { useRouter } from "next/router";
 import { DM_LOAI_TAISANService } from "../../../services/quanlythinghiem/DM_LOAI_TAISANService";
 import { DM_KHACHHANG_Service } from "../../../services/quanlythinghiem/DM_KHACHHANG_Service";
 import moment from "moment";
+
 
 export const FormField = ({ label, className, style, placeholder, value, onChange, id, isCalendar = false, isNumber = false, row = 5, isFileUpload = false, isDropdown = false, isTextArea = false, options = [], prefix, isDisabled = false, styleField, props, mode, currency, locale, childrenIPNumber = "VNĐ", optionsValue, optionsLabel }) => (
     <div className={className} style={style}>
@@ -92,23 +93,24 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, isEdit = false, formData
         setFields(res);
     }
 
-    const getAllDM_LTS = async () => {
-        try {
-            let res = await DM_LOAI_TAISANService.get_DM_LOAI_TAISAN();
-            setDM_LTS(res?.data);
-        } catch (err) {
-            setDM_LTS([])
-        }
+  const getAllDM_LTS = async () => {
+    try {
+      let res = await DM_LOAI_TAISANService.get_DM_LOAI_TAISAN();
+      setDM_LTS(res?.data);
+    } catch (err) {
+      setDM_LTS([]);
     }
+  };
 
-    const getAllDM_KH = async () => {
-        try {
-            let res = await DM_KHACHHANG_Service.get_ALL_DM_KHACHHANG();
-            setDM_KH(res);
-        } catch (err) {
-            setDM_KH([]);
-        }
+  const getAllDM_KH = async () => {
+    try {
+      let res = await DM_KHACHHANG_Service.get_ALL_DM_KHACHHANG();
+      setDM_KH(res);
+    } catch (err) {
+      setDM_KH([]);
     }
+  };
+
 
 
 
@@ -118,19 +120,21 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, isEdit = false, formData
         setFieldbyLoaiYCTN(res);
     }
 
-    const handleInputChange = (fieldName, value) => {
-        setFormData(prev => {
-            const newData = {
-                ...prev,
-                [fieldName]: value
-            };
+  const handleInputChange = (fieldName, value) => {
+    setFormData((prev) => {
+      const newData = {
+        ...prev,
+        [fieldName]: value,
+      };
 
-            // Tính toán các giá trị phụ thuộc
-            if (fieldName === 'gtdt_truoc_thue' || fieldName === 'gtdt_chiet_giam') {
-                if (newData.gtdt_truoc_thue && newData.gtdt_chiet_giam) {
-                    newData.phan_tram_chiet_giam = newData.gtdt_chiet_giam * 100 / newData.gtdt_truoc_thue;
-                }
-            }
+      // Tính toán các giá trị phụ thuộc
+      if (fieldName === "gtdt_truoc_thue" || fieldName === "gtdt_chiet_giam") {
+        if (newData.gtdt_truoc_thue && newData.gtdt_chiet_giam) {
+          newData.phan_tram_chiet_giam =
+            (newData.gtdt_chiet_giam * 100) / newData.gtdt_truoc_thue;
+        }
+      }
+
 
             if (fieldName === 'gtdt_truoc_thue' || fieldName === 'phan_tram_chiet_giam') {
                 if (newData.gtdt_truoc_thue && newData.phan_tram_chiet_giam) {
@@ -145,35 +149,47 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, isEdit = false, formData
                 newData.gtdt_sau_chiet_giam = newData.gtdt_truoc_thue;
             }
 
-            // Tính lại gtdt_thue dựa trên % thuế hiện tại khi gtdt_sau_chiet_giam thay đổi
-            if (newData.gtdt_sau_chiet_giam && newData.phan_tram_thue) {
-                newData.gtdt_thue = newData.phan_tram_thue * newData.gtdt_sau_chiet_giam / 100;
-            }
+      // Tính gtdt_sau_chiet_giam
+      if (newData.gtdt_truoc_thue && newData.gtdt_chiet_giam) {
+        newData.gtdt_sau_chiet_giam =
+          newData.gtdt_truoc_thue - newData.gtdt_chiet_giam;
+      } else {
+        newData.gtdt_sau_chiet_giam = newData.gtdt_truoc_thue;
+      }
 
-            // Tính phan_tram_thue khi gtdt_thue thay đổi
-            if (fieldName === 'gtdt_thue') {
-                if (newData.gtdt_sau_chiet_giam && newData.gtdt_thue) {
-                    newData.phan_tram_thue = newData.gtdt_thue * 100 / newData.gtdt_sau_chiet_giam;
-                }
-            }
+      // Tính lại gtdt_thue dựa trên % thuế hiện tại khi gtdt_sau_chiet_giam thay đổi
+      if (newData.gtdt_sau_chiet_giam && newData.phan_tram_thue) {
+        newData.gtdt_thue =
+          (newData.phan_tram_thue * newData.gtdt_sau_chiet_giam) / 100;
+      }
 
-            // Tính gtdt_thue khi phan_tram_thue thay đổi
-            if (fieldName === 'phan_tram_thue') {
-                if (newData.gtdt_sau_chiet_giam && newData.phan_tram_thue) {
-                    newData.gtdt_thue = newData.phan_tram_thue * newData.gtdt_sau_chiet_giam / 100;
-                }
-            }
+      // Tính phan_tram_thue khi gtdt_thue thay đổi
+      if (fieldName === "gtdt_thue") {
+        if (newData.gtdt_sau_chiet_giam && newData.gtdt_thue) {
+          newData.phan_tram_thue =
+            (newData.gtdt_thue * 100) / newData.gtdt_sau_chiet_giam;
+        }
+      }
 
-            // Tính gtdt_sau_thue
-            if (newData.gtdt_sau_chiet_giam && newData.gtdt_thue) {
-                newData.gtdt_sau_thue = newData.gtdt_sau_chiet_giam + newData.gtdt_thue;
-            } else {
-                newData.gtdt_sau_thue = newData.gtdt_sau_chiet_giam;
-            }
+      // Tính gtdt_thue khi phan_tram_thue thay đổi
+      if (fieldName === "phan_tram_thue") {
+        if (newData.gtdt_sau_chiet_giam && newData.phan_tram_thue) {
+          newData.gtdt_thue =
+            (newData.phan_tram_thue * newData.gtdt_sau_chiet_giam) / 100;
+        }
+      }
 
-            return newData;
-        });
-    };
+      // Tính gtdt_sau_thue
+      if (newData.gtdt_sau_chiet_giam && newData.gtdt_thue) {
+        newData.gtdt_sau_thue = newData.gtdt_sau_chiet_giam + newData.gtdt_thue;
+      } else {
+        newData.gtdt_sau_thue = newData.gtdt_sau_chiet_giam;
+      }
+
+      return newData;
+    });
+  };
+
 
     const fieldInput = [
         {
@@ -326,7 +342,6 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, isEdit = false, formData
     }
 
 
-    // Thêm mới
     const handleSubmit = async () => {
         if (formData.file_upload) {
             console.log(formData)
@@ -337,7 +352,7 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, isEdit = false, formData
         if (isAdd) {
             try {
                 console.log(formData)
-                await QLTN_YCTNService.create_QLTN_YCTN(formData)
+                 await QLTN_YCTNService.create_QLTN_YCTN(formData)
 
                 Notification.success(toast, "Tạo mới YCTN thành công")
             } catch (err) {
@@ -347,6 +362,7 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, isEdit = false, formData
         }
 
     }
+
 
 
     const handleUpdate = async () => {
