@@ -100,8 +100,8 @@ const TableYCTN = ({ dataYCTN, totalRecords, onPageChange  }) => {
         body={(rowData) => {
           return (
             <ul>
-              {rowData.don_vi_thuc_hien.map((donVi) => (
-                <li key={donVi}>{donVi}</li>
+              {rowData.don_vi_thuc_hien.map((donVi, index) => (
+                 <li key={`${donVi}-${index}`}>{donVi}</li>
               ))}
             </ul>
           );
@@ -118,7 +118,7 @@ const TableYCTN = ({ dataYCTN, totalRecords, onPageChange  }) => {
                 Đơn vị khởi tạo:{" "}
                 <ul>
                   {rowData.don_vi_thuc_hien.map((donVi, index) => (
-                    <li key={donVi}>{donVi}</li>
+                    <li key={`${donVi}-${index}`}>{donVi}</li>
                   ))}
                 </ul>
               </div>

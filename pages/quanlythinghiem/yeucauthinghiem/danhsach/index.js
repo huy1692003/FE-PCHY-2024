@@ -26,6 +26,7 @@ const DanhSachYCTN = () => {
     maLoaiYCTN: "",
     donViThucHien: "",
     idKhachHang: "",
+    crrStep: "",
     limit: 10,
   });
 
@@ -37,16 +38,13 @@ const DanhSachYCTN = () => {
         maLoaiYCTN: filters.maLoaiYCTN || "",
         donViThucHien: filters.donViThucHien || "",
         idKhachHang: filters.idKhachHang ? Number(filters.idKhachHang) : null,
+        crrStep: filters.crrStep ? Number(filters.crrStep) : null,
         pageIndex: 1,
         pageSize: filters.limit,
       };
 
+
       const response = await QLTN_YCTNService.get_DANH_SACH_YCTN(params);
-      console.log(response);
-      // data: Array(6) [ {…}, {…}, {…}, … ]
-      // pageIndex: 1
-      // pageSize: 10
-      // totalRecords: 6
       setDataYCTN(response?.data || []);
       setTotalRecords(response?.totalRecords || 0);
     } catch (error) {
@@ -177,8 +175,8 @@ const load_DANHMUC = async () => {
               <label className="block mb-2">Trạng thái</label>
               <Dropdown
                 className="w-full"
-                value={filters.status}
-                onChange={(e) => setFilters({ ...filters, status: e.value })}
+                value={filters.crrStep}
+                onChange={(e) => setFilters({ ...filters, crrStep: e.value })}
                 placeholder="Chọn"
                 filter
                 showClear
