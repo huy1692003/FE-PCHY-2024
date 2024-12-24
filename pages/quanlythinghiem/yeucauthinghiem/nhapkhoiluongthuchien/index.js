@@ -110,8 +110,8 @@ const NhapKhoiLuongThucHien = () => {
   };
 
   return (
-    <div className="border-round-3xl bg-white p-4">
-      <Panel header="Nhập khối lượng thực hiện" className="mt-3 text-xl">
+    <div className="border-round-3xl bg-white p-3">
+      <Panel header= {<h3 className="text-xl font-bold">Nhập khối lượng thực hiện</h3>}className="mt-3">
         <FillThongTinYCTN
           Element={
             thongTinYCTN ? (

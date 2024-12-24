@@ -94,7 +94,7 @@ const KhaoSatPhuongAn = () => {
                 formData={thongTinYCTN}
               >
                 <br className="mt-2"></br>
-               <Panel header={<p  className="text-2xl font-bold">Lập phương án thi công</p>}>
+               <Panel header={<p  className="text-base font-bold">Lập phương án thi công</p>}>
                <FieldKhaoSatPA
                   formData={formData}
                   setFormData={setFormData}

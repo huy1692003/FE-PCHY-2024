@@ -15,7 +15,12 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 
 import { locale, addLocale, updateLocaleOption, updateLocaleOptions, localeOption, localeOptions } from 'primereact/api';
 import vi from '../constants/local';
-        
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 addLocale('vi', vi);
 
 
