@@ -7,7 +7,7 @@ import {
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { useEffect, useState } from "react";
-const LichSuNhapKhoiLuong = ({ nextStep, MA_YCTN ,arrThietbiBD}) => {
+const LichSuNhapKhoiLuong = ({  arrThietbiBD}) => {
   return (
     <div>
       {Array.from(new Set(arrThietbiBD.map((device) => device.trang_thai))).sort((a, b) => a - b).map(
@@ -54,11 +54,6 @@ const LichSuNhapKhoiLuong = ({ nextStep, MA_YCTN ,arrThietbiBD}) => {
               <Column
                 field="so_luong"
                 header="Số lượng"
-                headerStyle={headerStyleColumn}
-              />
-              <Column
-                field="trang_thai"
-                header="Trạng thái"
                 headerStyle={headerStyleColumn}
               />
             </DataTable>

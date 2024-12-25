@@ -30,69 +30,9 @@ const NhapKhoiLuongPhatSinh = () => {
     try {
       const items =
         await QLTN_THIET_BI_YCTN_Service.getAll_QLTN_THIET_BI_YCTN_byMA_YCTN({
-          ma_yctn: ma_yctn,
+          ma_yctn: thongTinYCTN?.ma_yctn,
         });
-      //   {
-      //     id: 1,
-      //     ma_tbtn: "TB001",
-      //     ma_yctn: MA_YCTN,
-      //     ten_thiet_bi: "Thiết bị 1",
-      //     ma_loai_tb: "LTB001",
-      //     so_luong: 10,
-      //     trang_thai: 1, // Hoạt động
-      //     ngay_tao: new Date().toISOString(),
-      //     nguoi_tao: "Admin",
-      //     ten_loai_thiet_bi: "Loại thiết bị 1",
-      //   },
-      //   {
-      //     id: 2,
-      //     ma_tbtn: "TB002",
-      //     ma_yctn: MA_YCTN,
-      //     ten_thiet_bi: "Thiết bị 2",
-      //     ma_loai_tb: "LTB002",
-      //     so_luong: 20,
-      //     trang_thai: 0, // Bảo trì
-      //     ngay_tao: new Date().toISOString(),
-      //     nguoi_tao: "Admin",
-      //     ten_loai_thiet_bi: "Loại thiết bị 2",
-      //   },
-      //   {
-      //     id: 3,
-      //     ma_tbtn: "TB003",
-      //     ma_yctn: MA_YCTN,
-      //     ten_thiet_bi: "Thiết bị 3",
-      //     ma_loai_tb: "LTB003",
-      //     so_luong: 30,
-      //     trang_thai: 3, // Ngừng hoạt động
-      //     ngay_tao: new Date().toISOString(),
-      //     nguoi_tao: "Admin",
-      //     ten_loai_thiet_bi: "Loại thiết bị 3",
-      //   },
-      //   {
-      //     id: 4,
-      //     ma_tbtn: "TB004",
-      //     ma_yctn: MA_YCTN,
-      //     ten_thiet_bi: "Thiết bị 4",
-      //     ma_loai_tb: "LTB004",
-      //     so_luong: 40,
-      //     trang_thai: 1, // Hoạt động
-      //     ngay_tao: new Date().toISOString(),
-      //     nguoi_tao: "Admin",
-      //     ten_loai_thiet_bi: "Loại thiết bị 4",
-      //   },
-      //   {
-      //     id: 5,
-      //     ma_tbtn: "TB005",
-      //     ma_yctn: MA_YCTN,
-      //     ten_thiet_bi: "Thiết bị 5",
-      //     ma_loai_tb: "LTB005",
-      //     so_luong: 50,
-      //     trang_thai: 2, // Bảo trì
-      //     ngay_tao: new Date().toISOString(),
-      //     nguoi_tao: "Admin",
-      //     ten_loai_thiet_bi: "Loại thiết bị 5",
-      //   },
-      // ];
+      
       console.log("test");
       console.log(items);
       // console.log("TBBD",items);
@@ -112,63 +52,51 @@ const NhapKhoiLuongPhatSinh = () => {
   };
 
   const ThemMoiThietBi_YCTN = async () => {
-    if (!ma_yctn) {
-      toast.current.show({
-        severity: "error",
-        summary: "Lỗi",
-        detail: "Vui lòng chọn một yêu cầu thí nghiệm",
-        life: 3000,
-      });
-      return;
-    }
-    // console.log("ma_yctn", ma_yctn);
-    else {
-      console.log("arrThietbiBD", arrThietbiBD);
-      const thietBiData = arrThietbi.map((item, index) => {
-        const maxMaTBTN = arrThietbiBD.reduce((max, current) => {
-          const currentNumber = parseInt(current.ma_tbtn.split("-").pop());
-          return Math.max(max, currentNumber);
-        }, 0);
-        const nextMaTBTN = `${ma_yctn}-${maxMaTBTN + 1 + index}`;
-        const maxTrangThai = arrThietbiBD.reduce((max, current) => {
-          return Math.max(max, current.trang_thai);
-        }, 0);
-        return {
-          ma_tbtn: nextMaTBTN,
-          ma_yctn: ma_yctn,
-          ten_thiet_bi: item.ten_thiet_bi || "",
-          ma_loai_tb: item.ma_loai_tb || "",
-          so_luong: item.so_luong || 0,
-          trang_thai: maxTrangThai + 1, // thiết bị mới thêm
-          nguoi_tao: user,
-          ten_loai_thiet_bi: item.ten_loai_thiet_bi || "",
-        };
-      });
-      console.log("dsthietBiData trc lưu", thietBiData);
-      try {
-        if (thietBiData.length === 0) {
-          toast.current.show({
-            severity: "error",
-            summary: "Lỗi",
-            detail: "Không có thiết bị để thêm",
-            life: 3000,
-          });
-          return;
-        }
-        const res = await QLTN_THIET_BI_YCTN_Service.Nhap_Khoi_Luong_Phat_Sinh(
-          thietBiData
-        );
+    const mayctn = thongTinYCTN?.ma_yctn;    
+    const thietBiData = arrThietbi.map((item, index) => {
+      const maxMaTBTN = arrThietbiBD.reduce((max, current) => {
+        const currentNumber = parseInt(current.ma_tbtn.split("-").pop());
+        return Math.max(max, currentNumber);
+      }, 0);
+      const nextMaTBTN = `${mayctn}-${maxMaTBTN + 1 + index}`;
+      const maxTrangThai = arrThietbiBD.reduce((max, current) => {
+        return Math.max(max, current.trang_thai);
+      }, 0);
+      return {
+        ma_tbtn: nextMaTBTN,
+        ma_yctn: mayctn,
+        ten_thiet_bi: item.ten_thiet_bi || "",
+        ma_loai_tb: item.ma_loai_tb || "",
+        so_luong: item.so_luong || 0,
+        trang_thai: maxTrangThai + 1, // thiết bị mới thêm
+        nguoi_tao: user,
+        ten_loai_thiet_bi: item.ten_loai_thiet_bi || "",
+      };
+    });
+    console.log("dsthietBiData trc lưu", thietBiData);
+    try {
+      if (thietBiData.length === 0) {
         toast.current.show({
-          severity: "success",
-          summary: "Thành công",
-          detail: "Thêm mới thiết bị thành công",
+          severity: "error",
+          summary: "Lỗi",
+          detail: "Không có thiết bị để thêm",
           life: 3000,
         });
-        loadData();
-        setArrThietbi([]);
-      } catch (error) {
-        console.error("Error creating thiet bi:", error);
+        return;
       }
+      const res = await QLTN_THIET_BI_YCTN_Service.Nhap_Khoi_Luong_Phat_Sinh(
+        thietBiData
+      );
+      toast.current.show({
+        severity: "success",
+        summary: "Thành công",
+        detail: "Thêm mới thiết bị thành công",
+        life: 3000,
+      });
+      loadData();
+      setArrThietbi([]);
+    } catch (error) {
+      console.error("Error creating thiet bi:", error);
     }
   };
 
@@ -218,13 +146,11 @@ const NhapKhoiLuongPhatSinh = () => {
           }
         />
         {thongTinYCTN && (
-        <Panel header="Lịch sử nhập khối lượng">
-          <LichSuNhapKhoiLuong
-            nextStep={isCurrent}
-            MA_YCTN={ma_yctn}
-            arrThietbiBD={arrThietbiBD}
-          />
-        </Panel>
+          <Panel header="Lịch sử nhập khối lượng">
+            <LichSuNhapKhoiLuong
+              arrThietbiBD={arrThietbiBD}
+            />
+          </Panel>
         )}
 
         {/* Danh sach thiet bi */}
@@ -260,18 +186,18 @@ const NhapKhoiLuongPhatSinh = () => {
           </Panel>
         )}
 
-        {thongTinYCTN?.crr_step <3 && (
-        <div className="flex justify-content-end gap-2 mt-3">
-          <Button
-            label="Nhập khối lượng thực hiện"
-            style={{ backgroundColor: "#1445a7" }}
-            onClick={() => {
-              router.push(
-                `/quanlythinghiem/yeucauthinghiem/nhapkhoiluongthuchien?code=${ma_yctn}`
-              );
-            }}
-          />
-        </div>
+        {thongTinYCTN?.crr_step < 3 && (
+          <div className="flex justify-content-end gap-2 mt-3">
+            <Button
+              label="Nhập khối lượng thực hiện"
+              style={{ backgroundColor: "#1445a7" }}
+              onClick={() => {
+                router.push(
+                  `/quanlythinghiem/yeucauthinghiem/nhapkhoiluongthuchien?code=${thongTinYCTN?.ma_yctn}`
+                );
+              }}
+            />
+          </div>
         )}
       </Panel>
 
