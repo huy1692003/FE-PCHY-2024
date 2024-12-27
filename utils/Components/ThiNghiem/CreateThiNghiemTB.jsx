@@ -150,6 +150,7 @@ const CreateThiNghiemTB = ({ thongtinYCTN, stateDialog, thongtinThietBi, donVi, 
 
         return true;
     }
+    console.log(formData)
     // Lưu chi tiết thí nghiệm nên database
     const handleSaveCT_TN = async () => {
         try {
@@ -292,7 +293,7 @@ const CreateThiNghiemTB = ({ thongtinYCTN, stateDialog, thongtinThietBi, donVi, 
                                     label="Số lượng thí nghiệm"
                                     id="so_luong"
                                     value={formData.so_luong}
-                                    onChange={(id, value) => setFormData(prev => ({ ...prev, [id]: value }))}
+                                    onChange={(id,e)=>setFormData(prev => ({ ...prev, [id] : e }))}
                                     isNumber
                                     childrenIPNumber={""}
                                 />

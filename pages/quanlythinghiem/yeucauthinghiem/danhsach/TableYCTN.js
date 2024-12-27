@@ -7,25 +7,14 @@ import {
   propSortAndFilter,
 } from "../../../../constants/propGlobal";
 import moment from "moment";
+import { Badge } from "primereact/badge";
 
-const TableYCTN = ({ dataYCTN, totalRecords, onPageChange  }) => {
+const TableYCTN = ({ dataYCTN, totalRecords, onPageChange }) => {
   const actionBodyTemplate = (rowData) => {
     return (
-      <div className="flex gap-2">
-        <Button
-          icon="pi pi-pencil"
-          rounded
-          outlined
-          className="mr-2"
-          onClick={() => {}}
-        />
-        <Button
-          icon="pi pi-trash"
-          rounded
-          outlined
-          severity="danger"
-          onClick={() => {}}
-        />
+      <div className="flex gap-1 justify-content-center ">
+        <Button icon="pi pi-pencil" size="small" tooltip="Sửa"  style={{ backgroundColor: '#1445a7' ,width:40,height:40}} />
+        <Button icon="pi pi-trash" tooltip="Xóa"  style={{ backgroundColor: '#1445a7', border: "none" ,width:40,height:40}} />
       </div>
     );
   };
@@ -83,9 +72,9 @@ const TableYCTN = ({ dataYCTN, totalRecords, onPageChange  }) => {
         body={
           (rowData) => {
             return (
-                <>
-                    <p>Loại hình thí nghiệm: {rowData.ten_loai_yctn}</p>
-                </>
+              <>
+                <p>Loại hình thí nghiệm: {rowData.ten_loai_yctn}</p>
+              </>
             )
           }
         }
@@ -101,7 +90,7 @@ const TableYCTN = ({ dataYCTN, totalRecords, onPageChange  }) => {
           return (
             <ul>
               {rowData.don_vi_thuc_hien.map((donVi, index) => (
-                 <li key={`${donVi}-${index}`}>{donVi}</li>
+                <li key={`${donVi}-${index}`}>{donVi}</li>
               ))}
             </ul>
           );
@@ -139,27 +128,29 @@ const TableYCTN = ({ dataYCTN, totalRecords, onPageChange  }) => {
         {...propSortAndFilter}
         field="trangThai"
         header={headerTemplate("Trạng thái")}
-        body={(rowData) => {
-            return (
-                <div className="flex flex-column align-items-center gap-2">
-                    <div className="px-3 py-2 text-white border-round-md bg-green-500 text-sm">
-                        {rowData.ten_buoc_current}
-                    </div>
-        
-                    {rowData.ten_buoc_next && (
-                        <div className="px-3 py-2 text-white border-round-md bg-blue-500 text-sm">
-                            Bước tiếp theo: {rowData.ten_buoc_next}
-                        </div>
-                    )}
-                </div>
-            );
-        }}
+        body={(rowData) => (
+          <div className="flex flex-column align-items-center gap-2">
+            <Badge
+              value={rowData.ten_buoc_current}
+              className="bg-green-500 text-white text-sm  font-semibold p-2 "
+              style={{ height: 'auto', whiteSpace: 'normal' }}
+            />
+            {rowData.ten_buoc_next && (
+              <Badge
+                value={`Bước tiếp theo: ${rowData.ten_buoc_next}`}
+                className="bg-blue-500 text-white font-semibold text-sm  p-2"
+                style={{ height: 'auto', whiteSpace: 'normal' }}
+              />
+            )}
+          </div>
+        )}
       ></Column>
+
       <Column
         headerStyle={headerStyleColumn}
         header={headerTemplate("Thao tác")}
         body={actionBodyTemplate}
-        style={{ width: "10rem" }}
+        bodyClassName={"text-center"}
       ></Column>
     </DataTable>
   );

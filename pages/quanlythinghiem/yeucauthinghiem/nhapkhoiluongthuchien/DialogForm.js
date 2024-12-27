@@ -150,6 +150,7 @@ const DialogForm = ({
               Loại thiết bị<span className="text-red-500">*</span>
             </label>
             <Dropdown
+              filter
               id="ma_loai_tb"
               name="ma_loai_tb"
               value={formData.ma_loai_tb}

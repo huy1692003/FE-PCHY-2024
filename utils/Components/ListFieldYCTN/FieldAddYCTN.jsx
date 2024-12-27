@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef, useState, useLayoutEffect } from "react";
+import { memo, useEffect, useRef, useState, useLayoutEffect, useContext } from "react";
 import { InputText } from "primereact/inputtext";
 import { InputNumber } from "primereact/inputnumber";
 import { Calendar } from "primereact/calendar";
@@ -17,6 +17,8 @@ import { useRouter } from "next/router";
 import { DM_LOAI_TAISANService } from "../../../services/quanlythinghiem/DM_LOAI_TAISANService";
 import { DM_KHACHHANG_Service } from "../../../services/quanlythinghiem/DM_KHACHHANG_Service";
 import moment from "moment";
+import { set } from "date-fns";
+import { MyContext } from "../../../context/dataContext";
 
 
 export const FormField = ({ label, className, style, placeholder, value, onChange, id, isCalendar = false, isNumber = false, row = 5, isFileUpload = false, isDropdown = false, isTextArea = false, options = [], prefix, isDisabled = false, styleField, props, mode, currency, locale, childrenIPNumber = "VNĐ", optionsValue, optionsLabel }) => (
@@ -30,7 +32,7 @@ export const FormField = ({ label, className, style, placeholder, value, onChang
                 {childrenIPNumber && <span className="p-inputgroup-addon" style={{ backgroundColor: "#6366F1", color: "white" }}>{childrenIPNumber}</span>}
             </div>
         ) : isDropdown ? (
-            <Dropdown  {...props} id={id} name={id} value={value} options={options} showClear onChange={(e) => onChange(id, e.value)} className="w-full" disabled={isDisabled} filter optionValue={optionsValue} optionLabel={optionsLabel} placeholder="--Mời chọn--" />
+            <Dropdown  {...props} id={id} name={id} value={value} options={options} showClear onChange={(e) => onChange(id, e.value)} className="w-full" disabled={isDisabled} filter optionValue={optionsValue} optionLabel={optionsLabel} placeholder="-- Mời chọn --" />
         ) : isTextArea ? (
             <InputTextarea id={id} name={id} value={value} onChange={(e) => onChange(id, e.target.value)} rows={row} className="w-full" readOnly={isDisabled} autoResize />
         ) : (
@@ -41,7 +43,7 @@ export const FormField = ({ label, className, style, placeholder, value, onChang
 
 const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, isEdit = false, formDataInit = QLTN_YCTN, isUpdateHD = false, refeshData }) => {
 
-    console.log(formDataInit)
+
     const [formData, setFormData] = useState(formDataInit);
     const [fieldbyLoaiYCTN, setFieldbyLoaiYCTN] = useState([]);
     const [fields, setFields] = useState([]);
@@ -50,8 +52,9 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, isEdit = false, formData
     const [dm_KH, setDM_KH] = useState([]);
     const router = useRouter();
     const user = JSON.parse(sessionStorage.getItem("user"))?.ten_dang_nhap || "";
-
+    const [fieldsNull, setFieldsNull] = useState([]);
     const [yctn_LOG, setYCTN_LOG] = useState()
+    const { data } = useContext(MyContext)
 
     // Lấy danh sách trường dữ liệu và các trường tương ứng với loai_yctn  
     useEffect(() => {
@@ -93,47 +96,43 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, isEdit = false, formData
         setFields(res);
     }
 
-  const getAllDM_LTS = async () => {
-    try {
-      let res = await DM_LOAI_TAISANService.get_DM_LOAI_TAISAN();
-      setDM_LTS(res?.data);
-    } catch (err) {
-      setDM_LTS([]);
-    }
-  };
+    const getAllDM_LTS = async () => {
+        try {
+            let res = await DM_LOAI_TAISANService.get_DM_LOAI_TAISAN();
+            setDM_LTS(res?.data);
+        } catch (err) {
+            setDM_LTS([]);
+        }
+    };
 
-  const getAllDM_KH = async () => {
-    try {
-      let res = await DM_KHACHHANG_Service.get_ALL_DM_KHACHHANG();
-      setDM_KH(res);
-    } catch (err) {
-      setDM_KH([]);
-    }
-  };
-
-
-
-
+    const getAllDM_KH = async () => {
+        try {
+            let res = await DM_KHACHHANG_Service.get_ALL_DM_KHACHHANG();
+            setDM_KH(res);
+        } catch (err) {
+            setDM_KH([]);
+        }
+    };
 
     const getFieldByLoaiYCTN = async () => {
         let res = await DM_LOAI_YCTNService.get_PHAN_MIEN_YCTN_BY_LOAI_YCTN(loai_yctn.id)
         setFieldbyLoaiYCTN(res);
     }
 
-  const handleInputChange = (fieldName, value) => {
-    setFormData((prev) => {
-      const newData = {
-        ...prev,
-        [fieldName]: value,
-      };
+    const handleInputChange = (fieldName, value) => {
+        setFormData((prev) => {
+            const newData = {
+                ...prev,
+                [fieldName]: value,
+            };
 
-      // Tính toán các giá trị phụ thuộc
-      if (fieldName === "gtdt_truoc_thue" || fieldName === "gtdt_chiet_giam") {
-        if (newData.gtdt_truoc_thue && newData.gtdt_chiet_giam) {
-          newData.phan_tram_chiet_giam =
-            (newData.gtdt_chiet_giam * 100) / newData.gtdt_truoc_thue;
-        }
-      }
+            // Tính toán các giá trị phụ thuộc
+            if (fieldName === "gtdt_truoc_thue" || fieldName === "gtdt_chiet_giam") {
+                if (newData.gtdt_truoc_thue && newData.gtdt_chiet_giam) {
+                    newData.phan_tram_chiet_giam =
+                        (newData.gtdt_chiet_giam * 100) / newData.gtdt_truoc_thue;
+                }
+            }
 
 
             if (fieldName === 'gtdt_truoc_thue' || fieldName === 'phan_tram_chiet_giam') {
@@ -149,192 +148,306 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, isEdit = false, formData
                 newData.gtdt_sau_chiet_giam = newData.gtdt_truoc_thue;
             }
 
-      // Tính gtdt_sau_chiet_giam
-      if (newData.gtdt_truoc_thue && newData.gtdt_chiet_giam) {
-        newData.gtdt_sau_chiet_giam =
-          newData.gtdt_truoc_thue - newData.gtdt_chiet_giam;
-      } else {
-        newData.gtdt_sau_chiet_giam = newData.gtdt_truoc_thue;
-      }
+            // Tính gtdt_sau_chiet_giam
+            if (newData.gtdt_truoc_thue && newData.gtdt_chiet_giam) {
+                newData.gtdt_sau_chiet_giam =
+                    newData.gtdt_truoc_thue - newData.gtdt_chiet_giam;
+            } else {
+                newData.gtdt_sau_chiet_giam = newData.gtdt_truoc_thue;
+            }
 
-      // Tính lại gtdt_thue dựa trên % thuế hiện tại khi gtdt_sau_chiet_giam thay đổi
-      if (newData.gtdt_sau_chiet_giam && newData.phan_tram_thue) {
-        newData.gtdt_thue =
-          (newData.phan_tram_thue * newData.gtdt_sau_chiet_giam) / 100;
-      }
+            // Tính lại gtdt_thue dựa trên % thuế hiện tại khi gtdt_sau_chiet_giam thay đổi
+            if (newData.gtdt_sau_chiet_giam && newData.phan_tram_thue) {
+                newData.gtdt_thue =
+                    (newData.phan_tram_thue * newData.gtdt_sau_chiet_giam) / 100;
+            }
 
-      // Tính phan_tram_thue khi gtdt_thue thay đổi
-      if (fieldName === "gtdt_thue") {
-        if (newData.gtdt_sau_chiet_giam && newData.gtdt_thue) {
-          newData.phan_tram_thue =
-            (newData.gtdt_thue * 100) / newData.gtdt_sau_chiet_giam;
-        }
-      }
+            // Tính phan_tram_thue khi gtdt_thue thay đổi
+            if (fieldName === "gtdt_thue") {
+                if (newData.gtdt_sau_chiet_giam && newData.gtdt_thue) {
+                    newData.phan_tram_thue =
+                        (newData.gtdt_thue * 100) / newData.gtdt_sau_chiet_giam;
+                }
+            }
 
-      // Tính gtdt_thue khi phan_tram_thue thay đổi
-      if (fieldName === "phan_tram_thue") {
-        if (newData.gtdt_sau_chiet_giam && newData.phan_tram_thue) {
-          newData.gtdt_thue =
-            (newData.phan_tram_thue * newData.gtdt_sau_chiet_giam) / 100;
-        }
-      }
+            // Tính gtdt_thue khi phan_tram_thue thay đổi
+            if (fieldName === "phan_tram_thue") {
+                if (newData.gtdt_sau_chiet_giam && newData.phan_tram_thue) {
+                    newData.gtdt_thue =
+                        (newData.phan_tram_thue * newData.gtdt_sau_chiet_giam) / 100;
+                }
+            }
 
-      // Tính gtdt_sau_thue
-      if (newData.gtdt_sau_chiet_giam && newData.gtdt_thue) {
-        newData.gtdt_sau_thue = newData.gtdt_sau_chiet_giam + newData.gtdt_thue;
-      } else {
-        newData.gtdt_sau_thue = newData.gtdt_sau_chiet_giam;
-      }
+            // Tính gtdt_sau_thue
+            if (newData.gtdt_sau_chiet_giam && newData.gtdt_thue) {
+                newData.gtdt_sau_thue = newData.gtdt_sau_chiet_giam + newData.gtdt_thue;
+            } else {
+                newData.gtdt_sau_thue = newData.gtdt_sau_chiet_giam;
+            }
 
-      return newData;
-    });
-  };
+            return newData;
+        });
+    };
+
+
+    // Render label kèm thông báo bắt buộc nhập
+    const RenderLabel = ({ label, nameField }) => {
+        return (
+            <div className="flex items-center">
+                <span className="mr-2">{label}</span>
+                <span className="text-lg text-red-500">*</span>
+                {fieldsNull.includes(nameField) && (
+                    <span className="text-red-500 text-sm font-normal ml-1">Không được trống</span>
+                )}
+            </div>
+        );
+    };
+
 
 
     const fieldInput = [
         {
             stt: 1,
             key: "ma_yctn",
-            element: isUpdateHD ? <></> : <FormField label={<>Mã yêu cầu <span className="text-sm">(STT sẽ được hệ thống quy định)</span> <span className="text-lg text-red-500">*</span></>} id="ma_yctn" value={formData?.ma_yctn} isDisabled={true} />
+            element: isUpdateHD ? (
+                <></>
+            ) : (
+                <FormField
+                    label={
+                        <>
+                            Mã yêu cầu <span className="text-sm">(STT sẽ được hệ thống quy định)</span>{" "}
+                            <span className="text-lg text-red-500">*</span>
+                        </>
+                    }
+                    id="ma_yctn"
+                    value={formData?.ma_yctn}
+                    isDisabled={true}
+                />
+            ),
         },
         {
             stt: 2,
             key: "ten_yctn",
-            element: <FormField label="Tên YCTN" id="ten_yctn" value={formData?.ten_yctn || ""} onChange={handleInputChange} isDisabled={isUpdateHD} />
+            element: (
+                <FormField
+                    label={<RenderLabel label="Tên YCTN" nameField="ten_yctn" />}
+                    id="ten_yctn"
+                    value={formData?.ten_yctn || ""}
+                    onChange={handleInputChange}
+                    isDisabled={isUpdateHD}
+                />
+            ),
         },
         {
             stt: 3,
             key: "noi_dung",
-            element: <FormField label="Nội dung" id="noi_dung" value={formData?.noi_dung || ""} isTextArea onChange={handleInputChange} isDisabled={isUpdateHD} />
+            element: (
+                <FormField
+                    label={<RenderLabel label="Nội dung" nameField="noi_dung" />}
+                    id="noi_dung"
+                    value={formData?.noi_dung || ""}
+                    isTextArea
+                    onChange={handleInputChange}
+                    isDisabled={isUpdateHD}
+                />
+            ),
         },
         {
             stt: 4,
             key: "loai_tai_san",
-            element: loai_yctn.ma_loai_yctn === "ke_hoach_thi_nghiem" ? <FormField
-                label="Loại tài sản"
-                id="loai_tai_san"
-                value={Number.parseInt(formData.loai_tai_san)}
-                isDropdown
-                options={dm_LTS}
-                optionsLabel="ten_lts"
-                optionsValue="id"
-                onChange={handleInputChange} isDisabled={isUpdateHD}
-            /> : <></>
-        },
-        {
-            stt: 5,
-            key: "id_khach_hang",
-            element: <div className="flex gap-4">
-                <div style={{ width: "49%" }}>
+            element:
+                loai_yctn.ma_loai_yctn === "ke_hoach_thi_nghiem" ? (
                     <FormField
-                        label="Khách hàng / Đơn vị điện lực"
-                        id="id_khach_hang"
-                        value={Number.parseInt(formData?.id_khach_hang)}
-                        isDropdown
-                        options={dm_KH}
-                        optionsLabel="ten_kh"
-                        optionsValue="id"
-
-                        onChange={handleInputChange} isDisabled={isUpdateHD}
-                    />
-                </div>
-                <div style={{ width: "49%" }}>
-                    <FormField
-                        label="Loại tài sản"
+                        label={<RenderLabel label="Loại tài sản" nameField="loai_tai_san" />}
                         id="loai_tai_san"
                         value={Number.parseInt(formData.loai_tai_san)}
                         isDropdown
                         options={dm_LTS}
                         optionsLabel="ten_lts"
                         optionsValue="id"
-                        onChange={handleInputChange} isDisabled={isUpdateHD}
+                        onChange={handleInputChange}
+                        isDisabled={isUpdateHD}
                     />
+                ) : (
+                    <></>
+                ),
+        },
+        {
+            stt: 5,
+            key: "id_khach_hang",
+            element: (
+                <div className="flex gap-4">
+                    <div style={{ width: "49%" }}>
+                        <FormField
+                            label={<RenderLabel label="Khách hàng / Đơn vị điện lực" nameField="id_khach_hang" />}
+                            id="id_khach_hang"
+                            value={formData.id_khach_hang ? Number.parseInt(formData?.id_khach_hang) : null}
+                            isDropdown
+                            options={dm_KH}
+                            optionsLabel="ten_kh"
+                            optionsValue="id"
+                            onChange={handleInputChange}
+                            isDisabled={isUpdateHD}
+                        />
+                    </div>
+                    <div style={{ width: "49%" }}>
+                        <FormField
+                            label={<RenderLabel label="Loại tài sản" nameField="loai_tai_san" />}
+                            id="loai_tai_san"
+                            value={formData.loai_tai_san ? Number.parseInt(formData.loai_tai_san) : null}
+                            isDropdown
+                            options={dm_LTS}
+                            optionsLabel="ten_lts"
+                            optionsValue="id"
+                            onChange={handleInputChange}
+                            isDisabled={isUpdateHD}
+                        />
+                    </div>
                 </div>
-            </div>
+            ),
         },
         {
             stt: 6,
             key: "ngay_tao",
-            element: <FormField label="Ngày tạo" id="ngay_tao" value={moment(formData?.ngay_tao).toDate()} onChange={handleInputChange} isDisabled={isUpdateHD} isCalendar />
+            element: (
+                <FormField
+                    label={<RenderLabel label="Ngày tạo" nameField="ngay_tao" />}
+                    id="ngay_tao"
+                    value={moment(formData?.ngay_tao).toDate()}
+                    onChange={handleInputChange}
+                    isDisabled={isUpdateHD}
+                    isCalendar
+                />
+            ),
         },
         {
             stt: 7,
             key: "ngay_ky_hop_dong",
-            element: <FormField label="Ngày ký hợp đồng" id="ngay_ky_hop_dong" value={moment(formData?.ngay_ky_hop_dong).toDate()} onChange={handleInputChange} isDisabled={isUpdateHD} isCalendar />
+            element: (
+                <FormField
+                    label={<RenderLabel label="Ngày ký hợp đồng" nameField="ngay_ky_hop_dong" />}
+                    id="ngay_ky_hop_dong"
+                    value={moment(formData?.ngay_ky_hop_dong).toDate()}
+                    onChange={handleInputChange}
+                    isDisabled={isUpdateHD}
+                    isCalendar
+                />
+            ),
         },
         {
             stt: 8,
             key: "ngay_xay_ra_su_co",
-            element: <FormField label="Ngày xảy ra sự cố" id="ngay_xay_ra_su_co" value={moment(formData?.ngay_xay_ra_su_co).toDate()} onChange={handleInputChange} isDisabled={isUpdateHD} isCalendar />
+            element: (
+                <FormField
+                    label={<RenderLabel label="Ngày xảy ra sự cố" nameField="ngay_xay_ra_su_co" />}
+                    id="ngay_xay_ra_su_co"
+                    value={moment(formData?.ngay_xay_ra_su_co).toDate()}
+                    onChange={handleInputChange}
+                    isDisabled={isUpdateHD}
+                    isCalendar
+                />
+            ),
         },
         {
             stt: 9,
             key: "gtdt_truoc_thue",
-            element: <FormField label="Giá trị trước thuế" id="gtdt_truoc_thue" value={formData?.gtdt_truoc_thue} onChange={handleInputChange} isNumber childrenIPNumber={"(VNĐ)"} />
+            element: (
+                <FormField
+                    label={<RenderLabel label="Giá trị trước thuế" nameField="gtdt_truoc_thue" />}
+                    id="gtdt_truoc_thue"
+                    value={formData?.gtdt_truoc_thue}
+                    onChange={handleInputChange}
+                    isNumber
+                    childrenIPNumber={"VNĐ"}
+                />
+            ),
         },
         {
             stt: 10,
             key: "phan_tram_chiet_giam",
-            element: <div className="flex gap-4">
-                <div style={{ width: "20%" }}>
-                    <label className='font-medium text-sm my-3 block' htmlFor="phan_tram_chiet_giam">Phần trăm chiết giảm</label>
-                    <div className="p-inputgroup">
-                        <InputNumber id="phan_tram_chiet_giam" name="phan_tram_chiet_giam" value={formData.phan_tram_chiet_giam} onChange={(e) => handleInputChange("phan_tram_chiet_giam", e.value)} className="w-full" mode={"decimal"} min={0} minFractionDigits={1} maxFractionDigits={2} />
-                        <span className="p-inputgroup-addon" style={{ backgroundColor: "#6366F1", color: "white" }}>%</span>
+            element: (
+                <div className="flex gap-4">
+                    <div style={{ width: "20%" }}>
+                        <FormField
+                            label={<RenderLabel label="Phần trăm chiết giảm" nameField="phan_tram_chiet_giam" />}
+                            id="phan_tram_chiet_giam"
+                            value={formData.phan_tram_chiet_giam}
+                            onChange={handleInputChange}
+                            isNumber
+                        />
+                    </div>
+                    <div style={{ width: "38%" }}>
+                        <FormField
+                            label={<RenderLabel label="Giá trị chiết giảm" nameField="gtdt_chiet_giam" />}
+                            id="gtdt_chiet_giam"
+                            value={formData.gtdt_chiet_giam}
+                            onChange={handleInputChange}
+                            isNumber
+                        />
+                    </div>
+                    <div style={{ width: "39%" }}>
+                        <FormField
+                            label={<RenderLabel label="Giá trị sau chiết giảm" nameField="gtdt_sau_chiet_giam" />}
+                            id="gtdt_sau_chiet_giam"
+                            value={formData.gtdt_sau_chiet_giam}
+                            onChange={handleInputChange}
+                            isNumber
+                        />
                     </div>
                 </div>
-                <div style={{ width: "38%" }}>
-                    <label className='font-medium text-sm my-3 block' htmlFor="gtdt_chiet_giam">Giá trị chiết giảm</label>
-                    <div className="p-inputgroup">
-                        <InputNumber id="gtdt_chiet_giam" name="gtdt_chiet_giam" value={formData.gtdt_chiet_giam} onChange={(e) => handleInputChange("gtdt_chiet_giam", e.value)} className="w-full" min={0} />
-                        <span className="p-inputgroup-addon" style={{ backgroundColor: "#6366F1", color: "white" }}>VNĐ</span>
-                    </div>
-                </div>
-                <div style={{ width: "39%" }}>
-                    <label className='font-medium text-sm my-3 block' htmlFor="gtdt_sau_chiet_giam">Giá trị sau chiết giảm</label>
-                    <div className="p-inputgroup">
-                        <InputNumber id="gtdt_sau_chiet_giam" readOnly name="gtdt_sau_chiet_giam" value={formData.gtdt_sau_chiet_giam} onChange={(e) => handleInputChange("gtdt_sau_chiet_giam", e.value)} className="w-full" min={0} />
-                        <span className="p-inputgroup-addon" style={{ backgroundColor: "#6366F1", color: "white" }}>VNĐ</span>
-                    </div>
-                </div>
-            </div>
+            ),
         },
         {
             stt: 11,
             key: "phan_tram_thue",
-            element: <div className="flex gap-4">
-                <div style={{ width: "20%" }}>
-                    <label className='font-medium text-sm my-3 block' htmlFor="phan_tram_thue">Phần trăm thuế</label>
-                    <div className="p-inputgroup">
-                        <InputNumber mode={"decimal"} min={0} minFractionDigits={1} maxFractionDigits={2} id="phan_tram_thue" name="phan_tram_thue" value={formData.phan_tram_thue} onChange={(e) => handleInputChange("phan_tram_thue", e.value)} className="w-full" />
-                        <span className="p-inputgroup-addon" style={{ backgroundColor: "#6366F1", color: "white" }}>%</span>
+            element: (
+                <div className="flex gap-4">
+                    <div style={{ width: "20%" }}>
+                        <FormField
+                            label={<RenderLabel label="Phần trăm thuế" nameField="phan_tram_thue" />}
+                            id="phan_tram_thue"
+                            value={formData.phan_tram_thue}
+                            onChange={handleInputChange}
+                            isNumber
+                        />
+                    </div>
+                    <div style={{ width: "38%" }}>
+                        <FormField
+                            label={<RenderLabel label="Giá trị thuế" nameField="gtdt_thue" />}
+                            id="gtdt_thue"
+                            value={formData.gtdt_thue}
+                            onChange={handleInputChange}
+                            isNumber
+                        />
+                    </div>
+                    <div style={{ width: "39%" }}>
+                        <FormField
+                            label={<RenderLabel label="Giá trị sau thuế" nameField="gtdt_sau_thue" />}
+                            id="gtdt_sau_thue"
+                            value={formData.gtdt_sau_thue}
+                            onChange={handleInputChange}
+                            isNumber
+                        />
                     </div>
                 </div>
-                <div style={{ width: "38%" }}>
-                    <label className='font-medium text-sm my-3 block' htmlFor="gtdt_thue">Giá trị thuế</label>
-                    <div className="p-inputgroup">
-                        <InputNumber id="gtdt_thue" name="gtdt_thue" value={formData.gtdt_thue} onChange={(e) => handleInputChange("gtdt_thue", e.value)} className="w-full" min={0} />
-                        <span className="p-inputgroup-addon" style={{ backgroundColor: "#6366F1", color: "white" }}>VNĐ</span>
-                    </div>
-                </div>
-                <div style={{ width: "39%" }}>
-                    <label className='font-medium text-sm my-3 block' htmlFor="gtdt_sau_thue">Giá trị sau thuế</label>
-                    <div className="p-inputgroup">
-                        <InputNumber id="gtdt_sau_thue" readOnly name="gtdt_sau_thue" value={formData.gtdt_sau_thue} onChange={(e) => handleInputChange("gtdt_sau_thue", e.value)} className="w-full" min={0} />
-                        <span className="p-inputgroup-addon" style={{ backgroundColor: "#6366F1", color: "white" }}>VNĐ</span>
-                    </div>
-                </div>
-            </div>
+            ),
         },
         {
             stt: 16,
             key: "file_upload",
-            element: isUpdateHD ? <></> : <>
-                <label className='font-bold text-sm my-3 block' htmlFor="file_upload">Upload file</label>
-                <InputFile nameField="file_upload" setFormData={setFormData} />
-            </>
-        }
+            element: isUpdateHD ? (
+                <></>
+            ) : (
+                <>
+                    <label className="font-bold text-sm my-3 block" htmlFor="file_upload">
+                        <RenderLabel label="File Upload" nameField={"file_upload"} />
+                    </label>
+                    <InputFile nameField="file_upload" setFormData={setFormData} />
+                </>
+            ),
+        },
     ];
+
 
     const findMatchingFields = (fields, fieldByYCTN) => {
         // Lấy danh sách ma_truong_yctn từ fieldByYCTN      
@@ -342,27 +455,48 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, isEdit = false, formData
     }
 
 
-    const handleSubmit = async () => {
-        if (formData.file_upload) {
-            console.log(formData)
-            let resUpload = await UploadFileService.file(formData.file_upload)
 
+    console.log(fieldCurrent)
+    function validateFormData(fieldCurrent) {
+        setFieldsNull([])
+        let isValid = true
+        fieldCurrent.filter(s => s.ma_code !== "crr_step" && s.ma_code !== "next_step" && s.ma_code !== "ma_khach_hang").forEach(field => {
+            if (!formData[field.ma_code] && formData[field.ma_code] !== 0) {
+                setFieldsNull(prev => [...prev, field.ma_code])
+                isValid = false
+            }
+        })
+        if (!isValid) {
+            Notification.error(toast, `Vui lòng nhập đầy đủ các trường bắt buộc`)
+        }
+        return isValid
+    }
+
+
+    const handleSubmit = async () => {
+        if (!validateFormData(fieldCurrent)) return
+
+
+        if (formData.file_upload) {
+
+            let resUpload = await UploadFileService.file(formData.file_upload)
             formData.file_upload = resUpload.filePath
         }
+
         if (isAdd) {
             try {
-                console.log(formData)
-                 await QLTN_YCTNService.create_QLTN_YCTN(formData)
 
+                let res = await QLTN_YCTNService.create_QLTN_YCTN(formData)
+
+                setFormData((prev) => ({ ...prev,ma_yctn:res, next_step: 2 }))
                 Notification.success(toast, "Tạo mới YCTN thành công")
             } catch (err) {
-                console.log(err)
+
                 Notification.error(toast, "Tạo mới YCTN thất bại")
             }
         }
 
     }
-
 
 
     const handleUpdate = async () => {
@@ -371,16 +505,20 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, isEdit = false, formData
             res && refeshData()
             Notification.success(toast, "Cập nhật thành công")
         } catch (error) {
-            console.log(error)
+
             Notification.error(toast)
         }
     }
+
+    console.log(data)
     return (
         <div className="">
             <div>
                 {fieldInput.map(field => {
                     if (fieldCurrent.find(i => i?.ma_code === field.key)) {
-                        return <div key={field.stt}>{field.element}</div>
+                        return <div key={field.stt}>
+                            {field.element}
+                        </div>
                     }
 
                 })}
@@ -389,10 +527,12 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, isEdit = false, formData
             <br />
             <br />
             <div style={{ borderTop: "1px solid #ccc" }} className='flex justify-content-end gap-2 mt-10 pt-5'>
+
                 <Button label="Quay lại" icon="pi pi-arrow-left" className='p-button-danger' onClick={() => router.back()} />
                 {loai_yctn && isAdd && !isUpdateHD && <Button label={"Tạo mới " + loai_yctn?.ten_loai_yc} icon="pi pi-check" onClick={handleSubmit} />}
                 {loai_yctn && isAdd === false && <Button label={"Cập nhật " + loai_yctn?.ten_loai_yc} icon="pi pi-check" onClick={handleUpdate} />}
                 {loai_yctn && isUpdateHD && <Button label={"Cập nhật hợp đồng " + loai_yctn?.ten_loai_yc} icon="pi pi-check" onClick={handleUpdate} />}
+                {loai_yctn && formData.next_step === 2 && <Button onClick={() => { router.push("/quanlythinghiem/yeucauthinghiem/giaonhiemvu?code="+formData.ma_yctn) }} label={"Bước tiếp theo   " + data.listBuocYCTN?.find(s => s.buoc === 2)?.ten_buoc_yctn} icon="pi pi-check" />}
             </div>
         </div>
     );

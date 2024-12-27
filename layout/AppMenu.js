@@ -13,19 +13,29 @@ const AppMenu = () => {
             try {
                 const idUser = JSON.parse(sessionStorage.getItem('user')).id;
                 const res = await HT_NGUOIDUNG_Service.getMenuByIdUser(idUser);
-                const model = res.map(menu => ({
-                    label: menu.ten_menu,
-                    icon: menu.icon,
-                    key: menu.id,
-                    items: menu.children ? menu.children
-                        .sort((a, b) => a.ten_menu.localeCompare(b.ten_menu))
-                        .map(child => ({
-                            label: child.ten_menu,
-                            icon: child.icon,
-                            key: child.id,
-                            command: () => handleMenuClick(child.duong_dan || '/'),
-                        })) : []
-                }));
+                console.log('menu:', res);
+
+                // Hàm đệ quy để tạo cấu trúc menu nhiều cấp
+                const buildMenuModel = (menuItems) => {
+                    return menuItems.map(menu => {
+                        // Kiểm tra xem menu có children hay không
+                        const hasChildren = menu.children && menu.children.length > 0;
+
+                        return {
+                            label: menu.ten_menu,
+                            icon: menu.icon,
+                            key: menu.id,
+                            items: hasChildren ? buildMenuModel(
+                                menu.children.sort((a, b) => a.ten_menu.localeCompare(b.ten_menu))
+                            ) : null,
+                            command: menu.duong_dan ? () => handleMenuClick(menu.duong_dan) : undefined,
+                            // Nếu không có children, không cần thêm items
+                            className: !hasChildren ? 'menu-item-no-children' : '' // Thêm class để dễ dàng tùy chỉnh CSS nếu cần
+                        };
+                    });
+                };
+
+                const model = buildMenuModel(res);
 
                 setMenu(model);
             } catch (error) {
@@ -44,9 +54,7 @@ const AppMenu = () => {
         <MenuProvider>
             <PanelMenu
                 model={menu}
-                contextMenu=''                
-                
-                    // Cập nhật trạng thái mở rộng khi thay đổi
+                multiple // Cho phép mở nhiều cấp cùng lúc
             />
         </MenuProvider>
     );

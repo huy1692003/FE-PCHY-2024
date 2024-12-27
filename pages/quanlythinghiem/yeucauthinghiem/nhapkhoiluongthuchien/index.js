@@ -32,6 +32,7 @@ const NhapKhoiLuongThucHien = () => {
     setArrThietbi(arrThietbi);
   };
 
+  console.log(thongTinYCTN)
   useEffect(() => {
     setIsCurrent(thongTinYCTN?.crr_step);
   }, [thongTinYCTN]);
@@ -124,7 +125,7 @@ const NhapKhoiLuongThucHien = () => {
             )
           }
         />
-        {thongTinYCTN && isCurrent === 2 && (
+        {thongTinYCTN  && (
           <Panel headerTemplate={headerList}>
             <TableNhapKhoiLuong
               arrThietbi={arrThietbi}
