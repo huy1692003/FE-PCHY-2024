@@ -10,7 +10,7 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { useEffect, useState } from "react";
 import { QLTN_THIET_BI_YCTN_Service } from "../../../../services/quanlythinghiem/QLTN_THIET_BI_YCTN_Service";
-const LichSuNhapKhoiLuong = ({ nextStep,MA_YCTN }) => {
+const LichSuNhapKhoiLuong = ({ nextStep,thongTinYCTN }) => {
   const [arrThietbiBD, setArrThietbiBD] = useState([]);
   const router = useRouter();
   
@@ -18,7 +18,7 @@ const LichSuNhapKhoiLuong = ({ nextStep,MA_YCTN }) => {
     try {
       const items =
         await QLTN_THIET_BI_YCTN_Service.getAll_QLTN_THIET_BI_YCTN_byMA_YCTN({
-          ma_yctn: MA_YCTN,
+          ma_yctn: thongTinYCTN?.ma_yctn,
         });
         console.log("test")
         console.log(items)
@@ -30,22 +30,7 @@ const LichSuNhapKhoiLuong = ({ nextStep,MA_YCTN }) => {
   };
   useEffect(() => {
     loadData();
-    // console.log("MA_YCTN",MA_YCTN)
-  }, [MA_YCTN,nextStep]);
-  const headerList = (options) => {
-    const className = `${options.className} flex flex-wrap justify-content-between align-items-center`;
-
-    return (
-      <>
-        <div className={className + " mt-4"}>
-          <span className="font-bold text-base">
-            Danh sách thiết bị ban đầu
-          </span>
-          <div className="flex flex-wrap gap-2"></div>
-        </div>
-      </>
-    );
-  };
+  }, [thongTinYCTN,nextStep]);
   return (
     <div>
       {Array.from(new Set(arrThietbiBD.map((device) => device.trang_thai))).sort((a, b) => a - b).map(
@@ -116,7 +101,7 @@ const LichSuNhapKhoiLuong = ({ nextStep,MA_YCTN }) => {
             label="Nhập khối lượng phát sinh"
             style={{ backgroundColor: "#1445a7" }}
             onClick={() => {
-              router.push(`/quanlythinghiem/yeucauthinghiem/nhapkhoiluongphatsinh?code=${MA_YCTN}`);
+              router.push(`/quanlythinghiem/yeucauthinghiem/nhapkhoiluongphatsinh?code=${thongTinYCTN?.ma_yctn}`);
             }}
           />
           
@@ -124,7 +109,7 @@ const LichSuNhapKhoiLuong = ({ nextStep,MA_YCTN }) => {
             label="Bước tiếp theo: Khảo sát phương án thi công"
             style={{ backgroundColor: "#1445a7" }}
             onClick={() => {
-              router.push(`/quanlythinghiem/yeucauthinghiem/khaosatphuongan?code=${MA_YCTN}`);
+              router.push(`/quanlythinghiem/yeucauthinghiem/khaosatphuongan?code=${thongTinYCTN?.ma_yctn}`);
             }}
           />
         </div>

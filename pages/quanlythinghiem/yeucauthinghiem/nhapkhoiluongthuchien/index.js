@@ -14,8 +14,8 @@ import useThongTinYCTN from "../../../../hooks/useThongTinYCTN";
 import LichSuNhapKhoiLuong from "./LichSuNhapKhoiLuong";
 
 const NhapKhoiLuongThucHien = () => {
-  //   const [MaYCTN, setMaYCTN] = useState("YCTN.HD-334");
-  const { ma_yctn, thongTinYCTN } = useThongTinYCTN();
+  const router = useRouter();
+    const { ma_yctn, thongTinYCTN } = useThongTinYCTN();
 
   const [arrThietbi, setArrThietbi] = useState([]);
   const [showDialog, setShowDialog] = useState(false);
@@ -28,11 +28,6 @@ const NhapKhoiLuongThucHien = () => {
 
   const [isCurrent, setIsCurrent] = useState(thongTinYCTN?.crr_step);
 
-  const LoatArrThietBi = async () => {
-    setArrThietbi(arrThietbi);
-  };
-
-  console.log(thongTinYCTN)
   useEffect(() => {
     setIsCurrent(thongTinYCTN?.crr_step);
   }, [thongTinYCTN]);
@@ -43,9 +38,7 @@ const NhapKhoiLuongThucHien = () => {
     return (
       <>
         <div className={className + " mt-4"}>
-
           <span className="font-bold text-xl">Danh sách thiết bị</span>
-
 
           <div className="flex flex-wrap gap-2">
             <Button
@@ -71,30 +64,22 @@ const NhapKhoiLuongThucHien = () => {
   };
 
   const ThemMoiThietBi_YCTN = async () => {
-    if (!ma_yctn) {
-      toast.current.show({
-        severity: "error",
-        summary: "Lỗi",
-        detail: "Vui lòng chọn một yêu cầu thí nghiệm",
-        life: 3000,
-      });
-      return;
-    }
-    // console.log("ma_yctn", ma_yctn);
-    else {
-      const thietBiData = arrThietbi.map((item) => ({
-        //   id: item.id?.toString() || "",
-        ma_tbtn: `${ma_yctn}-${item.id}`,
-        ma_yctn: ma_yctn,
-        ten_thiet_bi: item.ten_thiet_bi || "",
-        ma_loai_tb: item.ma_loai_tb || "",
-        so_luong: item.so_luong || 0,
-        trang_thai: 0, // thiết bị mới thêm
-        //   ngay_tao: new Date().toISOString(),
-        nguoi_tao: user,
-        ten_loai_thiet_bi: item.ten_loai_thiet_bi || "",
-      }));
-      console.log("dsthietBiData trc lưu", thietBiData);
+    const mayctn = thongTinYCTN?.ma_yctn;
+
+    const thietBiData = arrThietbi.map((item) => ({
+      //   id: item.id?.toString() || "",
+      ma_tbtn: `${mayctn}-${item.id}`,
+      ma_yctn: mayctn,
+      ten_thiet_bi: item.ten_thiet_bi || "",
+      ma_loai_tb: item.ma_loai_tb || "",
+      so_luong: item.so_luong || 0,
+      trang_thai: 0, // thiết bị mới thêm
+      //   ngay_tao: new Date().toISOString(),
+      nguoi_tao: user,
+      ten_loai_thiet_bi: item.ten_loai_thiet_bi || "",
+    }));
+    console.log("dsthietBiData trc lưu", thietBiData);
+    try {
       const res =
         await QLTN_THIET_BI_YCTN_Service.create_Multiple_QLTN_THIET_BI_YCTN(
           thietBiData
@@ -106,7 +91,9 @@ const NhapKhoiLuongThucHien = () => {
         life: 3000,
       });
       setIsCurrent(3);
-      // setArrThietbi([]);
+      setArrThietbi([]);
+    } catch (error) {
+      
     }
   };
 
@@ -152,12 +139,13 @@ const NhapKhoiLuongThucHien = () => {
                     ThemMoiThietBi_YCTN();
                   }}
                 />
-                
+
                 <Button
                   label="Lưu và chuyển bước"
                   style={{ backgroundColor: "#1445a7" }}
                   onClick={() => {
                     ThemMoiThietBi_YCTN();
+                    router.push(`/quanlythinghiem/yeucauthinghiem/khaosatphuongan?code=${thongTinYCTN?.ma_yctn}`);
                   }}
                 />
               </div>
@@ -165,11 +153,14 @@ const NhapKhoiLuongThucHien = () => {
             {/* end_button lưu, hủy */}
           </Panel>
         )}
-        
-        {thongTinYCTN && isCurrent >=3 && (
-        <Panel header="Lịch sử nhập khối lượng">
-          <LichSuNhapKhoiLuong nextStep ={isCurrent} MA_YCTN={ma_yctn} />
-        </Panel>
+
+        {thongTinYCTN && isCurrent >= 3 && (
+          <Panel header="Lịch sử nhập khối lượng">
+            <LichSuNhapKhoiLuong
+              nextStep={isCurrent}
+              thongTinYCTN={thongTinYCTN}
+            />
+          </Panel>
         )}
       </Panel>
 
@@ -181,7 +172,6 @@ const NhapKhoiLuongThucHien = () => {
         toast={toast}
         setFormData={setFormData}
         setArrThietbi={setArrThietbi}
-        LoatArrThietBi={LoatArrThietBi}
         arrThietbi={arrThietbi}
       />
       <DialogForm_ImportFIle

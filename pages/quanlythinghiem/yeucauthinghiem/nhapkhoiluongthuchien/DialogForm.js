@@ -15,7 +15,6 @@ const DialogForm = ({
   toast,
   setFormData,
   setArrThietbi,
-  LoatArrThietBi,
 }) => {
   const renderHeader = () => {
     return (
