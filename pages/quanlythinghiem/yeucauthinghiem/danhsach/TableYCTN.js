@@ -2,13 +2,20 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import React, { useState } from "react";
+import { useRouter } from 'next/router';
+
 import {
   headerStyleColumn,
   propSortAndFilter,
 } from "../../../../constants/propGlobal";
 import moment from "moment";
 
-const TableYCTN = ({ dataYCTN, totalRecords, onPageChange  }) => {
+const TableYCTN = ({ loadYCTN, dataYCTN, totalRecords  }) => {
+  const router = useRouter();
+
+  const [page, setPage] = useState(0);
+  const [rows, setRows] = useState(5);
+
   const actionBodyTemplate = (rowData) => {
     return (
       <div className="flex gap-2">
@@ -17,6 +24,13 @@ const TableYCTN = ({ dataYCTN, totalRecords, onPageChange  }) => {
           rounded
           outlined
           className="mr-2"
+          onClick={() => {}}
+        />
+        <Button
+          icon="pi pi-trash"
+          rounded
+          outlined
+          severity="danger"
           onClick={() => {}}
         />
         <Button
@@ -45,12 +59,26 @@ const TableYCTN = ({ dataYCTN, totalRecords, onPageChange  }) => {
     );
   };
 
+
+
+ 
+
+
+
+
   return (
     <DataTable
       showGridlines
       value={dataYCTN}
       paginator
-      rows={10}
+      first={page * rows}
+      rows={rows} 
+      totalRecords={totalRecords}
+      onPageChange={(event) => {
+        setPage(event.page);
+        setRows(event.rows);
+        loadYCTN(event.page + 1, event.rows);
+      }}
       rowsPerPageOptions={[5, 10, 25, 50]}
       tableStyle={{ minWidth: "50rem" }}
       selectionMode="checkbox"
@@ -112,7 +140,7 @@ const TableYCTN = ({ dataYCTN, totalRecords, onPageChange  }) => {
         {...propSortAndFilter}
         field="thongTinKhoiTao"
         body={(rowData) => {
-          return (
+          return (  
             <>
               <div>
                 Đơn vị khởi tạo:{" "}

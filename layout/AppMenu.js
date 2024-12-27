@@ -13,6 +13,7 @@ const AppMenu = () => {
             try {
                 const idUser = JSON.parse(sessionStorage.getItem('user')).id;
                 const res = await HT_NGUOIDUNG_Service.getMenuByIdUser(idUser);
+                console.log(res);
                 const model = res.map(menu => ({
                     label: menu.ten_menu,
                     icon: menu.icon,

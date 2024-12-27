@@ -18,7 +18,7 @@ const DanhSachYCTN = () => {
   const [dmDonVi, setDmDonVi] = useState([]);
 
   //phan trang
-  const [first, setFirst] = useState(0);
+
   const [totalRecords, setTotalRecords] = useState(0);
 
   const [filters, setFilters] = useState({
@@ -31,7 +31,7 @@ const DanhSachYCTN = () => {
   });
 
 
-  const loadYCTN = async () => {
+  const loadYCTN = async (page = 1, rows = 10) => {
     try {
       const params = {
         searchTerm: filters.searchTerm || "",
@@ -39,8 +39,8 @@ const DanhSachYCTN = () => {
         donViThucHien: filters.donViThucHien || "",
         idKhachHang: filters.idKhachHang ? Number(filters.idKhachHang) : null,
         crrStep: filters.crrStep ? Number(filters.crrStep) : null,
-        pageIndex: 1,
-        pageSize: filters.limit,
+        pageIndex: page,
+        pageSize: rows,
       };
 
 
@@ -76,9 +76,7 @@ const load_DANHMUC = async () => {
   // console.log(dmDonVi)
 
 
-  const onPageChange = (event) => {
-    loadYCTN(event.page + 1);
-  };
+  
 
   const headerList = (options) => {
     const className = `${options.className} flex flex-wrap justify-content-between align-items-center`;
@@ -208,13 +206,13 @@ const load_DANHMUC = async () => {
 
 
   return (
-    <div className="border-round-3xl bg-white p-3">
+    <div className="border-round-3xl bg-tranpe p-3">
       <Panel headerTemplate={headerList}>
         <TableYCTN
+          loadYCTN={loadYCTN}
           dataYCTN={dataYCTN}
-          totalRecords={totalRecords}
-          onPageChange={onPageChange}
-        />
+          totalRecords={totalRecords}        
+          />
       </Panel>
       <Toast ref={toast} />
     </div>

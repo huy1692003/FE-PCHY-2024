@@ -92,6 +92,7 @@ const Menu = () => {
       setMenuOld(items)
       const treeData = buildTree(items);
       setArr_MENU(treeData);
+      console.log('arr_MENU', items);
     } catch (err) {
       console.error("Không thể tải dữ liệu:", err);
       toast.current.show({
@@ -102,6 +103,7 @@ const Menu = () => {
       });
     }
   };
+
 
   useEffect(() => {
     const treeData = buildTree(menuOld);
