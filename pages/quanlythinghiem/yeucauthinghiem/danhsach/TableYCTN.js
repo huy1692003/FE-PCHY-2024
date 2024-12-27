@@ -2,6 +2,8 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import React, { useState } from "react";
+import { useRouter } from 'next/router';
+
 import {
   headerStyleColumn,
   propSortAndFilter,
@@ -9,12 +11,36 @@ import {
 import moment from "moment";
 import { Badge } from "primereact/badge";
 
-const TableYCTN = ({ dataYCTN, totalRecords, onPageChange }) => {
+const TableYCTN = ({ loadYCTN, dataYCTN, totalRecords  }) => {
+  const router = useRouter();
+
+  const [page, setPage] = useState(0);
+  const [rows, setRows] = useState(5);
+
   const actionBodyTemplate = (rowData) => {
     return (
-      <div className="flex gap-1 justify-content-center ">
-        <Button icon="pi pi-pencil" size="small" tooltip="Sửa"  style={{ backgroundColor: '#1445a7' ,width:40,height:40}} />
-        <Button icon="pi pi-trash" tooltip="Xóa"  style={{ backgroundColor: '#1445a7', border: "none" ,width:40,height:40}} />
+      <div className="flex gap-2">
+        <Button
+          icon="pi pi-pencil"
+          rounded
+          outlined
+          className="mr-2"
+          onClick={() => {}}
+        />
+        <Button
+          icon="pi pi-trash"
+          rounded
+          outlined
+          severity="danger"
+          onClick={() => {}}
+        />
+        <Button
+          icon="pi pi-trash"
+          rounded
+          outlined
+          severity="danger"
+          onClick={() => {}}
+        />
       </div>
     );
   };
@@ -34,12 +60,26 @@ const TableYCTN = ({ dataYCTN, totalRecords, onPageChange }) => {
     );
   };
 
+
+
+ 
+
+
+
+
   return (
     <DataTable
       showGridlines
       value={dataYCTN}
       paginator
-      rows={10}
+      first={page * rows}
+      rows={rows} 
+      totalRecords={totalRecords}
+      onPageChange={(event) => {
+        setPage(event.page);
+        setRows(event.rows);
+        loadYCTN(event.page + 1, event.rows);
+      }}
       rowsPerPageOptions={[5, 10, 25, 50]}
       tableStyle={{ minWidth: "50rem" }}
       selectionMode="checkbox"
@@ -101,7 +141,7 @@ const TableYCTN = ({ dataYCTN, totalRecords, onPageChange }) => {
         {...propSortAndFilter}
         field="thongTinKhoiTao"
         body={(rowData) => {
-          return (
+          return (  
             <>
               <div>
                 Đơn vị khởi tạo:{" "}
