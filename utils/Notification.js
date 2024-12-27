@@ -15,6 +15,7 @@ export const Notification = {
             summary: title,
             detail: message,
             life,
+           
         });
     },
 
@@ -31,6 +32,7 @@ export const Notification = {
             summary: title,
             detail: message,
             life,
+            process: true,
         });
     },
 

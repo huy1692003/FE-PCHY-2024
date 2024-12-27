@@ -8,15 +8,10 @@ const FieldBanGiaKQ = ({ thongTinYCTN, formData, setFormData }) => {
   const [donVi, setDonVi] = useState([]);
 
   const user = JSON.parse(sessionStorage.getItem("user"))?.ten_dang_nhap || "";
-  useEffect(() => {
-    // console.log("YCTN",th)
-    setFormData({
-      ma_yctn:thongTinYCTN?.ma_yctn,
-      nguoi_ban_giao: user,
-      don_vi_thuc_hien: thongTinYCTN?.don_vi_thuc_hien || ""
-    });
-  }, [thongTinYCTN]);
+ 
 
+
+  console.log(thongTinYCTN)
   useEffect(() => {
     getDonVi();
   }, []); 
@@ -32,7 +27,7 @@ const FieldBanGiaKQ = ({ thongTinYCTN, formData, setFormData }) => {
           <FormField
             label="Người bàn giao kết quả"
             id="nguoi_ban_giao"
-            value={formData.nguoi_ban_giao}
+            value={formData?.nguoi_ban_giao||user}
             onChange={(id, value) =>
               setFormData((prev) => ({ ...prev, [id]: value }))
             }
@@ -42,7 +37,8 @@ const FieldBanGiaKQ = ({ thongTinYCTN, formData, setFormData }) => {
           <FormField
             label="Ngày bàn giao kết quả"
             id="ngay_ban_giao"
-            value={formData.ngay_ban_giao}
+            value={formData?.ngay_ban_giao ? new Date(formData.ngay_ban_giao) : new Date()}
+
             onChange={(id, value) =>
               setFormData((prev) => ({ ...prev, [id]: value }))
             }
@@ -56,7 +52,7 @@ const FieldBanGiaKQ = ({ thongTinYCTN, formData, setFormData }) => {
           <FormField
             label="Ghi chú"
             id="ghi_chu_ban_giao"
-            value={formData?.ghi_chu_ban_giao || ""}
+            value={formData?.ghi_chu_ban_giao}
             onChange={(id, value) =>
               setFormData((prev) => ({ ...prev, [id]: value }))
             }

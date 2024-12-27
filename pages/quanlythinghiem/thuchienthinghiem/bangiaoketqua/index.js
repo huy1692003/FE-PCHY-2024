@@ -10,6 +10,7 @@ import { Toast } from "primereact/toast";
 import QLTN_YCTN from "../../../../models/QLTN_YCTN";
 import QLTN_YCTNService from "../../../../services/quanlythinghiem/QLTN_YCTNService";
 import { Notification } from "../../../../utils/notification";
+import { convertTimezoneToVN } from "../../../../utils/FunctionFormart";
 
 const BanGiaoKetQua = () => {
   const { ma_yctn, thongTinYCTN } = useThongTinYCTN();
@@ -17,15 +18,19 @@ const BanGiaoKetQua = () => {
   const [isBanGiao, setIsBanGiao] = useState(false);//kiểm tra đã bàn giao chưa
   const toast = useRef(null);
 
+  useEffect(()=>{
+    setFormData(thongTinYCTN)
+  },[thongTinYCTN])
+
+
   const onSubmit = async () => {
     const updatedFormData = {
       don_vi_nhan_ban_giao: formData.don_vi_thuc_hien || "Giá trị mặc định", // Gán giá trị mặc định nếu don_vi_thuc_hien là null
       ma_yctn: ma_yctn, // Gắn giá trị ma_yctn
       nguoi_ban_giao: formData.nguoi_ban_giao, // Gắn giá trị nguoi_ban_giao
-      ngay_ban_giao: formData.ngay_ban_giao, // Gắn giá trị ngay_ban_giao
+      ngay_ban_giao: convertTimezoneToVN(formData.ngay_ban_giao), // Gắn giá trị ngay_ban_giao
       ghi_chu_ban_giao: formData.ghi_chu_ban_giao, // Gắn giá trị ghi_chu_ban_giao
     };
-    console.log("formData", updatedFormData); // In ra formData đã cập nhật
     try {
       await QLTN_YCTNService.ban_giao_ket_qua_YCTN(updatedFormData);
       Notification.success(toast, "Bàn giao thành công");
@@ -86,11 +91,10 @@ const BanGiaoKetQua = () => {
               formData={formData}
               setFormData={setFormData}
             />
-            {!isBanGiao && (
-              <div className="flex justify-content-end mt-6">
-                <Button label="Lưu" onClick={onSubmit} />
-              </div>
-            )}
+
+            <div className="flex justify-content-end mt-6">
+              {!(thongTinYCTN&& thongTinYCTN.nguoi_ban_giao) &&<Button label="Lưu" onClick={onSubmit} />}
+            </div>
           </Panel>
         )}
       </Panel>

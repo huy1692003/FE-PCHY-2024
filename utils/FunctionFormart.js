@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import moment from "moment";
 import "moment/locale/vi"; // Import locale tiếng Việt
 
@@ -13,6 +14,9 @@ export const formatDateTime = (dateTime) => {
   return moment(dateTime).locale("vi").format("DD/MM/YYYY HH:mm:ss");
 };
 
+export const convertTimezoneToVN = (date) => {
+  return dayjs(date).tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DDTHH:mm:ss');
+};
 export const formatPrice = (amount) => {
   if (amount == null || amount === "") return ""; // Kiểm tra giá trị null hoặc undefined
   return new Intl.NumberFormat("vi-VN", {

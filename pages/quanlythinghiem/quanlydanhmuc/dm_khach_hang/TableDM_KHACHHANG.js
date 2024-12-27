@@ -81,6 +81,7 @@ const TableDM_KHACHHANG = ({
       </div>
 
       <DataTable
+       
         value={data}
         emptyMessage="Không tìm thấy dữ liệu"
         showGridlines={true}
