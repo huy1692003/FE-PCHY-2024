@@ -19,6 +19,8 @@ import { DM_KHACHHANG_Service } from "../../../services/quanlythinghiem/DM_KHACH
 import moment from "moment";
 import { set } from "date-fns";
 import { MyContext } from "../../../context/dataContext";
+import { urlServer } from "../../../constants/api";
+import { Tooltip } from "primereact/tooltip";
 
 
 export const FormField = ({ label, className, style, placeholder, value, onChange, id, isCalendar = false, isNumber = false, row = 5, isFileUpload = false, isDropdown = false, isTextArea = false, options = [], prefix, isDisabled = false, styleField, props, mode, currency, locale, childrenIPNumber = "VNĐ", optionsValue, optionsLabel }) => (
@@ -41,7 +43,7 @@ export const FormField = ({ label, className, style, placeholder, value, onChang
     </div>
 );
 
-const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, isEdit = false, formDataInit = QLTN_YCTN, isUpdateHD = false, refeshData }) => {
+const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, formDataInit = QLTN_YCTN, isUpdateHD = false, refeshData }) => {
 
 
     const [formData, setFormData] = useState(formDataInit);
@@ -55,7 +57,6 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, isEdit = false, formData
     const [fieldsNull, setFieldsNull] = useState([]);
     const [yctn_LOG, setYCTN_LOG] = useState()
     const { data } = useContext(MyContext)
-
     // Lấy danh sách trường dữ liệu và các trường tương ứng với loai_yctn  
     useEffect(() => {
 
@@ -209,7 +210,7 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, isEdit = false, formData
         {
             stt: 1,
             key: "ma_yctn",
-            element: isUpdateHD ? (
+            element: (isUpdateHD || !isAdd) ? (
                 <></>
             ) : (
                 <FormField
@@ -477,7 +478,7 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, isEdit = false, formData
         if (!validateFormData(fieldCurrent)) return
 
 
-        if (formData.file_upload) {
+        if (formData.file_upload && formData.file_upload instanceof FormData) {
 
             let resUpload = await UploadFileService.file(formData.file_upload)
             formData.file_upload = resUpload.filePath
@@ -488,11 +489,21 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, isEdit = false, formData
 
                 let res = await QLTN_YCTNService.create_QLTN_YCTN(formData)
 
-                setFormData((prev) => ({ ...prev,ma_yctn:res, next_step: 2 }))
+                setFormData((prev) => ({ ...prev, ma_yctn: res, next_step: 2 }))
                 Notification.success(toast, "Tạo mới YCTN thành công")
             } catch (err) {
 
                 Notification.error(toast, "Tạo mới YCTN thất bại")
+            }
+        }
+        else {
+            try {
+                let res = await QLTN_YCTNService.update({...formData,qltn_yctn_log:formData.qltn_yctn_log})
+                res && refeshData()
+                Notification.success(toast, "Cập nhật thành công")
+            } catch (error) {
+                console.log(error)
+                Notification.error(toast)
             }
         }
 
@@ -501,16 +512,16 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, isEdit = false, formData
 
     const handleUpdate = async () => {
         try {
-            let res = await QLTN_YCTNService.update_QLTN_YCTN({ ...formData, nguoi_sua: user, qltn_yctn_log: [...formData.qltn_yctn_log || [], yctn_LOG] })
+
+            let res = await QLTN_YCTNService.update({ ...formData, nguoi_sua: user, qltn_yctn_log: isUpdateHD ? [...formData.qltn_yctn_log || [], yctn_LOG] : formData.yctn_LOG })
             res && refeshData()
             Notification.success(toast, "Cập nhật thành công")
         } catch (error) {
-
+            console.log(error)
             Notification.error(toast)
         }
     }
 
-    console.log(data)
     return (
         <div className="">
             <div>
@@ -522,6 +533,18 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, isEdit = false, formData
                     }
 
                 })}
+                {!isAdd && <p className="flex justify-content-end mt-2">
+                    <Tooltip target=".file-link" position="left" content="Nhấn để mở File đã tải lên" />
+                    <a
+
+                        href={`${urlServer}${formData.file_upload}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-500 underline file-link"
+                    >
+                        {yctn_LOG && yctn_LOG.file_upload?.split("/").pop()}
+                    </a>
+                </p>}
             </div>
             <br />
             <br />
@@ -529,10 +552,10 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, isEdit = false, formData
             <div style={{ borderTop: "1px solid #ccc" }} className='flex justify-content-end gap-2 mt-10 pt-5'>
 
                 <Button label="Quay lại" icon="pi pi-arrow-left" className='p-button-danger' onClick={() => router.back()} />
-                {loai_yctn && isAdd && !isUpdateHD && <Button label={"Tạo mới " + loai_yctn?.ten_loai_yc} icon="pi pi-check" onClick={handleSubmit} />}
-                {loai_yctn && isAdd === false && <Button label={"Cập nhật " + loai_yctn?.ten_loai_yc} icon="pi pi-check" onClick={handleUpdate} />}
+                {loai_yctn && isAdd && !isUpdateHD  && !formData.next_step === 2&& <Button label={"Tạo mới " + loai_yctn?.ten_loai_yc} icon="pi pi-check" onClick={handleSubmit} />}
+                {loai_yctn && isAdd === false && <Button label={"Cập nhật " + loai_yctn?.ten_loai_yc} icon="pi pi-check" onClick={handleSubmit} />}
                 {loai_yctn && isUpdateHD && <Button label={"Cập nhật hợp đồng " + loai_yctn?.ten_loai_yc} icon="pi pi-check" onClick={handleUpdate} />}
-                {loai_yctn && formData.next_step === 2 && <Button onClick={() => { router.push("/quanlythinghiem/yeucauthinghiem/giaonhiemvu?code="+formData.ma_yctn) }} label={"Bước tiếp theo   " + data.listBuocYCTN?.find(s => s.buoc === 2)?.ten_buoc_yctn} icon="pi pi-check" />}
+                {loai_yctn && formData.next_step === 2 && <Button onClick={() => { router.push("/quanlythinghiem/yeucauthinghiem/giaonhiemvu?code=" + formData.ma_yctn) }} label={"Bước tiếp theo   " + data.listBuocYCTN?.find(s => s.buoc === 2)?.ten_buoc_yctn} icon="pi pi-check" />}
             </div>
         </div>
     );

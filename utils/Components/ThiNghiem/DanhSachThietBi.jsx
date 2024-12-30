@@ -22,7 +22,7 @@ const DanhSachThietBi = ({ thongtinYCTN, ma_yctn }) => {
 
     useEffect(() => {
         setThietBiBanDau(thietBis.filter(thietBi => thietBi.trang_thai === 0));
-        setThietBiPhatSinh(thietBis.filter(thietBi => thietBi.trang_thai === 1));
+        setThietBiPhatSinh(thietBis.filter(thietBi => thietBi.trang_thai >0));
     }, [thietBis]);
 
     const getDM = async () => {
@@ -33,7 +33,6 @@ const DanhSachThietBi = ({ thongtinYCTN, ma_yctn }) => {
     }
     const getThietBis = async () => {
         const res = await QLTN_CHI_TIET_THI_NGHIEM_Service.getAll_TBTN_byMA_YCTN(ma_yctn);
-        console.log(res);
         setThietBis(res);
     }
 

@@ -59,12 +59,12 @@ const BanGiaoKetQua = () => {
   }, [thongTinYCTN]);
   
   return (
-    <>
+    <div className="border-round-3xl bg-white p-3">
       <Toast ref={toast} />
       <Head>
         <title>Bàn giao kết quả</title>
       </Head>
-      <Panel header={<h3 className="text-xl font-bold">Bàn giao kết quả</h3>}>
+      <Panel className="mt-3" header={<h3 className="text-xl font-bold">Bàn giao kết quả</h3>}>
         <FillThongTinYCTN
           Element={
             thongTinYCTN ? (
@@ -98,7 +98,7 @@ const BanGiaoKetQua = () => {
           </Panel>
         )}
       </Panel>
-    </>
+    </div>
   );
 };
 

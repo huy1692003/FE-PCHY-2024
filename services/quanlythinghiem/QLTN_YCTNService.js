@@ -12,7 +12,22 @@ const QLTN_YCTNService = {
       );
     }
   },
-
+  update: async (data) => {
+    try {
+      const res = await apiClient.post('/QLTN_YCTN/Update', data);
+      return res?.data;
+    } catch (error) {
+      throw new Error(error.response ? error.response.data : 'Error assigning YCTN');
+    }
+  },
+  delete: async (id) => {
+    try {
+      const res = await apiClient.delete('/QLTN_YCTN/Delete/'+ id);
+      return res?.data;
+    } catch (error) {
+      throw new Error(error.response ? error.response.data : 'Error assigning YCTN');
+    }
+  },
   // Giao nhiệm vụ yêu cầu thí nghiệm
   giao_nhiem_vu_YCTN: async (data) => {
     try {
@@ -37,7 +52,7 @@ const QLTN_YCTNService = {
     }
   },
 
- 
+
 
 
   get_QLTN_YCTN_ByMAYCTN: async (MA_YCTN) => {
@@ -52,36 +67,39 @@ const QLTN_YCTNService = {
       );
     }
   },
-  
-  
-    // Tìm kiếm theo mã YCTN
-    search_Ma_YCTN: async (maYCTN) => {
-        try {
-            const url = maYCTN ? `/QLTN_YCTN/SearchMaYCTN?maYCTN=${maYCTN}` : '/QLTN_YCTN/SearchMaYCTN';
-            const res = await apiClient.get(url);
-            return res?.data;
-        } catch (error) {
-            throw new Error(error.response ? error.response.data : 'Error searching YCTN');
-        }
-    },
+
+
+  // Tìm kiếm theo mã YCTN
+  search_Ma_YCTN: async (maYCTN) => {
+    try {
+      const url = maYCTN ? `/QLTN_YCTN/SearchMaYCTN?maYCTN=${maYCTN}` : '/QLTN_YCTN/SearchMaYCTN';
+      const res = await apiClient.get(url);
+      return res?.data;
+    } catch (error) {
+      throw new Error(error.response ? error.response.data : 'Error searching YCTN');
+    }
+  },
+
+
+  ban_giao_ket_qua_YCTN: async (data) => {
+    try {
+      const res = await apiClient.post('/QLTN_YCTN/BanGiaoKetQua', data);
+      return res?.data;
+    } catch (error) {
+      throw new Error(error.response ? error.response.data : 'Error assigning YCTN');
+    }
+  },
   
 
-    ban_giao_ket_qua_YCTN: async (data) => {
-        try {
-            const res = await apiClient.post('/QLTN_YCTN/BanGiaoKetQua', data);
-            return res?.data;
-        } catch (error) {
-            throw new Error(error.response ? error.response.data : 'Error assigning YCTN');
-        }
-    },
 
- 
 
-//   searchTerm: "",
-//   maLoaiYCTN: "",
-//   donViThucHien: "f22ccd97-2f27-4a7f-b2e3-912fee4e2476",
-//   pageIndex: 1,
-//   pageSize: 4,
+
+
+  //   searchTerm: "",
+  //   maLoaiYCTN: "",
+  //   donViThucHien: "f22ccd97-2f27-4a7f-b2e3-912fee4e2476",
+  //   pageIndex: 1,
+  //   pageSize: 4,
   get_DANH_SACH_YCTN: async (params) => {
     try {
       const res = await apiClient.post("/QLTN_YCTN/get_DANH_SACH_YCTN", params);

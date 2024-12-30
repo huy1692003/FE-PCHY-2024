@@ -209,6 +209,7 @@ const load_DANHMUC = async () => {
     <div className="border-round-3xl bg-tranpe p-3">
       <Panel headerTemplate={headerList}>
         <TableYCTN
+          toast={toast}
           loadYCTN={loadYCTN}
           dataYCTN={dataYCTN}
           totalRecords={totalRecords}        
