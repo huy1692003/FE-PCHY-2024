@@ -1,8 +1,20 @@
 .p-column-filter-menu-button {
-    color: white !important;
-    font-size: 1.5rem !important;
-  }
-  .p-sortable-column-icon {
-    color: white !important;
-    font-size: 1.5rem !important
-  }
+  color: white !important;
+  font-size: 1.5rem !important;
+}
+
+.p-sortable-column-icon {
+  color: white !important;
+  font-size: 1.5rem !important
+}
+
+.my-panel.completed .p-panel-header {
+  background-color: #e4f1d2 ;
+  color: #639c11; 
+}
+
+.my-panel.incomplete .p-panel-header {
+  background-color: #e5e5e5; 
+  color: #495057; 
+}
+

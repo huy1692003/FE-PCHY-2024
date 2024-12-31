@@ -16,18 +16,29 @@ import { Notification } from "../../../../utils/notification";
 
 const TableYCTN = ({ toast,loadYCTN, dataYCTN, totalRecords }) => {
   const router = useRouter();
-
   const [page, setPage] = useState(0);
   const [rows, setRows] = useState(5);
 
   const actionBodyTemplate = (rowData) => {
     return (
       <div className="flex gap-2">
+
         <Button size='small' className="w-1rem h-2rem p-3 mr-1" style={{ backgroundColor: "#1146A6" }} icon="pi pi-user-edit" onClick={() => router.push({
           pathname: '/quanlythinghiem/yeucauthinghiem/danhsach/updateYCTN',
           query: { code: rowData.ma_yctn ?? "" },
         })} tooltip='Chỉnh sửa' />
-        <Button size='small' className="w-1rem h-2rem p-3 mr-1" style={{ backgroundColor: "#1146A6" }} icon="pi pi-eye" tooltip='Xem chi tiết' />
+         <Button
+          icon="pi pi-eye"
+          rounded
+          outlined
+          className="mr-2"
+          onClick={() => {
+            router.push({
+              pathname: "/quanlythinghiem/yeucauthinghiem/chitiet",
+              query: { code: rowData.ma_yctn },
+            });
+          }}
+        />
         <Button size='small' className="w-1rem h-2rem p-3 mr-1" style={{ backgroundColor: "#1146A6" }} onClick={() => { handleDeleteYCTN(rowData.ma_yctn) }} icon="pi pi-trash" tooltip='Xóa ' />
       </div>
     );
@@ -67,6 +78,8 @@ const TableYCTN = ({ toast,loadYCTN, dataYCTN, totalRecords }) => {
 
 
 
+ 
+  //console.log('dataYCTN', dataYCTN);
 
 
 

@@ -26,6 +26,9 @@ const GiaoNhiemVu = () => {
     }, [thongTinYCTN]);
 
 
+    console.log('giao nhiem vu:', formData);
+
+
     const onSubmit = async () => {
         try {
             if (formData.file_dinh_kem_giao_nv) {
