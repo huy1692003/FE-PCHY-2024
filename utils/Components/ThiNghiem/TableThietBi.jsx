@@ -14,7 +14,7 @@ const TagStatus = ({ status }) => {
                 return "#1170E4"; // xanh dương - đang chờ ký
             case 2:
                 return "#13BFA6"; // xanh lá cây nhạt - đã ký
-            case 3:
+            case -1:
                 return "#E82646"; // đỏ nhạt - từ chối ký
             default:
                 return "#1170E4";
@@ -27,7 +27,7 @@ const TagStatus = ({ status }) => {
                 return "Thí nghiệm và Đang chờ ký";
             case 2:
                 return "Đã ký số";
-            case 3:
+            case -1:
                 return "Từ chối ký";
             default:
                 return "Đang chờ ký";
@@ -135,7 +135,7 @@ const TableThietBi = ({ thongtinYCTN, label, data, loaiThietBi, loaiBienBan, toa
                                             <span>
 
                                                 <Button onClick={() => openfileBienBan(urlServer + t.file_upload)} tooltip="Xem biên bản" style={{ color: "#13BFA6" }} icon={"fas fa-file-arrow-up"} className="p-button-text text-2xl hover:bg-green-600 hover:text-white" />
-                                                {t.trang_thai_ky === 1 && <Button tooltip="Thực hiện lại" onClick={() => setVisibleConfirm({ state: true, id: t.ma_chi_tiet_tn })} style={{ color: "#13BFA6" }} icon={"fas fa-history"} className="p-button-text text-2xl hover:bg-green-600 hover:text-white" />}
+                                                {t.trang_thai_ky <= 1  && <Button tooltip="Thực hiện lại" onClick={() => setVisibleConfirm({ state: true, id: t.ma_chi_tiet_tn })} style={{ color: "#13BFA6" }} icon={"fas fa-history"} className="p-button-text text-2xl hover:bg-green-600 hover:text-white" />}
                                             </span>
                                         }
                                     </td>

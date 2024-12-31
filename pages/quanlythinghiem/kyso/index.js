@@ -25,10 +25,10 @@ const statusList = [
     { keyword: -1, title: "Văn bản từ chối ký" },
 ];
 
-const processKySoList=[
-    {level: 1, title: "Ký nháy"},
-    {level: 2, title: "Ký trưởng phòng kỹ thuật"},
-    {level: 3, title: "Ký giám đốc"},
+const processKySoList = [
+    { level: 1, title: "Ký nháy" },
+    { level: 2, title: "Ký trưởng phòng kỹ thuật" },
+    { level: 3, title: "Ký giám đốc" },
 ]
 
 const rangeOptions = [
@@ -60,7 +60,7 @@ const Kyso = () => {
     const [dates, setDates] = useState(null);
     const [listDocument, setListDocument] = useState({ total: 1, items: [] });
     const [danhmuc, setDanhmuc] = useState({ donvi: [], loaibienban: [], trangthai: [] });
-    const [rangeOption, setRangeOption] = useState("30"); // Mặc định là "30 Ngày Trước"
+    const [rangeOption, setRangeOption] = useState("month"); // Mặc định là "30 Ngày Trước"
     const [paginate, setPaginate] = useState({ page: 1, pageSize: 10 });
     const [paramSearch, setParamSearch] = useState(initSearch);
     const toast = useRef(null);
@@ -74,9 +74,9 @@ const Kyso = () => {
     }, [currentStatus]);
 
     useEffect(() => {
-        const today = startOfToday();
-        let start = subDays(today, 30); // 30 ngày trước
-        const end = endOfToday();
+        let today = startOfToday();
+        let start = new Date(today.getFullYear(), today.getMonth(), 1);
+        let end = new Date(today.getFullYear(), today.getMonth() + 1, 0);
         setDates([start, end]);
 
         const getDanhMuc = async () => {
@@ -254,7 +254,7 @@ const Kyso = () => {
                         Tìm kiếm
                     </Button>
                 </div>
-                <TableDocument loading={loading} data={listDocument} />
+                <TableDocument loading={loading} refeshData={handleSearch} data={listDocument} />
             </Panel>
         </>
     );

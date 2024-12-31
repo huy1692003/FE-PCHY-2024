@@ -51,9 +51,8 @@ const CreateThiNghiemTB = ({ thongtinYCTN, stateDialog, thongtinThietBi, donVi, 
     const [dsNguoiKy, setDsNguoiKy] = useState(initNguoiKy)
 
     const soluong_conlai = useMemo(() => {
-        return thongtinThietBi.so_luong - thongtinThietBi.listTN.reduce((sum, item) => sum + item.soluong, 0);
+        return thongtinThietBi.so_luong - thongtinThietBi.listTN.reduce((sum, item) => sum + item.so_luong, 0);
     }, [thongtinThietBi]);
-
 
     useEffect(() => {
         getDM();
@@ -148,7 +147,7 @@ const CreateThiNghiemTB = ({ thongtinYCTN, stateDialog, thongtinThietBi, donVi, 
             return false;
         }
         if (formData.so_luong > soluong_conlai) {
-            showToast("error", "Số lượng thí nghiệm không hợp lệ", `Số lượng thí nghiệm phải nhỏ hơn hoặc bằng (${soluong_conlai})`)
+            showToast("error", "Số lượng thí nghiệm không hợp lệ", `Số lượng thí nghiệm không được vượt quá (${soluong_conlai})`)
             return false;
         }
         return true;
@@ -227,7 +226,7 @@ const CreateThiNghiemTB = ({ thongtinYCTN, stateDialog, thongtinThietBi, donVi, 
                 header="Thực hiện thí nghiệm thiết bị"
                 visible={stateDialog.visible}
                 onHide={() => stateDialog.setVisible(false)}
-                style={{ width: '80vw' }}
+                style={{ width: '90vw' }}
                 footer={renderFooter()}
                 maximizable
             >
@@ -310,7 +309,7 @@ const CreateThiNghiemTB = ({ thongtinYCTN, stateDialog, thongtinThietBi, donVi, 
                         <div className="grid">
                             <div className="col-6">
                                 <FormField
-                                    label="Số lượng thí nghiệm"
+                                    label={<span>Số lượng thí nghiệm <span className="text-red-600">(Còn lại {soluong_conlai}) </span></span>}
                                     id="so_luong"
                                     value={formData.so_luong}
                                     onChange={(id, e) => setFormData(prev => ({ ...prev, [id]: e }))}
@@ -345,7 +344,7 @@ const CreateThiNghiemTB = ({ thongtinYCTN, stateDialog, thongtinThietBi, donVi, 
                                         <span>Upload biên bản</span>
                                     </span>
                                 </label>
-                                <InputFile nameField="file_upload" setFormData={setFormData} />
+                                <InputFile nameField="file_upload" setFormData={setFormData} showPreview={true} />
                             </div>
                         </div>
                         <small className="text-gray-600 mt-4 text-lg block">

@@ -9,7 +9,17 @@ const QLTN_KYSO_Service = {
         } catch (error) {
             throw new Error(error.response ? error.response.data : 'Error creating NGUOI_KY_SO');
         }
+    },
+    update_TrangThai_Ky: async (data) => {
+        try {
+            const res = await apiClient.post(`/QLTN_KYSO/update_TrangThai_Ky`, data);
+            return res?.data;
+        } catch (error) {
+            console.log(error)
+        }
     }
 };
+
+
 
 export default QLTN_KYSO_Service;

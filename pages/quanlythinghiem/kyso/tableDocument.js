@@ -2,7 +2,7 @@ import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
-import React, { memo, useState } from 'react';
+import React, { memo, useRef, useState } from 'react';
 import { headerStyleColumn, propSortAndFilter } from '../../../constants/propGlobal';
 import { urlServer } from '../../../constants/api';
 import { InputText } from 'primereact/inputtext';
@@ -11,14 +11,15 @@ import { Steps } from 'primereact/steps'; // Import Steps từ PrimeReact
 import ViewKyso from './viewKyso';
 import { formatDateTime } from '../../../utils/FunctionFormart';
 import { ro } from 'date-fns/locale';
+import { Toast } from 'primereact/toast';
 
 
-const TableDocument = ({ data ,loading}) => {
+const TableDocument = ({ data, loading, refeshData }) => {
     const { total, items } = data
     console.log(items)
     const [dialogVisible, setDialogVisible] = useState(false);
     const [selectedDocument, setSelectedDocument] = useState(null);
-
+    const toast = useRef(null);
     // Định nghĩa render cho cột "Thao tác"
     const actionBodyTemplate = (rowData) => {
         return (
@@ -57,7 +58,8 @@ const TableDocument = ({ data ,loading}) => {
 
     return (
         <div className='w-full'>
-            <DataTable showGridlines value={items} loading={loading} responsiveLayout="scroll" >
+            <Toast ref={toast} />
+            <DataTable showGridlines value={items} responsiveLayout="scroll" >
                 {/* Cột STT */}
                 <Column headerStyle={headerStyleColumn} field="stt" header="STT" body={(rowData, { rowIndex }) => rowIndex + 1} />
 
@@ -85,7 +87,7 @@ const TableDocument = ({ data ,loading}) => {
                     headerStyle={headerStyleColumn}
                     field="ThongTinThietBi.TEN_TB"
                     header="Thông tin thiết bị"
-                    
+
                     body={(rowData) =>
                         <div className='px-1 ' >
                             <p className='mb-1 text-gray-700 text-base '><b className='font-semibold'>Mã loại thiết bị: </b> <span className='font-normal'>{rowData.ma_loaitb}</span></p>
@@ -102,8 +104,8 @@ const TableDocument = ({ data ,loading}) => {
                     headerStyle={headerStyleColumn}
                     field="don_vi_thuc_hien"
                     header="Đơn vị thực hiện"
-                    body={(row)=>{
-                       return row.don_vi_thuc_hien?.map(s=><span className='block'>{s}</span>)
+                    body={(row) => {
+                        return row.don_vi_thuc_hien?.map(s => <span className='block'>{s}</span>)
                     }}
                 />
 
@@ -115,9 +117,7 @@ const TableDocument = ({ data ,loading}) => {
                     header="Loại văn bản"
                 />
 
-                {/* Cột Trạng thái */}
                 <Column
-                    {...propSortAndFilter}
                     headerStyle={headerStyleColumn}
                     header="Trạng thái"
                     body={(rowData) =>
@@ -125,28 +125,44 @@ const TableDocument = ({ data ,loading}) => {
                             <p className='my-0'>1. Tạo bởi: {rowData.nguoi_tao} ({formatDateTime(rowData.ngaytao)}) </p>
                             <p className='my-0'>2. Ký nháy: 
                                 {rowData.list_NguoiKy.filter(s => s.nhom_nguoi_ky === 1)?.map((s, index) => {
-                                    return <>
-                                        <span className={s.trang_thai_ky === 0 ? "text-red-500" : "" + " m-0"}> {s.ten_dang_nhap} <span >({s.trang_thai_ky === 0 ? "Chưa ký " : formatDateTime(s.thoi_gian_ky)})</span></span><br />
-                                    </>
-                                })
-                                }
+                                    return <span className="ml-2">
+                                        <span className={s.trang_thai_ky === 0 ? "text-red-500" : s.trang_thai_ky === -1 ? "text-orange-500" : "" + " m-0"}>
+                                            {s.ten_dang_nhap+" "}
+                                            <span>
+                                                ({s.trang_thai_ky === 0 ? " Chưa ký " :
+                                                    s.trang_thai_ky === -1 ? " Từ chối ký " :
+                                                        formatDateTime(s.thoi_gian_ky)})
+                                            </span>
+                                        </span><br />
+                                    </span>
+                                })}
                             </p>
                             <p className='my-0'>3. Ký trưởng phòng kỹ thuật: {rowData.list_NguoiKy.filter(s => s.nhom_nguoi_ky === 2)?.map((s, index) => {
-                                return <>
-                                    <span className={s.trang_thai_ky === 0 ? "text-red-500" : "" + " m-0"}> {s.ten_dang_nhap} <span >({s.trang_thai_ky === 0 ? "Chưa ký " : formatDateTime(s.thoi_gian_ky)})</span></span><br />
-                                </>
-                            })
-                            }</p>
+                                return <span className="ml-2">
+                                    <span className={s.trang_thai_ky === 0 ? "text-red-500" : s.trang_thai_ky === -1 ? "text-orange-500" : "" + " m-0"}>
+                                        {s.ten_dang_nhap+" "}
+                                        <span className='inline-block'>
+                                            ({s.trang_thai_ky === 0 ? " Chưa ký " :
+                                                s.trang_thai_ky === -1 ? " Từ chối ký " :
+                                                    formatDateTime(s.thoi_gian_ky)})
+                                        </span>
+                                    </span><br />
+                                </span>
+                            })}</p>
                             <p className='my-0'>4. Ký giám đốc:{rowData.list_NguoiKy.filter(s => s.nhom_nguoi_ky === 3)?.map((s, index) => {
-                                return <>
-                                    <span className={s.trang_thai_ky === 0 ? "text-red-500" : "" + " m-0"}> {s.ten_dang_nhap} <span >({s.trang_thai_ky === 0 ? "Chưa ký " : formatDateTime(s.thoi_gian_ky)})</span></span><br />
-                                </>
-                            })
-                            } </p>
-
-
+                                return <span className="ml-2">
+                                    <span className={s.trang_thai_ky === 0 ? "text-red-500" : s.trang_thai_ky === -1 ? "text-orange-500" : "" + " m-0"}>
+                                        {s.ten_dang_nhap+" "}
+                                        <span>
+                                            ({s.trang_thai_ky === 0 ? "Chưa ký" :
+                                                s.trang_thai_ky === -1 ? "Từ chối ký" :
+                                                    formatDateTime(s.thoi_gian_ky)})
+                                        </span>
+                                    </span><br />
+                                </span>
+                            })} </p>
                         </div>
-                    } // Hiển thị mỗi trạng thái trên 1 hàng mới
+                    }
                 />
 
                 {/* Cột Thao tác */}
@@ -155,7 +171,9 @@ const TableDocument = ({ data ,loading}) => {
 
             {/* Dialog hiển thị PDF */}
 
-            {selectedDocument && <ViewKyso setShow={setDialogVisible} Detail={selectedDocument} Show={dialogVisible} />}
+            {selectedDocument && <ViewKyso 
+            toastParent={toast}
+            setShow={setDialogVisible} Detail={selectedDocument} Show={dialogVisible} refeshData={refeshData} />}
         </div >
     );
 };
