@@ -31,7 +31,7 @@ const DanhSachYCTN = () => {
   });
 
 
-  const loadYCTN = async (page = 1, rows = 10) => {
+  const loadYCTN = async (page = 1, rows = 20) => {
     try {
       const params = {
         searchTerm: filters.searchTerm || "",
@@ -52,6 +52,8 @@ const DanhSachYCTN = () => {
     }
   };
 
+
+  console.log('cpn index >> data YCTN:', dataYCTN);
 
 const load_DANHMUC = async () => {
   try {
@@ -194,7 +196,7 @@ const load_DANHMUC = async () => {
           <Button
               label="Tìm kiếm"
               style={{ backgroundColor: "#1445a7" }}
-              onClick={loadYCTN}
+              onClick={() => loadYCTN(1, filters.limit)}
             />
           </div>
         </Panel>

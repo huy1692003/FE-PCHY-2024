@@ -26,3 +26,21 @@ export const formatPrice = (amount) => {
     .format(amount)
     .replace("₫", "VNĐ"); // Thay thế ký hiệu ₫ thành VNĐ
 };
+
+export const convertToDate = (dateInput) => {
+  // Kiểm tra nếu dateInput đã là đối tượng Date hợp lệ
+  if (dateInput instanceof Date && !isNaN(dateInput)) {
+    return dateInput;  // Nếu là Date hợp lệ, trả về nguyên vẹn
+  }
+
+  // Nếu không phải Date, chuyển đổi từ datetime (YYYY-MM-DD HH:mm:ss) thành đối tượng Date
+  const date = new Date(dateInput);  // Chuyển đổi chuỗi thành Date
+
+  // Kiểm tra nếu việc chuyển đổi đã thành công (Ngày hợp lệ)
+  if (!isNaN(date)) {
+    return date;
+  }
+
+  // Nếu không hợp lệ, trả về null hoặc giá trị mặc định
+  return null;
+}

@@ -13,7 +13,6 @@ import { Badge } from "primereact/badge";
 
 const TableYCTN = ({ loadYCTN, dataYCTN, totalRecords  }) => {
   const router = useRouter();
-
   const [page, setPage] = useState(0);
   const [rows, setRows] = useState(5);
 
@@ -21,11 +20,16 @@ const TableYCTN = ({ loadYCTN, dataYCTN, totalRecords  }) => {
     return (
       <div className="flex gap-2">
         <Button
-          icon="pi pi-pencil"
+          icon="pi pi-eye"
           rounded
           outlined
           className="mr-2"
-          onClick={() => {}}
+          onClick={() => {
+            router.push({
+              pathname: "/quanlythinghiem/yeucauthinghiem/chitiet",
+              query: { code: rowData.ma_yctn },
+            });
+          }}
         />
         <Button
           icon="pi pi-trash"
@@ -63,7 +67,7 @@ const TableYCTN = ({ loadYCTN, dataYCTN, totalRecords  }) => {
 
 
  
-
+  console.log('dataYCTN', dataYCTN);
 
 
 

@@ -14,6 +14,7 @@ import ThongTinYCTN from "../../../../utils/Components/ListFieldYCTN/ThongTinYCT
 const KhaoSatPhuongAn = () => {
   const { ma_yctn, thongTinYCTN } = useThongTinYCTN();
   //console.log(thongTinYCTN);
+  const router = useRouter();
 
   const [formData, setFormData] = useState({
     file_pa_thi_cong: null,
@@ -108,6 +109,11 @@ const KhaoSatPhuongAn = () => {
                         <Button
                           label="Bước tiếp theo : Thuc hien thi nghiem"
                           icon="pi pi-arrow-right"
+                          onClick={() => {
+                            router.push(
+                              `/quanlythinghiem/thuchienthinghiem/thinghiem/list?code=${ma_yctn}`
+                            );
+                          }}
                         />
                       ) : (
                         <Button

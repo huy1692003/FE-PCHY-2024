@@ -4,6 +4,7 @@ import InputFile from "../InputFile";
 import { get_All_DM_DONVI } from "../../../services/quantrihethong/DM_DONVIService";
 import { MultiSelect } from "primereact/multiselect";
 import { urlServer } from "../../../constants/api";
+import { convertToDate, formatDateForField, formatDateTime } from "../../FunctionFormart";
 
 const FieldGiaoNV = ({ formData, setFormData }) => {
     const [donVi, setDonVi] = useState([]);
@@ -19,6 +20,7 @@ const FieldGiaoNV = ({ formData, setFormData }) => {
         setDonVi(res);
     }
 
+
     useEffect(() => {
         if (formData.file_dinh_kem_giao_nv && formData.crr_step===2) {
             let file = urlServer + formData.file_dinh_kem_giao_nv;
@@ -27,6 +29,10 @@ const FieldGiaoNV = ({ formData, setFormData }) => {
         }
     }, [formData.file_dinh_kem_giao_nv, formData.crr_step]);
 
+
+    //console.log('da chuyen doi', formatDateTime(formData?.ngay_giao_nv));
+    console.log('days: ', convertToDate(formData?.ngay_giao_nv));
+    
     return (
         <div>
             <div className="flex gap-4">
@@ -83,7 +89,7 @@ const FieldGiaoNV = ({ formData, setFormData }) => {
                     <FormField
                         label="Ngày giao nhiệm vụ"
                         id="ngay_giao_nv"
-                        value={formData.ngay_giao_nv}
+                        value={convertToDate(formData?.ngay_giao_nv)}
                         onChange={(id, value) => setFormData(prev => ({ ...prev, [id]: value }))}
                         isCalendar
                     />
