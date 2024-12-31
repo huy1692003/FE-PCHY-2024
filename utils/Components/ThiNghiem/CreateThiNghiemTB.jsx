@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef, useState } from "react";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
 import { Panel } from "primereact/panel";
 import { Dialog } from "primereact/dialog";
 import { FormField } from "../ListFieldYCTN/FieldAddYCTN";
@@ -16,7 +16,8 @@ import QLTN_CHI_TIET_THI_NGHIEM_Service from "../../../services/quanlythinghiem/
 import UploadFileService from "../../../services/UploadFileService";
 import QLTN_NGUOI_KY_Service from "../../../services/quanlythinghiem/QLTN_NGUOI_KY_Service";
 import { Toast } from "primereact/toast";
-const initNguoiKy=[
+import { th } from "date-fns/locale";
+const initNguoiKy = [
     {
         cap: 1,
         ten_cap: "Ký nháy",
@@ -35,7 +36,6 @@ const initNguoiKy=[
 ]
 const CreateThiNghiemTB = ({ thongtinYCTN, stateDialog, thongtinThietBi, donVi, refeshData, toastCurrent }) => {
 
-    console.log(thongtinThietBi.listTN.length + 1)
     // Chi tiết thí nghiệm
     const [formData, setFormData] = useState(
         {
@@ -50,8 +50,11 @@ const CreateThiNghiemTB = ({ thongtinYCTN, stateDialog, thongtinThietBi, donVi, 
     const toast = useRef(null)
     const [dsNguoiKy, setDsNguoiKy] = useState(initNguoiKy)
 
+    const soluong_conlai = useMemo(() => {
+        return thongtinThietBi.so_luong - thongtinThietBi.listTN.reduce((sum, item) => sum + item.soluong, 0);
+    }, [thongtinThietBi]);
 
-    console.log(formData)
+
     useEffect(() => {
         getDM();
     }, []);
@@ -65,9 +68,25 @@ const CreateThiNghiemTB = ({ thongtinYCTN, stateDialog, thongtinThietBi, donVi, 
                 nguoi_tao: JSON.parse(sessionStorage.getItem("user")).ten_dang_nhap,
                 lanthu: thongtinThietBi.listTN.length ? thongtinThietBi.listTN.length + 1 : 1
             })
-            setDsNguoiKy(initNguoiKy)
+            setDsNguoiKy([
+                {
+                    cap: 1,
+                    ten_cap: "Ký nháy",
+                    nguoi_ky: []
+                },
+                {
+                    cap: 2,
+                    ten_cap: "Trưởng phòng kỹ thuật ký",
+                    nguoi_ky: null
+                },
+                {
+                    cap: 3,
+                    ten_cap: "Giám đốc ký",
+                    nguoi_ky: null
+                }
+            ])
         }
-    }, [stateDialog])
+    }, [stateDialog.visible])
 
     const getDM = async () => {
         const res = await DM_LOAI_BIENBAN_Service.getAllDM_LOAI_BIENBAN();
@@ -118,7 +137,9 @@ const CreateThiNghiemTB = ({ thongtinYCTN, stateDialog, thongtinThietBi, donVi, 
     }
 
     function validateInforCTTN() {
-        if (!formData.ma_loai_bb || !formData.ngay_tt_tn || !formData.file_upload) {
+        if (!formData.ma_loai_bb || !formData.ngay_tt_tn || !formData.file_upload || !formData.so_luong) {
+
+
             showToast(
                 "error",
                 "Chưa nhập đầy đủ thông tin",
@@ -126,9 +147,10 @@ const CreateThiNghiemTB = ({ thongtinYCTN, stateDialog, thongtinThietBi, donVi, 
             );
             return false;
         }
-
-
-
+        if (formData.so_luong > soluong_conlai) {
+            showToast("error", "Số lượng thí nghiệm không hợp lệ", `Số lượng thí nghiệm phải nhỏ hơn hoặc bằng (${soluong_conlai})`)
+            return false;
+        }
         return true;
     }
 
@@ -138,7 +160,6 @@ const CreateThiNghiemTB = ({ thongtinYCTN, stateDialog, thongtinThietBi, donVi, 
         let kythuat = listNguoiKy.filter(s => s.nhom_nguoi_ky === 2);
         let giamdoc = listNguoiKy.filter(s => s.nhom_nguoi_ky === 3);
 
-        console.log(kinhays, kythuat, giamdoc)
         if (kinhays.length < 1 || kythuat.length < 1 || giamdoc.length < 1) {
             showToast(
                 "error",
@@ -150,7 +171,6 @@ const CreateThiNghiemTB = ({ thongtinYCTN, stateDialog, thongtinThietBi, donVi, 
 
         return true;
     }
-    console.log(formData)
     // Lưu chi tiết thí nghiệm nên database
     const handleSaveCT_TN = async () => {
         try {
@@ -161,7 +181,7 @@ const CreateThiNghiemTB = ({ thongtinYCTN, stateDialog, thongtinThietBi, donVi, 
                     let resUpload = await UploadFileService.file(formData.file_upload, "fileBBTN")
                     formData.file_upload = resUpload.filePath
                 }
-                let created = await QLTN_CHI_TIET_THI_NGHIEM_Service.insert_QLTN_CHI_TIET_THI_NGHIEM({ ...formData, so_luong: formData.so_luong || 0, ma_loai_bb: formData.ma_loai_bb + "" })
+                let created = await QLTN_CHI_TIET_THI_NGHIEM_Service.insert_QLTN_CHI_TIET_THI_NGHIEM({ ...formData, ma_loai_bb: formData.ma_loai_bb + "" })
 
                 if (created) {
                     let nguoi_ky = mapNguoiKy(dsNguoiKy, created.ma_chi_tiet_tn)
@@ -182,7 +202,6 @@ const CreateThiNghiemTB = ({ thongtinYCTN, stateDialog, thongtinThietBi, donVi, 
     }
 
 
-    console.log(dsNguoiKy)
     // Tạo mảng người ký gồm id và cấp
     function mapNguoiKy(dsNguoiKy, ma_chi_tiet_tn) {
         return dsNguoiKy.flatMap(item => {
@@ -190,6 +209,7 @@ const CreateThiNghiemTB = ({ thongtinYCTN, stateDialog, thongtinThietBi, donVi, 
             return dsResult.map(id => ({ id_nguoi_ky: id, nhom_nguoi_ky: item.cap, ma_chi_tiet_tn, trang_thai_ky: 0 }));
         });
     }
+
 
 
     const renderFooter = () => {
@@ -293,7 +313,7 @@ const CreateThiNghiemTB = ({ thongtinYCTN, stateDialog, thongtinThietBi, donVi, 
                                     label="Số lượng thí nghiệm"
                                     id="so_luong"
                                     value={formData.so_luong}
-                                    onChange={(id,e)=>setFormData(prev => ({ ...prev, [id] : e }))}
+                                    onChange={(id, e) => setFormData(prev => ({ ...prev, [id]: e }))}
                                     isNumber
                                     childrenIPNumber={""}
                                 />
@@ -351,6 +371,8 @@ const CreateThiNghiemTB = ({ thongtinYCTN, stateDialog, thongtinThietBi, donVi, 
                                         headerStyle={{ display: "flex", justifyContent: "center" }}
                                         body={(rowData, { rowIndex }) => (
                                             <Dropdown
+                                                virtualScroll
+                                                itemSize={38}
                                                 placeholder="-- Mời chọn --"
                                                 filter
                                                 value={rowData}
@@ -385,6 +407,8 @@ const CreateThiNghiemTB = ({ thongtinYCTN, stateDialog, thongtinThietBi, donVi, 
                                         <Dropdown
                                             placeholder="-- Mời chọn --"
                                             filter
+                                            virtualScroll
+                                            itemSize={38}
                                             value={nguoiKy.nguoi_ky}
                                             options={users}
                                             optionLabel={(option) => `${option.hO_TEN} - [ ${option.teN_DANG_NHAP} ]`}

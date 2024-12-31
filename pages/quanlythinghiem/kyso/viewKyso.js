@@ -85,6 +85,8 @@ const ViewKySo = ({ Show, setShow, Detail }) => {
             closable={false}
             style={{ width: '90%', minHeight: '88vh' }}
             header={dialogHeader}
+            maximizable
+            
             onHide={() => setShow(false)}
         >
             {file_upload && (

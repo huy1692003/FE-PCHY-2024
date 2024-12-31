@@ -69,6 +69,7 @@ const FieldBanGiaKQ = ({ thongTinYCTN, formData, setFormData }) => {
             }
             options={donVi}
             optionLabel="ten"
+            display="chip"
             optionValue="id"
             placeholder="Chọn đơn vị"
             filter

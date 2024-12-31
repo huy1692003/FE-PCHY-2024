@@ -100,6 +100,7 @@ const FieldGiaoNV = ({ formData, setFormData }) => {
                         value={formData?.don_vi_thuc_hien || []}
                         onChange={(e) => setFormData(prev => ({ ...prev, don_vi_thuc_hien: e.value }))}
                         options={donVi}
+                        display="chip"
                         optionLabel="ten"
                         optionValue="id"
                         placeholder="Chọn đơn vị thực hiện"
