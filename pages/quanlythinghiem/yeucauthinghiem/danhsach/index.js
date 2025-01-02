@@ -31,7 +31,7 @@ const DanhSachYCTN = () => {
   });
 
 
-  const loadYCTN = async (page = 1, rows = 10) => {
+  const loadYCTN = async (page = 1, rows = 20) => {
     try {
       const params = {
         searchTerm: filters.searchTerm || "",
@@ -52,6 +52,8 @@ const DanhSachYCTN = () => {
     }
   };
 
+
+  console.log('cpn index >> data YCTN:', dataYCTN);
 
 const load_DANHMUC = async () => {
   try {
@@ -106,7 +108,7 @@ const load_DANHMUC = async () => {
                 onChange={(e) =>
                   setFilters({ ...filters, searchTerm: e.target.value })
                 }
-                placeholder="Nhập...."
+                placeholder=""
                 type="search"
               />
             </div>
@@ -115,11 +117,11 @@ const load_DANHMUC = async () => {
               <label className="block mb-2">Loại hình dịch vụ</label>
               <Dropdown
                 className="w-full"
-                value={filters.maLoaiYCTN}
+                value={filters.maLoaiYCTN===""?null:filters.maLoaiYCTN}
                 onChange={(e) =>
                   setFilters({ ...filters, maLoaiYCTN: e.value })
                 }
-                placeholder="Chọn"
+                placeholder="-- Mời chọn --"
                 filter
                 showClear
                 options={[
@@ -137,13 +139,13 @@ const load_DANHMUC = async () => {
               <label className="block mb-2">Đơn vị thực hiện</label>
               <Dropdown
                 className="w-full"
-                value={filters.donViThucHien}
+                value={filters.donViThucHien===""?null:filters.donViThucHien}
                 onChange={(e) =>
                   setFilters({ ...filters, donViThucHien: e.value })
                 }
                 filter
                 showClear
-                placeholder="Chọn"
+                placeholder="-- Mời chọn --"
                 options={dmDonVi.map((item) => ({
                   label: item.ten,
                   value: item.id,
@@ -155,11 +157,11 @@ const load_DANHMUC = async () => {
               <label className="block mb-2">Khách hàng</label>
               <Dropdown
                 className="w-full"
-                value={filters.idKhachHang}
+                value={filters.idKhachHang===""?null:filters.idKhachHang}
                 onChange={(e) =>
                   setFilters({ ...filters, idKhachHang: e.value })
                 }
-                placeholder="Chọn"
+                placeholder="-- Mời chọn --"
                 filter
                 showClear
                 options={dmKhachHang.map((item) => ({
@@ -173,9 +175,9 @@ const load_DANHMUC = async () => {
               <label className="block mb-2">Trạng thái</label>
               <Dropdown
                 className="w-full"
-                value={filters.crrStep}
+                value={filters.crrStep===""?null:filters.crrStep}
                 onChange={(e) => setFilters({ ...filters, crrStep: e.value })}
-                placeholder="Chọn"
+                placeholder="-- Mời chọn --"
                 filter
                 showClear
                 options={[
@@ -194,7 +196,7 @@ const load_DANHMUC = async () => {
           <Button
               label="Tìm kiếm"
               style={{ backgroundColor: "#1445a7" }}
-              onClick={loadYCTN}
+              onClick={() => loadYCTN(1, filters.limit)}
             />
           </div>
         </Panel>

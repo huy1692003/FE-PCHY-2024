@@ -49,8 +49,8 @@ const FieldKhaoSatPA = ({
     }, []);
 
 
-    console.log('dm_KH',dm_KH);
-
+    // console.log('dm_KH',dm_KH);
+    console.log('ngay lap pa:', formData.ngay_ks_lap_pa_thi_cong);
   return (
     <div>
       <InputFile

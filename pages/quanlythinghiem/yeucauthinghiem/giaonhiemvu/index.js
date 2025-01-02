@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef, useState } from "react";
+import { memo, useContext, useEffect, useRef, useState } from "react";
 import { Panel } from "primereact/panel";
 import Head from "next/head";
 import FillThongTinYCTN from "../../../../utils/Components/FilterYCTN/FillThongTinYCTN";
@@ -12,6 +12,7 @@ import { Button } from "primereact/button";
 import UploadFileService from "../../../../services/UploadFileService";
 import { Toast } from "primereact/toast";
 import { Notification } from "../../../../utils/notification";
+import { MyContext } from "../../../../context/dataContext";
 const GiaoNhiemVu = () => {
 
 
@@ -19,11 +20,15 @@ const GiaoNhiemVu = () => {
     const [formData, setFormData] = useState(QLTN_YCTN);
     const user = JSON.parse(sessionStorage.getItem("user"))?.ten_dang_nhap || "";
     const toast = useRef(null);
+    const { data } = useContext(MyContext)
     useEffect(() => {
         if (thongTinYCTN) {
             setFormData({ ...thongTinYCTN, nguoi_giao_nhiem_vu: formData?.nguoi_giao_nhiem_vu || user, ngay_giao_nv: new Date() });
         }
     }, [thongTinYCTN]);
+
+
+    console.log('giao nhiem vu:', formData);
 
 
     const onSubmit = async () => {
@@ -60,7 +65,7 @@ const GiaoNhiemVu = () => {
                     {
                         thongTinYCTN &&
                         <div>
-                            {thongTinYCTN?.crr_step === 2 ? <Button label="Bước tiếp theo : Nhập khối lượng thực hiện" icon="pi pi-arrow-right" /> : <Button label="Lưu" icon="pi pi-save" onClick={onSubmit} />}
+                            {thongTinYCTN?.crr_step === 2 ? <Button onClick={() => { router.push("/quanlythinghiem/yeucauthinghiem/nhapkhoiluongthuchien?code=" + formData?.ma_yctn) }} label={"Bước tiếp theo   " + data.listBuocYCTN?.find(s => s.buoc === 3)?.ten_buoc_yctn} icon="pi pi-arrow-right" /> : <Button label="Lưu" icon="pi pi-save" onClick={onSubmit} />}
                         </div>
                     }
                 </div>

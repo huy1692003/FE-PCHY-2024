@@ -8,13 +8,10 @@ const FieldBanGiaKQ = ({ thongTinYCTN, formData, setFormData }) => {
   const [donVi, setDonVi] = useState([]);
 
   const user = JSON.parse(sessionStorage.getItem("user"))?.ten_dang_nhap || "";
- 
 
-
-  console.log(thongTinYCTN)
   useEffect(() => {
     getDonVi();
-  }, []); 
+  }, []);
 
   const getDonVi = async () => {
     const res = await get_All_DM_DONVI();
@@ -27,7 +24,7 @@ const FieldBanGiaKQ = ({ thongTinYCTN, formData, setFormData }) => {
           <FormField
             label="Người bàn giao kết quả"
             id="nguoi_ban_giao"
-            value={formData?.nguoi_ban_giao||user}
+            value={formData?.nguoi_ban_giao || user}
             onChange={(id, value) =>
               setFormData((prev) => ({ ...prev, [id]: value }))
             }
@@ -63,9 +60,9 @@ const FieldBanGiaKQ = ({ thongTinYCTN, formData, setFormData }) => {
             Đơn vị bàn giao
           </label>
           <MultiSelect
-            value={formData?.don_vi_thuc_hien || []}
+            value={donVi.length > 0 && formData?.don_vi_nhan_ban_giao || []}
             onChange={(e) =>
-              setFormData((prev) => ({ ...prev, don_vi_thuc_hien: e.value }))
+              setFormData((prev) => ({ ...prev, don_vi_nhan_ban_giao: e.value }))
             }
             options={donVi}
             optionLabel="ten"

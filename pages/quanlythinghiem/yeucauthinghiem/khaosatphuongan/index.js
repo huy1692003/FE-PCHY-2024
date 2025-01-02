@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef, useContext } from "react";
 import { Toast } from "primereact/toast";
 import { Panel } from "primereact/panel";
 import { Button } from "primereact/button";
@@ -10,11 +10,13 @@ import UploadFileService from "../../../../services/UploadFileService"; // Impor
 import QLTN_YCTNService from "../../../../services/quanlythinghiem/QLTN_YCTNService";
 import FieldKhaoSatPA from "../../../../utils/Components/ListFieldYCTN/FieldKhaoSatPA";
 import ThongTinYCTN from "../../../../utils/Components/ListFieldYCTN/ThongTinYCTN";
+import { MyContext } from "../../../../context/dataContext";
 
 const KhaoSatPhuongAn = () => {
   const { ma_yctn, thongTinYCTN } = useThongTinYCTN();
   //console.log(thongTinYCTN);
-
+  const router = useRouter();
+  const { data } = useContext(MyContext)
   const [formData, setFormData] = useState({
     file_pa_thi_cong: null,
     nguoi_th_ks_lap_pa_thi_cong: null,
@@ -50,16 +52,21 @@ const KhaoSatPhuongAn = () => {
           ...prevState,
           file_pa_thi_cong: filePath,
         }));
-  }
+      }
 
       await QLTN_YCTNService.khao_sat_phuong_an_YCTN({
         ma_yctn,
-        file_pa_thi_cong: filePath, 
+        file_pa_thi_cong: filePath,
         nguoi_th_ks_lap_pa_thi_cong: formData.nguoi_th_ks_lap_pa_thi_cong,
         ngay_ks_lap_pa_thi_cong: formData.ngay_ks_lap_pa_thi_cong,
       });
 
       toast.current.show({ severity: "success", summary: "Lưu thành công" });
+      setFormData((prevState) => ({
+        ...prevState,
+        crr_step: 4,
+      }));
+    
     } catch (error) {
       console.error("Lỗi khi lưu dữ liệu:", error);
     }
@@ -94,20 +101,25 @@ const KhaoSatPhuongAn = () => {
                 formData={thongTinYCTN}
               >
                 <br className="mt-2"></br>
-               <Panel header={<p  className="text-base font-bold">Lập phương án thi công</p>}>
-               <FieldKhaoSatPA
-                  formData={formData}
-                  setFormData={setFormData}
-                  handleChange={handleChange}
-                />
-               </Panel>
+                <Panel header={<p className="text-base font-bold">Lập phương án thi công</p>}>
+                  <FieldKhaoSatPA
+                    formData={formData}
+                    setFormData={setFormData}
+                    handleChange={handleChange}
+                  />
+                </Panel>
                 <div className="flex justify-content-end mt-6">
                   {thongTinYCTN && (
                     <div>
                       {thongTinYCTN?.crr_step === 4 ? (
                         <Button
-                          label="Bước tiếp theo : Thuc hien thi nghiem"
+                          label={"Bước tiếp theo   " + data.listBuocYCTN?.find(s => s.buoc === 4)?.ten_buoc_yctn}
                           icon="pi pi-arrow-right"
+                          onClick={() => {
+                            router.push(
+                              `/quanlythinghiem/thuchienthinghiem/thinghiem/list?code=${ma_yctn}`
+                            );
+                          }}
                         />
                       ) : (
                         <Button
@@ -239,7 +251,7 @@ export default KhaoSatPhuongAn;
 
 //       await QLTN_YCTNService.khao_sat_phuong_an_YCTN({
 //         ma_yctn,
-//         file_pa_thi_cong: filePath, 
+//         file_pa_thi_cong: filePath,
 //         nguoi_th_ks_lap_pa_thi_cong: formData.nguoi_th_ks_lap_pa_thi_cong,
 //         ngay_ks_lap_pa_thi_cong: formData.ngay_ks_lap_pa_thi_cong,
 //       });

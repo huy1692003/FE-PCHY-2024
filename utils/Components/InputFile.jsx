@@ -84,6 +84,7 @@ const InputFile = ({ onChange, label = "Upload file", className, nameField, setF
                         className="hidden"
                     />
                     <Button
+                        tooltipOptions={{position:"bottom"}}
                         tooltip="Nhấn vào để thay đổi File"
                         onClick={() => fileInputRef.current.click()}
                         severity="info"

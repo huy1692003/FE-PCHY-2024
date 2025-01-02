@@ -14,21 +14,44 @@ import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import QLTN_YCTNService from "../../../../services/quanlythinghiem/QLTN_YCTNService";
 import { Notification } from "../../../../utils/notification";
 
-const TableYCTN = ({ toast,loadYCTN, dataYCTN, totalRecords }) => {
-  const router = useRouter();
+const urlRedirect = [
+  { i: 2, url: "/quanlythinghiem/yeucauthinghiem/giaonhiemvu" },
+  { i: 3, url: "/quanlythinghiem/yeucauthinghiem/nhapkhoiluongthuchien" },
+  { i: 4, url: "/quanlythinghiem/yeucauthinghiem/khaosatphuongan" },
+  { i: 5, url: "/quanlythinghiem/thuchienthinghiem/thinghiem/list" },
+  { i: 6, url: "/quanlythinghiem/thuchienthinghiem/bangiaoketqua" },
+]
 
+const TableYCTN = ({ toast, loadYCTN, dataYCTN, totalRecords }) => {
+  const router = useRouter();
   const [page, setPage] = useState(0);
   const [rows, setRows] = useState(5);
 
   const actionBodyTemplate = (rowData) => {
     return (
-      <div className="flex gap-2">
-        <Button size='small' className="w-1rem h-2rem p-3 mr-1" style={{ backgroundColor: "#1146A6" }} icon="pi pi-user-edit" onClick={() => router.push({
-          pathname: '/quanlythinghiem/yeucauthinghiem/danhsach/updateYCTN',
-          query: { code: rowData.ma_yctn ?? "" },
-        })} tooltip='Chỉnh sửa' />
-        <Button size='small' className="w-1rem h-2rem p-3 mr-1" style={{ backgroundColor: "#1146A6" }} icon="pi pi-eye" tooltip='Xem chi tiết' />
-        <Button size='small' className="w-1rem h-2rem p-3 mr-1" style={{ backgroundColor: "#1146A6" }} onClick={() => { handleDeleteYCTN(rowData.ma_yctn) }} icon="pi pi-trash" tooltip='Xóa ' />
+      <div className="grid gap-1 justify-content-center">
+        
+        <Button
+          icon="pi pi-eye"
+          tooltip="Xem chi tiết"
+          style={{ backgroundColor: "#1146A6" }}
+          className="w-1rem h-2rem p-3 mr-1"
+          onClick={() => {
+            router.push({
+              pathname: "/quanlythinghiem/yeucauthinghiem/chitiet",
+              query: { code: rowData.ma_yctn },
+            });
+          }}
+        />
+        {
+          rowData.cur_step === 1 && <>
+            <Button size='small' className="w-1rem h-2rem p-3 mr-1" style={{ backgroundColor: "#1146A6" }} icon="pi pi-user-edit" onClick={() => router.push({
+              pathname: '/quanlythinghiem/yeucauthinghiem/danhsach/updateYCTN',
+              query: { code: rowData.ma_yctn ?? "" },
+            })} tooltip='Chỉnh sửa' />
+            <Button size='small' className="w-1rem h-2rem p-3 mr-1" style={{ backgroundColor: "#1146A6" }} onClick={() => { handleDeleteYCTN(rowData.ma_yctn) }} icon="pi pi-trash" tooltip='Xóa ' />
+          </>
+        }
       </div>
     );
   };
@@ -40,7 +63,7 @@ const TableYCTN = ({ toast,loadYCTN, dataYCTN, totalRecords }) => {
       icon: 'pi pi-exclamation-triangle',
       accept: async () => {
         await QLTN_YCTNService.delete(ma_YCTN);
-        Notification.success(toast,'Xóa thành công '+ ma_YCTN);
+        Notification.success(toast, 'Xóa thành công ' + ma_YCTN);
         loadYCTN()
       },
       reject: () => {
@@ -67,6 +90,8 @@ const TableYCTN = ({ toast,loadYCTN, dataYCTN, totalRecords }) => {
 
 
 
+
+  //console.log('dataYCTN', dataYCTN);
 
 
 
@@ -99,6 +124,7 @@ const TableYCTN = ({ toast,loadYCTN, dataYCTN, totalRecords }) => {
           bodyStyle={{ textAlign: "center" }}
         ></Column>
         <Column
+          style={{ minWidth: 300 }}
           headerStyle={headerStyleColumn}
           {...propSortAndFilter}
           body={(rowData) => {
@@ -134,29 +160,26 @@ const TableYCTN = ({ toast,loadYCTN, dataYCTN, totalRecords }) => {
           header={headerTemplate("Đơn vị thực hiện")}
           body={(rowData) => {
             return (
-              <ul>
-                {rowData.don_vi_thuc_hien.map((donVi, index) => (
-                  <li key={`${donVi}-${index}`}>{donVi}</li>
-                ))}
-              </ul>
+              <div className="text-center"> {
+                rowData.don_vi_thuc_hien?.length > 0 ?
+                  <ul className="pl-0">
+                    {rowData.don_vi_thuc_hien.map((donVi, index) => (
+                      <p className="my-0 mx-0" key={`${donVi}-${index}`}>{donVi}</p>
+                    ))}
+                  </ul> : "Chưa cập nhật"}
+              </div>
             );
           }}
         ></Column>
         <Column
           headerStyle={headerStyleColumn}
           {...propSortAndFilter}
+          headerClassName="max-w-4"
+          style={{ maxWidth: 150 }}
           field="thongTinKhoiTao"
           body={(rowData) => {
             return (
-              <>
-                <div>
-                  Đơn vị khởi tạo:{" "}
-                  <ul>
-                    {rowData.don_vi_thuc_hien.map((donVi, index) => (
-                      <li key={`${donVi}-${index}`}>{donVi}</li>
-                    ))}
-                  </ul>
-                </div>
+              <div >
                 <div>
                   Ngày tạo:{" "}
                   <strong>{moment(rowData.ngayTao).format("DD/MM/YYYY")}</strong>
@@ -164,39 +187,55 @@ const TableYCTN = ({ toast,loadYCTN, dataYCTN, totalRecords }) => {
                 <div>
                   Người tạo: <strong>{rowData.nguoi_tao}</strong>
                 </div>
-              </>
+              </div>
             );
           }}
-          header={headerTemplate("Thông tin khởi tạo")}
+          header={"Thông tin khởi tạo"}
         ></Column>
         <Column
           headerStyle={headerStyleColumn}
           {...propSortAndFilter}
           field="trangThai"
           header={headerTemplate("Trạng thái")}
-          body={(rowData) => (
-            <div className="flex flex-column align-items-center gap-2">
+          body={(rowData) => {
+
+            console.log(rowData)
+            return <div className="flex flex-column align-items-center gap-2">
               <Badge
-                value={rowData.ten_buoc_current}
-                className="bg-green-500 text-white text-sm  font-semibold p-2 "
+                onClick={() => {
+                  if (rowData.cur_step === 5) {
+                    const url = urlRedirect.find(s => s.i === rowData.cur_step)?.url;
+                    router.push({ pathname: url, query: { code: rowData.ma_yctn ?? "" } });
+                  }
+                }}
+
+                value={(rowData.cur_step === 5 ? "Đang " : "Đã hoàn thành: ") + rowData.ten_buoc_current}
+                className="bg-green-500 text-white text-sm  font-semibold p-2 min-w-full "
                 style={{ height: 'auto', whiteSpace: 'normal' }}
               />
               {rowData.ten_buoc_next && (
                 <Badge
+                  onClick={() => {
+                    let url = urlRedirect.find(s => s.i === rowData.nex_step)?.url
+                    router.push({ pathname: url, query: { code: rowData.ma_yctn ?? "" }, })
+                  }
+                  }
                   value={`Bước tiếp theo: ${rowData.ten_buoc_next}`}
-                  className="bg-blue-500 text-white font-semibold text-sm  p-2"
+                  className="bg-blue-500 text-white font-semibold text-sm min-w-full p-2"
                   style={{ height: 'auto', whiteSpace: 'normal' }}
                 />
               )}
             </div>
-          )}
+
+          }}
         ></Column>
 
 
         <Column
           headerStyle={headerStyleColumn}
-          header={headerTemplate("Thao tác")}
+          header={"Thao tác"}
           body={actionBodyTemplate}
+          style={{maxWidth:100}}
           bodyClassName={"text-center"}
         ></Column>
       </DataTable>

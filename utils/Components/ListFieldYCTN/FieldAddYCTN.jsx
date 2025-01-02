@@ -487,9 +487,9 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, formDataInit = QLTN_YCTN
         if (isAdd) {
             try {
 
-                let res = await QLTN_YCTNService.create_QLTN_YCTN(formData)
+                let res = await QLTN_YCTNService.create_QLTN_YCTN({...formData,nguoi_tao:user})
 
-                setFormData((prev) => ({ ...prev, ma_yctn: res, next_step: 2 }))
+                setFormData((prev) => ({ ...prev, ma_yctn: res, next_step: 2, crr_step: 1, nguoi_tao: user }))
                 Notification.success(toast, "Tạo mới YCTN thành công")
             } catch (err) {
 
@@ -498,7 +498,7 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, formDataInit = QLTN_YCTN
         }
         else {
             try {
-                let res = await QLTN_YCTNService.update({...formData,qltn_yctn_log:formData.qltn_yctn_log})
+                let res = await QLTN_YCTNService.update({ ...formData, qltn_yctn_log: formData.qltn_yctn_log })
                 res && refeshData()
                 Notification.success(toast, "Cập nhật thành công")
             } catch (error) {
@@ -552,7 +552,7 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, formDataInit = QLTN_YCTN
             <div style={{ borderTop: "1px solid #ccc" }} className='flex justify-content-end gap-2 mt-10 pt-5'>
 
                 <Button label="Quay lại" icon="pi pi-arrow-left" className='p-button-danger' onClick={() => router.back()} />
-                {loai_yctn && isAdd && !isUpdateHD  && !formData.next_step === 2&& <Button label={"Tạo mới " + loai_yctn?.ten_loai_yc} icon="pi pi-check" onClick={handleSubmit} />}
+                {loai_yctn && isAdd && !isUpdateHD && formData.next_step != 2 && <Button label={"Tạo mới " + loai_yctn?.ten_loai_yc} icon="pi pi-check" onClick={handleSubmit} />}
                 {loai_yctn && isAdd === false && <Button label={"Cập nhật " + loai_yctn?.ten_loai_yc} icon="pi pi-check" onClick={handleSubmit} />}
                 {loai_yctn && isUpdateHD && <Button label={"Cập nhật hợp đồng " + loai_yctn?.ten_loai_yc} icon="pi pi-check" onClick={handleUpdate} />}
                 {loai_yctn && formData.next_step === 2 && <Button onClick={() => { router.push("/quanlythinghiem/yeucauthinghiem/giaonhiemvu?code=" + formData.ma_yctn) }} label={"Bước tiếp theo   " + data.listBuocYCTN?.find(s => s.buoc === 2)?.ten_buoc_yctn} icon="pi pi-check" />}

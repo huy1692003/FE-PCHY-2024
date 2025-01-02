@@ -1,66 +1,28 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Toast } from "primereact/toast";
-import { Panel } from "primereact/panel";
-import Head from "next/head";
 import FillThongTinYCTN from "../../../../utils/Components/FilterYCTN/FillThongTinYCTN";
 import useThongTinYCTN from "../../../../hooks/useThongTinYCTN";
-import UploadFileService from "../../../../services/UploadFileService"; // Import API upload
-import QLTN_YCTNService from "../../../../services/quanlythinghiem/QLTN_YCTNService";
 import FieldKhaoSatPA from "../../../../utils/Components/ListFieldYCTN/FieldKhaoSatPA";
 import ThongTinYCTN from "../../../../utils/Components/ListFieldYCTN/ThongTinYCTN";
+import FieldGiaoNV from "../../../../utils/Components/ListFieldYCTN/FieldGiaoNV";
+import DanhSachThietBi from "../../../../utils/Components/ThiNghiem/DanhSachThietBi";
+import FieldBanGiaKQ from "../../thuchienthinghiem/bangiaoketqua/FieldBanGiaKQ";
+import { CustomPanel } from "../../../../utils/Components/CustomPanel";
 
 const ChiTiet_YCTN = () => {
-  const { ma_yctn, thongTinYCTN } = useThongTinYCTN();
+  const { ma_yctn, thongTinYCTN } = useThongTinYCTN(); 
+  
+  const [formData, setFormData] = useState({});
 
-  const [formData, setFormData] = useState({
-    file_pa_thi_cong: null,
-    nguoi_th_ks_lap_pa_thi_cong: null,
-    ngay_ks_lap_pa_thi_cong: null,
-  });
   const toast = useRef(null);
 
-
-  //console.log("before formData", formData);
-
+  // console.log("before formData", formData);
 
   useEffect(() => {
-    thongTinYCTN &&
-      setFormData({
-        ...thongTinYCTN,
-        file_pa_thi_cong: thongTinYCTN?.file_pa_thi_cong || null,
-        nguoi_th_ks_lap_pa_thi_cong:
-          thongTinYCTN?.nguoi_th_ks_lap_pa_thi_cong || null,
-        ngay_ks_lap_pa_thi_cong: thongTinYCTN?.ngay_ks_lap_pa_thi_cong || null,
-      });
-  }, [thongTinYCTN]);
-
-  const handleSave = async () => {
-    try {
-      let filePath = formData.file_pa_thi_cong;
-      if (filePath && filePath instanceof File) {
-        const fileData = new FormData();
-        fileData.append("file", filePath);
-        const response = await UploadFileService.file(fileData);
-        filePath = response.filePath;
-
-        setFormData((prevState) => ({
-          ...prevState,
-          file_pa_thi_cong: filePath,
-        }));
-      }
-
-      await QLTN_YCTNService.khao_sat_phuong_an_YCTN({
-        ma_yctn,
-        file_pa_thi_cong: filePath,
-        nguoi_th_ks_lap_pa_thi_cong: formData.nguoi_th_ks_lap_pa_thi_cong,
-        ngay_ks_lap_pa_thi_cong: formData.ngay_ks_lap_pa_thi_cong,
-      });
-
-      toast.current.show({ severity: "success", summary: "Lưu thành công" });
-    } catch (error) {
-      console.error("Lỗi khi lưu dữ liệu:", error);
+    if (thongTinYCTN) {
+      setFormData(thongTinYCTN);
     }
-  };
+  }, [thongTinYCTN]); 
 
   const handleChange = useCallback((field, value) => {
     setFormData((prevData) => ({
@@ -69,51 +31,94 @@ const ChiTiet_YCTN = () => {
     }));
   }, []);
 
-  //console.log(">>>> FILE PATH:", formData.file_pa_thi_cong);
+  console.log(">>>> FORM:", formData);
 
   return (
     <div className="border-round-3xl bg-white p-3">
       <Toast ref={toast} />
-      <Head>
-        <title>Khảo sát lập phương án thi công</title>
-      </Head>
-      <Panel
-        header={
-          <h3 className="text-xl font-bold">Khảo sát lập phương án thi công</h3>
-        }
-        className="mt-3"
-      >
-        <FillThongTinYCTN
-          Element={
-            thongTinYCTN ? (
-              <ThongTinYCTN
-                loai_yctn={thongTinYCTN.loai_yctn_model}
-                formData={thongTinYCTN}
+
+      <FillThongTinYCTN
+        Element={
+          thongTinYCTN ? (
+            <ThongTinYCTN
+              loai_yctn={thongTinYCTN.loai_yctn_model}
+              formData={thongTinYCTN}
+            >
+              <br className="mt-2"></br>
+
+              <CustomPanel
+                stepPanel={2}
+                header="Giao nhiệm vụ"
+                fields={[
+                  "file_dinh_kem_giao_nv",
+                  "don_vi_thuc_hien",
+                  "nguoi_giao_nhiem_vu",
+                  "ngay_giao_nv",
+                ]}
+                toggleable
+                formData={formData}
               >
-                <br className="mt-2"></br>
-                <Panel header={<p className="text-2xl font-bold">Lập phương án thi công</p>}>
-                  
+                <FieldGiaoNV
+                  formData={formData}
+                  setFormData={setFormData}
+                />
+              </CustomPanel>
 
-                  <Panel header="Tiêu đề" toggleable>
-                    <FieldKhaoSatPA
-                      formData={formData}
-                      setFormData={setFormData}
-                      handleChange={handleChange}
-                    />
-                  </Panel>
+              <CustomPanel 
+                stepPanel={4}
 
-                </Panel>
-              </ThongTinYCTN>
-            ) : (
-              <></>
-            )
-          }
-        />
-      </Panel>
+                  header="Khảo sát lập phương án thi công" 
+                  toggleable
+                  fields={[
+                    "file_pa_thi_cong",
+                    "nguoi_th_ks_lap_pa_thi_cong",
+                    "ngay_ks_lap_pa_thi_cong"
+                  ]}
+                  formData={formData}
+              >
+                <FieldKhaoSatPA
+                  formData={formData}
+                  setFormData={setFormData}
+                />
+              </CustomPanel>
+
+              <CustomPanel 
+                stepPanel={5}
+                formData={formData}
+                header="Thực hiện thí nghiệm " toggleable
+                currentStep={formData.crr_step}
+                >
+                <DanhSachThietBi
+                  thongtinYCTN={formData}
+                  ma_yctn={ma_yctn}
+                />
+              </CustomPanel>
+
+              <CustomPanel 
+                stepPanel={6}
+
+                  header="Bàn Giao Kết Quả" 
+                  toggleable
+                  fields={[
+                    "nguoi_ban_giao",
+                    "ngay_ban_giao",
+                    "ghi_chu_ban_giao"
+                  ]}
+                  formData={formData}
+              >
+                <FieldBanGiaKQ
+                  formData={formData}
+                  setFormData={setFormData}
+                />
+              </CustomPanel>
+            </ThongTinYCTN>
+          ) : (
+            <></> 
+          )
+        }
+      />
     </div>
   );
 };
 
 export default ChiTiet_YCTN;
-
-
