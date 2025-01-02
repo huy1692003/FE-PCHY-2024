@@ -112,7 +112,7 @@ const NhapKhoiLuongThucHien = () => {
             )
           }
         />
-        {thongTinYCTN  && (
+        {thongTinYCTN && isCurrent == 2  && (
           <Panel headerTemplate={headerList}>
             <TableNhapKhoiLuong
               arrThietbi={arrThietbi}
@@ -137,6 +137,7 @@ const NhapKhoiLuongThucHien = () => {
                   style={{ backgroundColor: "#1445a7" }}
                   onClick={() => {
                     ThemMoiThietBi_YCTN();
+                    
                   }}
                 />
 
