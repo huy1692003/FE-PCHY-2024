@@ -214,8 +214,8 @@ const CreateThiNghiemTB = ({ thongtinYCTN, stateDialog, thongtinThietBi, donVi, 
     const renderFooter = () => {
         return (
             <div className="flex justify-content-end gap-2">
-                <Button label="Hủy" icon="pi pi-times" className="p-button-text" onClick={() => stateDialog.setVisible(false)} />
-                <Button label="Lưu" icon="pi pi-check" onClick={() => handleSaveCT_TN()} />
+                <Button label="Đóng" icon="pi pi-times" severity="danger" onClick={() => stateDialog.setVisible(false)} />
+                <Button label="Thí nghiệm và Tạo luồng ký số" icon="pi pi-check" onClick={() => handleSaveCT_TN()} />
             </div>
         );
     };

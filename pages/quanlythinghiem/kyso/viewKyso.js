@@ -10,8 +10,9 @@ import { InputTextarea } from 'primereact/inputtextarea';
 import { Notification } from '../../../utils/notification';
 import QLTN_KYSO_Service from '../../../services/quanlythinghiem/QLTN_KYSO_Service';
 import { Toast } from 'primereact/toast';
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
-const ViewKySo = ({ Show, setShow, Detail, refeshData , toastParent }) => {
+const ViewKySo = ({ Show, setShow, Detail, refeshData, toastParent }) => {
     const [rejectDialogVisible, setRejectDialogVisible] = useState(false);  // Thay thế confirmVisible bằng rejectDialogVisible
     const [rejectionReason, setRejectionReason] = useState('');
     const userID = JSON.parse(sessionStorage.getItem('user'))?.id;
@@ -37,8 +38,8 @@ const ViewKySo = ({ Show, setShow, Detail, refeshData , toastParent }) => {
             }>
                 {signer.trang_thai_ky === 1 ? " ( Đồng ý ký )" :
                     signer.trang_thai_ky === -1 ?
-                        <span> ( Từ chối ký ) 
-                            <Button  label="Xem lý do" icon="pi pi-info-circle" className="block mt-3" onClick={() => Notification.info(toast, signer.ly_do_tu_choi, "Lý do từ chối ký văn bản", 13000)} /></span> :
+                        <span> ( Từ chối ký )
+                            <Button label="Xem lý do" icon="pi pi-info-circle" className="block mt-3" onClick={() => Notification.info(toast, signer.ly_do_tu_choi, "Lý do từ chối ký văn bản", 13000)} /></span> :
                         " ( Chưa ký )"}
             </span>
         </div>
@@ -118,23 +119,45 @@ const ViewKySo = ({ Show, setShow, Detail, refeshData , toastParent }) => {
     const handleSubmit = async (status = 1) => {
         if (status === -1 && rejectionReason.trim() === '') {
             Notification.error(toast, 'Vui lòng nhập lý do từ chối.');
+            return; // Thoát sớm nếu lý do từ chối không hợp lệ
         }
+
         const data = {
             id: record_kyso?.id,
             maCTTN: record_kyso?.ma_chi_tiet_tn,
             idNguoiKy: userID,
             nhomNguoiKy: record_kyso?.nhom_nguoi_ky,
             trangThai: status,
-            lyDoTuChoi: status === -1 ? rejectionReason : null
+            lyDoTuChoi: status === -1 ? rejectionReason : null,
         };
-        await QLTN_KYSO_Service.update_TrangThai_Ky(data)
-        refeshData()
-        setShow(false);
-        setRejectionReason('');  // Reset lý do từ chối
-        setRejectDialogVisible(false);  // Đóng dialog từ chối
-        Notification.success(toastParent, status === 1 ? 'Ký số thành công '+ma_yctn  : "Bạn vừa từ chối ký số thành công" + ma_yctn);
 
+        const executeUpdate = async () => {
+            await QLTN_KYSO_Service.update_TrangThai_Ky(data);
+            refeshData();
+            setShow(false);
+            setRejectionReason(''); // Reset lý do từ chối
+            setRejectDialogVisible(false); // Đóng dialog từ chối
+            Notification.success(
+                toastParent,
+                status === 1
+                    ? `Ký số thành công ${ma_yctn}`
+                    : `Bạn vừa từ chối ký số thành công ${ma_yctn}`
+            );
+        };
+
+        if (status === 1) {
+            confirmDialog({
+                message: 'Xác nhận ký số cho văn bản?',
+                header: 'Thông báo',
+                icon: 'pi pi-question-circle',
+                accept: executeUpdate,
+                reject: () => {return},
+            });
+        } else {
+            await executeUpdate();
+        }
     };
+
 
 
     return (
@@ -262,6 +285,7 @@ const ViewKySo = ({ Show, setShow, Detail, refeshData , toastParent }) => {
                         />
                     </div>
                 </Dialog>
+                    <ConfirmDialog/>
             </div>
         </Dialog>
     );
