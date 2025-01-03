@@ -8,17 +8,18 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { useEffect, useState } from "react";
 import { QLTN_THIET_BI_YCTN_Service } from "../../../../services/quanlythinghiem/QLTN_THIET_BI_YCTN_Service";
-const LichSuNhapKhoiLuong = ({ nextStep,MA_YCTN }) => {
+import { useRouter } from "next/router";
+const LichSuNhapKhoiLuong = ({ nextStep, thongTinYCTN }) => {
   const [arrThietbiBD, setArrThietbiBD] = useState([]);
-
+  const router = useRouter();
   const loadData = async () => {
     try {
       const items =
         await QLTN_THIET_BI_YCTN_Service.getAll_QLTN_THIET_BI_YCTN_byMA_YCTN({
-          ma_yctn: MA_YCTN,
+          ma_yctn: thongTinYCTN.ma_yctn,
         });
-        console.log("test")
-        console.log(items)
+      console.log("test")
+      console.log(items)
       // console.log("TBBD",items);
       setArrThietbiBD(items);
     } catch (err) {
@@ -28,9 +29,9 @@ const LichSuNhapKhoiLuong = ({ nextStep,MA_YCTN }) => {
   useEffect(() => {
     loadData();
     // console.log("MA_YCTN",MA_YCTN)
-  }, [MA_YCTN,nextStep]);
+  }, [thongTinYCTN, nextStep]);
 
-  
+
   const headerList = (options) => {
     const className = `${options.className} flex flex-wrap justify-content-between align-items-center`;
 
@@ -88,27 +89,31 @@ const LichSuNhapKhoiLuong = ({ nextStep,MA_YCTN }) => {
             headerStyle={headerStyleColumn}
           />
         </DataTable>
-        
+
       </Panel>
       <div className="flex justify-content-end gap-2 mt-3">
-          <Button
-              label="Hủy"
-              severity="secondary"
-              outlined
-            
-            />
-          <Button
-            label="Nhập khối lượng phát sinh"
-            style={{ backgroundColor: "#1445a7" }}
-           
-          />
-          
-          <Button
-            label="Bước tiếp theo:"
-            style={{ backgroundColor: "#1445a7" }}
-           
-          />
-        </div>
+        <Button
+          label="Hủy"
+          severity="secondary"
+          outlined
+
+        />
+        <Button
+          label="Nhập khối lượng phát sinh"
+          style={{ backgroundColor: "#1445a7" }}
+          onClick={() => {
+            router.push(`/quanlythinghiem/yeucauthinghiem/nhapkhoiluongphatsinh?code=${thongTinYCTN?.ma_yctn}`);
+          }}
+        />
+
+        <Button
+          label="Chuyển sang bước tiếp theo"
+          style={{ backgroundColor: "#1445a7" }}
+          onClick={() => {
+            router.push(`/quanlythinghiem/yeucauthinghiem/khaosatphuongan?code=${thongTinYCTN?.ma_yctn}`);
+          }}
+        />
+      </div>
     </div>
   );
 };

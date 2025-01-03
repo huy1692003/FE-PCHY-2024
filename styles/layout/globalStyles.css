@@ -9,12 +9,48 @@
 }
 
 .my-panel.completed .p-panel-header {
-  background-color: #e4f1d2 ;
-  color: #639c11; 
+  background-color: #e4f1d2;
+  color: #639c11;
 }
 
 .my-panel.incomplete .p-panel-header {
-  background-color: #e5e5e5; 
-  color: #495057; 
+  background-color: #e5e5e5;
+  color: #495057;
 }
 
+.p-panelmenu .p-panelmenu-header>a {
+  padding: 10px;
+  border: 1px solid #dee2e6;
+  color: #6c757d;
+  background: #f8f9fa;
+  font-weight: 700;
+  border-radius: 6px;
+  transition: box-shadow 0.2s;
+
+}
+/* CSS chung cho Dropdown */
+.p-dropdown-item {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Media query cho màn hình di động */
+@media (max-width: 768px) {
+  .p-dropdown-item {
+      max-width: 200px;  /* Giới hạn chiều rộng tối đa */
+      text-overflow: ellipsis;
+  }
+
+  /* Giảm kích thước font trên mobile */
+  .p-dropdown-label {
+      font-size: 14px;
+  }
+}
+
+
+
+div.p-datepicker.p-component.p-connected-overlay-enter-done{
+  min-width: auto !important;
+  width: auto !important;
+}

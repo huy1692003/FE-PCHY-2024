@@ -30,7 +30,7 @@ const TableYCTN = ({ toast, loadYCTN, dataYCTN, totalRecords }) => {
   const actionBodyTemplate = (rowData) => {
     return (
       <div className="grid gap-1 justify-content-center">
-        
+
         <Button
           icon="pi pi-eye"
           tooltip="Xem chi tiết"
@@ -126,8 +126,9 @@ const TableYCTN = ({ toast, loadYCTN, dataYCTN, totalRecords }) => {
         <Column
           style={{ minWidth: 300 }}
           headerStyle={headerStyleColumn}
-          {...propSortAndFilter}
+
           body={(rowData) => {
+            console.log(rowData)
             return (
               <>
                 <p>Mã yêu cầu: {rowData.ma_yctn}</p>
@@ -135,7 +136,14 @@ const TableYCTN = ({ toast, loadYCTN, dataYCTN, totalRecords }) => {
               </>
             );
           }}
-          field="thongTinYCTN"
+          // Phương thức lọc (tìm kiếm chứa chuỗi)
+          filter={true}  // Bật tính năng lọc
+          filterPlaceholder="Tìm kiếm..."  // Text hiển thị trong hộp tìm kiếm
+          filterField="ma_yctn"
+          showFilterMenuOptions={false}  // Ẩn các tùy chọn trong menu bộ lọc
+          filterMatchMode="contains"  // Kiểu lọc: chứa chuỗi
+          sortField="ma_yctn"
+          sortable
           header={headerTemplate("Thông tin Yêu cầu thí nghiệm")}
         ></Column>
         <Column
@@ -151,6 +159,7 @@ const TableYCTN = ({ toast, loadYCTN, dataYCTN, totalRecords }) => {
             }
           }
           field="thongTinChung"
+          sortField="ten_loai_yctn"
           header={headerTemplate("Thông tin chung")}
         ></Column>
         <Column
@@ -235,7 +244,7 @@ const TableYCTN = ({ toast, loadYCTN, dataYCTN, totalRecords }) => {
           headerStyle={headerStyleColumn}
           header={"Thao tác"}
           body={actionBodyTemplate}
-          style={{maxWidth:100}}
+          style={{ maxWidth: 100 }}
           bodyClassName={"text-center"}
         ></Column>
       </DataTable>

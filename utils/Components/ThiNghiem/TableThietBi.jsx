@@ -36,6 +36,7 @@ const TagStatus = ({ status }) => {
 
     return <span className="px-5 text-sm py-2" style={{
         padding: "5px",
+        display: "inline-block",
         borderRadius: "20px",
         backgroundColor: getStatusColor(),
         color: "white"
@@ -89,62 +90,65 @@ const TableThietBi = ({ thongtinYCTN, label, data, loaiThietBi, loaiBienBan, toa
     }
     return <>
         <h5 className="text-lg font-bold">{label}</h5>
-        <table className="w-full" style={{ borderCollapse: "collapse" }}>
-            <thead>
-                <tr>
-                    <th className="border-1 border-300 p-3">STT</th>
-                    <th className="border-1 border-300 p-3">Tên thiết bị</th>
-                    <th className="border-1 border-300 p-3">Loại thiết bị</th>
-                    <th className="border-1 border-300 p-3">Mã loại thiết bị</th>
-                    <th className="border-1 border-300 p-3">Số lượng</th>
-                    <th className="border-1 border-300 p-3">Trạng thái</th>
-                    <th className="border-1 border-300 p-3">Thao tác</th>
-                </tr>
-            </thead>
-            <tbody>
-                {
-                    data.map((thietBi, index) => (
-                        <>
-                            <tr key={index}>
-                                <td rowSpan={thietBi.listTN.length + 1} style={{ width: "20px", verticalAlign: "top" }} className="text-center border-1 border-300 py-3">{index + 1}</td>
-                                <td rowSpan={thietBi.listTN.length + 1} style={{ verticalAlign: "top" }} className="text-center border-1 border-300 py-3">{thietBi.ma_tbtn}</td>
-                                <td rowSpan={thietBi.listTN.length + 1} style={{ verticalAlign: "top" }} className="text-center border-1 border-300 py-3">{loaiThietBi.find(l => l.ma_loai_tb === thietBi.ma_loai_tb)?.ten_loai_tb}</td>
-                                <td rowSpan={thietBi.listTN.length + 1} style={{ verticalAlign: "top" }} className="text-center border-1 border-300 py-3">{thietBi.ma_loai_tb}</td>
-                                <td className="text-center border-1 border-300 py-3">{thietBi.so_luong}</td>
-                                <td className="text-center border-1 border-300 py-3">
-                                    <span className="px-5" style={{ cursor: "pointer", padding: "5px", borderRadius: "20px", backgroundColor: thietBi.trang_thai === 0 ? "#E9E9F1" : "#1170E4", color: thietBi.trang_thai === 0 ? "black" : "white" }} >
-                                        {thietBi.trang_thai === 0 ? "Tạo mới" : "Phát sinh"}
-                                    </span>
-                                </td>
-                                <td className="text-center border-1 border-300 py-3">
-                                    <Button onClick={() => showCreateThiNghiemTB(thietBi)} tooltip="Thí nghiệm" icon="fas fa-thermometer-three-quarters" className="p-button-text text-primary text-xl hover:bg-primary-600 hover:text-white" />
-                                </td>
-                            </tr>
-                            {thietBi.listTN.length > 0 && thietBi.listTN.map((t, index) =>
-                                <tr>
-                                    <td className="text-center border-1 border-300 py-4">
-                                        <span>
-                                            <span className="mb-1">Đợt {(index + 1) + " : " + t.so_luong}</span><br />
-                                            <span>Loại biên bản : {loaiBienBan.find(l => l.id === +t.ma_loai_bb)?.ten_loai_bb} </span>
+        <div className="max-w-screen overflow-x-scroll">
+
+            <table className="w-full"  style={{ borderCollapse: "collapse" , minWidth: "1000px"}}>
+                <thead>
+                    <tr>
+                        <th className="border-1 border-300 p-3">STT</th>
+                        <th className="border-1 border-300 p-3">Tên thiết bị</th>
+                        <th className="border-1 border-300 p-3">Loại thiết bị</th>
+                        <th className="border-1 border-300 p-3">Mã loại thiết bị</th>
+                        <th className="border-1 border-300 p-3">Số lượng</th>
+                        <th className="border-1 border-300 p-3">Trạng thái</th>
+                        <th className="border-1 border-300 p-3">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {
+                        data.map((thietBi, index) => (
+                            <>
+                                <tr key={index}>
+                                    <td rowSpan={thietBi.listTN.length + 1} style={{ width: "20px",  }} className="text-center border-1 border-300 py-3">{index + 1}</td>
+                                    <td rowSpan={thietBi.listTN.length + 1}  className="text-center border-1 border-300 py-3">{thietBi.ma_tbtn}</td>
+                                    <td rowSpan={thietBi.listTN.length + 1}  className="text-center border-1 border-300 py-3">{loaiThietBi.find(l => l.ma_loai_tb === thietBi.ma_loai_tb)?.ten_loai_tb}</td>
+                                    <td rowSpan={thietBi.listTN.length + 1}  className="text-center border-1 border-300 py-3">{thietBi.ma_loai_tb}</td>
+                                    <td className="text-center border-1 border-300 py-3">{thietBi.so_luong}</td>
+                                    <td className="text-center border-1 border-300 py-3">
+                                        <span className="px-5" style={{ cursor: "pointer", padding: "5px", borderRadius: "20px", backgroundColor: thietBi.trang_thai === 0 ? "#E9E9F1" : "#1170E4", color: thietBi.trang_thai === 0 ? "black" : "white" }} >
+                                            {thietBi.trang_thai === 0 ? "Tạo mới" : "Phát sinh"}
                                         </span>
                                     </td>
-                                    <td className="text-center border-1 border-300 py-4"><TagStatus status={t.trang_thai_ky} /></td>
-                                    <td className="text-center border-1 border-300 py-4">
-                                        {
-                                            t.trang_thai_ky <= 2 &&
-                                            <span>
-
-                                                <Button onClick={() => openfileBienBan(urlServer + t.file_upload)} tooltip="Xem biên bản" style={{ color: "#13BFA6" }} icon={"fas fa-file-arrow-up"} className="p-button-text text-2xl hover:bg-green-600 hover:text-white" />
-                                                {t.trang_thai_ky <= 1  && <Button tooltip="Thực hiện lại" onClick={() => setVisibleConfirm({ state: true, id: t.ma_chi_tiet_tn })} style={{ color: "#13BFA6" }} icon={"fas fa-history"} className="p-button-text text-2xl hover:bg-green-600 hover:text-white" />}
-                                            </span>
-                                        }
+                                    <td className="text-center border-1 border-300 py-3">
+                                        <Button onClick={() => showCreateThiNghiemTB(thietBi)} tooltip="Thí nghiệm" icon="fas fa-thermometer-three-quarters" className="p-button-text text-primary text-xl hover:bg-primary-600 hover:text-white" />
                                     </td>
-                                </tr>)}
-                        </>
-                    ))
-                }
-            </tbody>
-        </table>
+                                </tr>
+                                {thietBi.listTN.length > 0 && thietBi.listTN.map((t, index) =>
+                                    <tr>
+                                        <td className="text-center border-1 border-300 py-4">
+                                            <span>
+                                                <span className="mb-1">Đợt {(index + 1) + " : " + t.so_luong}</span><br />
+                                                <span>Loại biên bản : {loaiBienBan.find(l => l.id === +t.ma_loai_bb)?.ten_loai_bb} </span>
+                                            </span>
+                                        </td>
+                                        <td className="text-center border-1 border-300 py-4"><TagStatus  status={t.trang_thai_ky} /></td>
+                                        <td className="text-center border-1 border-300 py-4">
+                                            {
+                                                t.trang_thai_ky <= 2 &&
+                                                <span>
+
+                                                    <Button onClick={() => openfileBienBan(urlServer + t.file_upload)} tooltip="Xem biên bản" style={{ color: "#13BFA6" }} icon={"fas fa-file-arrow-up"} className="p-button-text text-2xl hover:bg-green-600 hover:text-white" />
+                                                    {t.trang_thai_ky <= 1 && <Button tooltip="Thực hiện lại" onClick={() => setVisibleConfirm({ state: true, id: t.ma_chi_tiet_tn })} style={{ color: "#13BFA6" }} icon={"fas fa-history"} className="p-button-text text-2xl hover:bg-green-600 hover:text-white" />}
+                                                </span>
+                                            }
+                                        </td>
+                                    </tr>)}
+                            </>
+                        ))
+                    }
+                </tbody>
+            </table>
+        </div>
 
 
         <ConfirmDialog

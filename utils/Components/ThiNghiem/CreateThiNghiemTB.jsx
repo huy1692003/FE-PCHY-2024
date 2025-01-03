@@ -399,10 +399,18 @@ const CreateThiNghiemTB = ({ thongtinYCTN, stateDialog, thongtinThietBi, donVi, 
                             </div>
 
                             {/* Ký kỹ thuật và giám đốc */}
-                            <div className="flex justify-content-between mt-4 w-full">
+                            <div className="flex flex-wrap justify-content-between mt-4 w-full gap-4">
                                 {dsNguoiKy.slice(1).map((nguoiKy) => (
-                                    <div key={nguoiKy.cap} className="" style={{ width: "48%" }}>
-                                        <label className="mb-2 block font-semibold text-sm" htmlFor="">{nguoiKy.ten_cap} <span className="text-red-500">*</span></label>
+                                    <div
+                                        key={nguoiKy.cap}
+                                        className="flex-auto md:w-5 w-full" // md:w-6 (50% trên màn hình lớn), w-full (100% trên màn hình nhỏ)
+                                    >
+                                        <label
+                                            className="mb-2 block font-semibold text-sm"
+                                            htmlFor=""
+                                        >
+                                            {nguoiKy.ten_cap} <span className="text-red-500">*</span>
+                                        </label>
                                         <Dropdown
                                             placeholder="-- Mời chọn --"
                                             filter
@@ -410,14 +418,24 @@ const CreateThiNghiemTB = ({ thongtinYCTN, stateDialog, thongtinThietBi, donVi, 
                                             itemSize={38}
                                             value={nguoiKy.nguoi_ky}
                                             options={users}
-                                            optionLabel={(option) => `${option.hO_TEN} - [ ${option.teN_DANG_NHAP} ]`}
+                                            optionLabel={(option) =>
+                                                `${option.hO_TEN} - [ ${option.teN_DANG_NHAP} ]`
+                                            }
                                             optionValue="id"
+                                            itemTemplate={(option) => (
+                                                <div title={option.hO_TEN + ' - ' + option.teN_DANG_NHAP}>
+                                                    {`${option.hO_TEN} - [ ${option.teN_DANG_NHAP} ]`}
+                                                </div>
+                                            )}
                                             className="w-full"
-                                            onChange={(e) => handleChangeNguoiKy(nguoiKy.cap, null, e.value)}
+                                            onChange={(e) =>
+                                                handleChangeNguoiKy(nguoiKy.cap, null, e.value)
+                                            }
                                         />
                                     </div>
                                 ))}
                             </div>
+
                         </div>
                     </Panel>
                 </div>

@@ -8,7 +8,7 @@ class MyDocument extends Document {
 
     render() {
         return (
-            <Html lang="en">
+            <Html lang="vi">
                 <Head>
                     <link rel='icon' href='/demo/images/login/Logo.ico' sizes='any'></link>
                     <link id="theme-css" href={`/themes/lara-light-indigo/theme.css`} rel="stylesheet"></link>

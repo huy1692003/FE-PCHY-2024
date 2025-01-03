@@ -24,10 +24,10 @@ import { Tooltip } from "primereact/tooltip";
 
 
 export const FormField = ({ label, className, style, placeholder, value, onChange, id, isCalendar = false, isNumber = false, row = 5, isFileUpload = false, isDropdown = false, isTextArea = false, options = [], prefix, isDisabled = false, styleField, props, mode, currency, locale, childrenIPNumber = "VNĐ", optionsValue, optionsLabel }) => (
-    <div className={className} style={style}>
-        <label className='font-medium text-sm my-3 block' htmlFor={id}>{label}</label>
+    <div className={className +" mb-2"} style={style}>
+        <label className='font-medium text-sm my-1 block' htmlFor={id}>{label}</label>
         {isCalendar ? (
-            <Calendar id={id} name={id} value={value} onChange={(e) => onChange(id, e.value)} showIcon className="w-full" disabled={isDisabled} />
+            <Calendar id={id} name={id} value={value} onChange={(e) => onChange(id, e.value)} showIcon className="w-full"  disabled={isDisabled} appendTo="self"   />
         ) : isNumber ? (
             <div className="p-inputgroup">
                 <InputNumber id={id} name={id} value={value} onChange={(e) => onChange(id, e.value)} className="w-full" readOnly={isDisabled} />
@@ -312,6 +312,7 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, formDataInit = QLTN_YCTN
             key: "ngay_tao",
             element: (
                 <FormField
+                
                     label={<RenderLabel label="Ngày tạo" nameField="ngay_tao" />}
                     id="ngay_tao"
                     value={moment(formData?.ngay_tao).toDate()}
@@ -326,6 +327,7 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, formDataInit = QLTN_YCTN
             key: "ngay_ky_hop_dong",
             element: (
                 <FormField
+                
                     label={<RenderLabel label="Ngày ký hợp đồng" nameField="ngay_ky_hop_dong" />}
                     id="ngay_ky_hop_dong"
                     value={moment(formData?.ngay_ky_hop_dong).toDate()}
@@ -367,8 +369,8 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, formDataInit = QLTN_YCTN
             stt: 10,
             key: "phan_tram_chiet_giam",
             element: (
-                <div className="flex gap-4">
-                    <div style={{ width: "20%" }}>
+                <div className="flex gap-4 flex-wrap md:justify-content-between">
+                    <div className="w-full sm:w-6 md:w-3">
                         <FormField
                             label={<RenderLabel label="Phần trăm chiết giảm" nameField="phan_tram_chiet_giam" />}
                             id="phan_tram_chiet_giam"
@@ -377,7 +379,7 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, formDataInit = QLTN_YCTN
                             isNumber
                         />
                     </div>
-                    <div style={{ width: "38%" }}>
+                    <div className="w-full sm:w-6 md:w-4">
                         <FormField
                             label={<RenderLabel label="Giá trị chiết giảm" nameField="gtdt_chiet_giam" />}
                             id="gtdt_chiet_giam"
@@ -386,7 +388,7 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, formDataInit = QLTN_YCTN
                             isNumber
                         />
                     </div>
-                    <div style={{ width: "39%" }}>
+                    <div className="w-full sm:w-6 md:w-4">
                         <FormField
                             label={<RenderLabel label="Giá trị sau chiết giảm" nameField="gtdt_sau_chiet_giam" />}
                             id="gtdt_sau_chiet_giam"
@@ -402,8 +404,8 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, formDataInit = QLTN_YCTN
             stt: 11,
             key: "phan_tram_thue",
             element: (
-                <div className="flex gap-4">
-                    <div style={{ width: "20%" }}>
+                <div className="flex gap-4 flex-wrap md:justify-content-between">
+                    <div className="w-full sm:w-6 md:w-3">
                         <FormField
                             label={<RenderLabel label="Phần trăm thuế" nameField="phan_tram_thue" />}
                             id="phan_tram_thue"
@@ -412,7 +414,7 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, formDataInit = QLTN_YCTN
                             isNumber
                         />
                     </div>
-                    <div style={{ width: "38%" }}>
+                    <div className="w-full sm:w-6 md:w-4">
                         <FormField
                             label={<RenderLabel label="Giá trị thuế" nameField="gtdt_thue" />}
                             id="gtdt_thue"
@@ -421,7 +423,7 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, formDataInit = QLTN_YCTN
                             isNumber
                         />
                     </div>
-                    <div style={{ width: "39%" }}>
+                    <div className="w-full sm:w-6 md:w-4">
                         <FormField
                             label={<RenderLabel label="Giá trị sau thuế" nameField="gtdt_sau_thue" />}
                             id="gtdt_sau_thue"
@@ -433,6 +435,8 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, formDataInit = QLTN_YCTN
                 </div>
             ),
         },
+        
+        
         {
             stt: 16,
             key: "file_upload",

@@ -15,7 +15,7 @@ import LichSuNhapKhoiLuong from "./LichSuNhapKhoiLuong";
 
 const NhapKhoiLuongThucHien = () => {
   const router = useRouter();
-    const { ma_yctn, thongTinYCTN } = useThongTinYCTN();
+  const { ma_yctn, thongTinYCTN } = useThongTinYCTN();
 
   const [arrThietbi, setArrThietbi] = useState([]);
   const [showDialog, setShowDialog] = useState(false);
@@ -93,13 +93,13 @@ const NhapKhoiLuongThucHien = () => {
       setIsCurrent(3);
       setArrThietbi([]);
     } catch (error) {
-      
+
     }
   };
 
   return (
     <div className="border-round-3xl bg-white p-3">
-      <Panel header= {<h3 className="text-xl font-bold">Nhập khối lượng thực hiện</h3>}className="mt-3">
+      <Panel header={<h3 className="text-xl font-bold">Nhập khối lượng thực hiện</h3>} className="mt-3">
         <FillThongTinYCTN
           Element={
             thongTinYCTN ? (
@@ -112,7 +112,7 @@ const NhapKhoiLuongThucHien = () => {
             )
           }
         />
-        {thongTinYCTN  && (
+        {thongTinYCTN && isCurrent === 2 && (
           <Panel headerTemplate={headerList}>
             <TableNhapKhoiLuong
               arrThietbi={arrThietbi}
