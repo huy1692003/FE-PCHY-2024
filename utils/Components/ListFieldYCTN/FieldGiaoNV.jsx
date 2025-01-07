@@ -37,7 +37,7 @@ const FieldGiaoNV = ({ formData, setFormData }) => {
         <div>
             <div className="flex gap-4">
                 <div style={{ width: "49%" }}>
-                    <label className='font-bold text-sm my-3 block' htmlFor="file_dinh_kem_giao_nv">
+                    <label className='font-bold text-sm mb-3 block' htmlFor="file_dinh_kem_giao_nv">
                         <span className="flex justify-content-between">
                             <span>File quyết định</span>
                         </span>
@@ -86,6 +86,7 @@ const FieldGiaoNV = ({ formData, setFormData }) => {
             </div>
             <div className="flex gap-4">
                 <div style={{ width: "49%" }}>
+                    <div style={{ height: "14px", visibility: "hidden" }}></div>
                     <FormField
                         label="Ngày giao nhiệm vụ"
                         id="ngay_giao_nv"
