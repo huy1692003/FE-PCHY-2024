@@ -29,7 +29,7 @@ const ChiTiet_YCTN = () => {
       ...prevData,
       [field]: value,
     }));
-  }, []);
+    }, []);
 
   console.log(">>>> FORM:", formData);
 
@@ -66,7 +66,6 @@ const ChiTiet_YCTN = () => {
 
               <CustomPanel 
                 stepPanel={4}
-
                   header="Khảo sát lập phương án thi công" 
                   toggleable
                   fields={[
@@ -83,10 +82,9 @@ const ChiTiet_YCTN = () => {
               </CustomPanel>
 
               <CustomPanel 
-                stepPanel={5}
                 formData={formData}
                 header="Thực hiện thí nghiệm " toggleable
-                currentStep={formData.crr_step}
+                currentStep={formData.crr_step} //5
                 >
                 <DanhSachThietBi
                   thongtinYCTN={formData}
@@ -96,7 +94,6 @@ const ChiTiet_YCTN = () => {
 
               <CustomPanel 
                 stepPanel={6}
-
                   header="Bàn Giao Kết Quả" 
                   toggleable
                   fields={[

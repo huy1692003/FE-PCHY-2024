@@ -32,7 +32,7 @@ const FormField = ({
   isTextArea = false,
   options = [],
   prefix,
-  isDisabled = true,
+  // isDisabled = true,
   styleField,
   props,
   mode,
@@ -50,11 +50,11 @@ const FormField = ({
       <Calendar
         id={id}
         name={id}
-        value={new Date(value)}
+        value={value ? new Date(value) : new Date()}
         showIcon
         onChange={onChange}
         className="w-full flex align-items-center justify-content-start p-disabled-custom"
-        disabled={isDisabled}
+        // disabled={isDisabled}
       />
     ) : isNumber ? (
       <div className="p-inputgroup">
@@ -63,7 +63,7 @@ const FormField = ({
           name={id}
           value={value}
           className="w-full"
-          disabled={isDisabled}
+          // disabled={isDisabled}
           style={{ opacity: 1 }}
         />
         <span
@@ -82,7 +82,7 @@ const FormField = ({
         options={options}
         showClear
         className="w-full"
-        disabled={isDisabled}
+        // disabled={isDisabled}
         filter
         optionValue={optionsValue}
         onChange={onChange}
@@ -97,7 +97,7 @@ const FormField = ({
         value={value}
         rows={5}
         className="w-full"
-        disabled={isDisabled}
+        // disabled={isDisabled}
         autoResize
         style={{ opacity: 1 }}
       />
@@ -108,7 +108,7 @@ const FormField = ({
         name={id}
         value={value}
         className="w-full"
-        disabled={isDisabled}
+        // disabled={isDisabled}
       />
     )}
   </div>

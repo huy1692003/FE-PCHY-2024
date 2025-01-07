@@ -25,15 +25,18 @@ const FieldKhaoSatPA = ({
         let fileName = formData.file_pa_thi_cong.split("/").pop();
         setListFileUpload([{ file, name: fileName }]);
       }
+      // console.log(isFormDisabled)
     }, [formData.file_pa_thi_cong, formData.crr_step]);
 
 
     //console.log('listFileUpload', listFileUpload);
 
-    const isFormDisabled =  
-    formData.file_pa_thi_cong &&
-    formData.nguoi_th_ks_lap_pa_thi_cong &&
-    formData.ngay_ks_lap_pa_thi_cong;
+    // const isFormDisabled =  
+    // formData.file_pa_thi_cong &&
+    // formData.nguoi_th_ks_lap_pa_thi_cong &&
+    // formData.ngay_ks_lap_pa_thi_cong;
+
+    
 
 
     useEffect(() => {
@@ -50,11 +53,11 @@ const FieldKhaoSatPA = ({
 
 
     // console.log('dm_KH',dm_KH);
-    console.log('ngay lap pa:', formData.ngay_ks_lap_pa_thi_cong);
+  console.log('ngay lap pa:', formData.ngay_ks_lap_pa_thi_cong);
   return (
     <div>
       <InputFile
-        isDisabled={isFormDisabled}
+        // isDisabled={isFormDisabled}
         nameField="file_upload"
         setFormData={setFormData}
         onChange={(formData) => {
@@ -104,7 +107,7 @@ const FieldKhaoSatPA = ({
         label="Người khảo sát"
         id="nguoi_th_ks_lap_pa_thi_cong"
         isDropdown
-        isDisabled={isFormDisabled}
+        // isDisabled={isFormDisabled}
         options={dm_KH}
         optionsValue="id"
         optionsLabel="hO_TEN"
@@ -114,7 +117,7 @@ const FieldKhaoSatPA = ({
 
       <FormField
         label="Ngày khảo sát"
-        isDisabled={isFormDisabled}
+        // isDisabled={isFormDisabled}
         id="ngay_ks_lap_pa_thi_cong"
         isCalendar
         value={formData.ngay_ks_lap_pa_thi_cong}
