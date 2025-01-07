@@ -4,7 +4,7 @@ import { Calendar } from "primereact/calendar";
 import { InputText } from "primereact/inputtext";
 import { Panel } from "primereact/panel";
 import { Dropdown } from "primereact/dropdown";
-import { memo, useMemo, useState, useEffect, useRef } from "react";
+import { memo, useMemo, useState, useEffect, useRef, useLayoutEffect } from "react";
 import { subDays, startOfToday, endOfToday } from "date-fns";
 import { Button } from "primereact/button";
 import TableDocument from "./tableDocument";
@@ -64,23 +64,29 @@ const Kyso = () => {
     const [loading, setLoading] = useState(false);
     const [showFilter, setShowFilter] = useState(false);  // Điều khiển hiển thị các trường tìm kiếm
     const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
-
+    const [loadingExport, setLoadingExport] = useState(false);
     const idUserCurrent = JSON.parse(sessionStorage.getItem('user'))?.id;
     const currentStatusTitle = useMemo(() => {
         return statusList.find((item) => item.keyword === currentStatus)?.title || "Không xác định";
     }, [currentStatus]);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         let today = startOfToday();
         let start = new Date(today.getFullYear(), today.getMonth(), 1);
         let end = new Date(today.getFullYear(), today.getMonth() + 1, 0);
         setDates([start, end]);
 
         const getDanhMuc = async () => {
-            let dmDonVis = await get_All_DM_DONVI();
-            setDanhmuc((prev) => ({ ...prev, donvi: dmDonVis }));
-            let dmLoaiBienBans = await DM_LOAI_BIENBAN_Service.getAllDM_LOAI_BIENBAN();
-            setDanhmuc((prev) => ({ ...prev, loaibienban: dmLoaiBienBans }));
+            try {
+                let dmDonVis = await get_All_DM_DONVI();
+                setDanhmuc((prev) => ({ ...prev, donvi: dmDonVis }));
+                let dmLoaiBienBans = await DM_LOAI_BIENBAN_Service.getAllDM_LOAI_BIENBAN();
+                setDanhmuc((prev) => ({ ...prev, loaibienban: dmLoaiBienBans }));
+            }
+            catch (error) {
+                console.log(error);
+                setDanhmuc((prev) => ({ ...prev, donvi: [], loaibienban: [] }));
+            }
         };
 
         getDanhMuc();
@@ -89,18 +95,17 @@ const Kyso = () => {
             status_Document: currentStatus === 0 ? null : currentStatus,
             userId: currentStatus === 1 ? idUserCurrent : null,
         });
-    }, [currentStatus ]);
+    }, [currentStatus]);
 
-    useEffect(() => {  
-      handleSearch();
-    },[paginate])
+    useLayoutEffect(() => {
+        handleSearch();
+    }, [paginate])
 
 
     const search_Document = async (paginate, paramSearch) => {
         setLoading(true);
         try {
             let res = await QLTN_KYSO_Service.SEARCH_VANBAN(paginate, paramSearch);
-            console.log(res);
             if (res) {
                 setListDocument((prev) => ({ ...prev, total: res.total, items: res.data }));
             }
@@ -164,7 +169,6 @@ const Kyso = () => {
     };
 
     const handleSearch = async () => {
-        console.log(paramSearch);
         search_Document(paginate, {
             ...paramSearch,
             status_Document: currentStatus === 0 ? null : currentStatus,
@@ -172,15 +176,42 @@ const Kyso = () => {
         });
     };
 
+
     const headerList = (options, currentStatusTitle) => {
         const className = `${options.className} flex flex-wrap justify-content-between align-items-center`;
         return (
             <div className={className + " mt-3"}>
                 <span className="text-xl font-bold">{currentStatusTitle}</span>
                 <Button
+                    loading={loadingExport}
+                    onClick={async () => {
+                        setLoadingExport(true);
+                        try {
+                            // Gọi API để xuất file Excel
+                            let res = await QLTN_KYSO_Service.exportExcel(paginate, paramSearch);
+                            if (res) {
+                                const blob = new Blob([res], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+                                const link = document.createElement("a");
+                                link.href = URL.createObjectURL(blob);
+                                link.download = `DanhSachVanBan_${new Date().toISOString()}.xlsx`;
+                                // Tải file
+                                link.click();
+                                // Giải phóng bộ nhớ sau khi tải xong
+                                URL.revokeObjectURL(link.href);
+                            }
+
+
+                        } catch (error) {
+                            console.error("Có lỗi xảy ra khi xuất file Excel:", error);
+                        } finally {
+                            setLoadingExport(false);
+                        }
+
+                    }}
+                    
                     label="Xuất file Excel"
                     icon="pi pi-file-excel"
-                    className="bg-green-700 border-none flex align-items-center"
+                    className="bg-green-700 border-none font-medium flex align-items-center"
                 />
             </div>
         );
@@ -261,16 +292,16 @@ const Kyso = () => {
                         </Button>
                     )}
                     {isMobile && showFilter && (
-                        <div className="box-filter-mobile">
+                        <div className="box-filter-mobile grid gap-2">
                             <InputText
                                 showClear
-                                className="min-w-[200px] w-10rem"
+                                className="w-full"
                                 placeholder="Từ khóa ..."
                                 onChange={onKeywordChange}
                             />
                             <Dropdown
                                 value={rangeOption}
-                                className="w-[150px]"
+                                className="w-full"
                                 options={rangeOptions}
                                 onChange={onRangeChange}
                                 optionLabel="label"
@@ -279,6 +310,8 @@ const Kyso = () => {
                                 value={dates}
                                 selectionMode="range"
                                 showButtonBar
+                                className="w-full"
+
                                 onChange={onCalendarChange}
                                 dateIcon="pi pi-calendar"
                                 showIcon={true}
@@ -286,7 +319,7 @@ const Kyso = () => {
                             <Dropdown
                                 value={paramSearch.donvithuchien}
                                 options={danhmuc.donvi}
-                                style={{ maxWidth: 190 }}
+                                style={{ width: "100%" }}
                                 onChange={(e) => onDropdownChange("donvithuchien", e.value)}
                                 filter
                                 optionLabel="ten"
@@ -299,33 +332,36 @@ const Kyso = () => {
                                 options={danhmuc.loaibienban}
                                 onChange={(e) => onDropdownChange("idloaibienban", e.value)}
                                 filter
-                                style={{ maxWidth: 160 }}
+                                style={{ width: "49%" }}
                                 optionLabel="ten_loai_bb"
                                 optionValue="id"
                                 placeholder="Loại văn bản"
                                 showClear
                             />
                             <Dropdown
+                                style={{ width: "48%" }}
                                 value={paramSearch.tienTrinhKySo}
                                 options={processKySoList}
                                 onChange={(e) => onDropdownChange("tienTrinhKySo", e.value)}
                                 optionLabel="title"
-                                style={{ maxWidth: 150 }}
                                 optionValue="level"
                                 placeholder="Trạng thái"
                                 showClear
                             />
-                            <Button className="text-white" type="primary" onClick={handleSearch}>
-                                Tìm kiếm
-                            </Button>
-                            <Button className="text-white" type="text" onClick={() => setShowFilter(false)}>
-                                Đóng
-                            </Button>
+                            <div className="flex justify-content-around w-full mt-2">
+                                <Button className="text-white" type="primary" onClick={handleSearch}>
+                                    Tìm kiếm
+                                </Button>
+                                <Button className="text-white" type="text" onClick={() => setShowFilter(false)}>
+                                    Đóng
+                                </Button>
+                            </div>
                         </div>
                     )}
                 </div>
 
                 <TableDocument
+                    isMobile={isMobile}
                     loading={loading}
                     data={listDocument}
                     paginate={paginate}

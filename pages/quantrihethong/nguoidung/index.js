@@ -295,7 +295,7 @@ const NguoiDung = () => {
                 <Panel headerTemplate={headerTemplate}>
                     <DataTable
                         selection={selectedNguoiDung}
-                        onSelectionChange={(e) => { setSelectedNguoiDung(e.value) }} dataKey='teN_DANG_NHAP'
+                        onSelectionChange={(e) => { setSelectedNguoiDung(e.value) }} dataKey='id'
                         value={DataFilter} showGridlines
                         responsiveLayout="scroll"
                         style={{ fontSize: 12, fontWeight: "" }}

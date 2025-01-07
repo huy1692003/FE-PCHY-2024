@@ -339,9 +339,9 @@ const CreateThiNghiemTB = ({ thongtinYCTN, stateDialog, thongtinThietBi, donVi, 
                                 />
                             </div>
                             <div className="col-6">
-                                <label className='font-bold text-sm my-3 block' htmlFor="file_upload">
+                                <label className='font-medium text-sm my-2 block' htmlFor="file_dinh_kem_giao_nv">
                                     <span className="flex justify-content-between">
-                                        <span>Upload biên bản</span>
+                                        <span>File upload</span>
                                     </span>
                                 </label>
                                 <InputFile nameField="file_upload" setFormData={setFormData} showPreview={true} />

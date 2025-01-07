@@ -17,7 +17,17 @@ const QLTN_KYSO_Service = {
         } catch (error) {
             console.log(error)
         }
-    }
+    },
+    exportExcel: async (paginate,data) => {
+        try {
+            const res = await apiClient.post(`/QLTN_KYSO/exportExcel`, data,{
+                responseType: 'blob'  // Chỉ định nhận dữ liệu dưới dạng blob
+            });
+            return res?.data;
+        } catch (error) {
+            throw new Error(error.response ? error.response.data : 'Error creating NGUOI_KY_SO');
+        }
+    },
 };
 
 

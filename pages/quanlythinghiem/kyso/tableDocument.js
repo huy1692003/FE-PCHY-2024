@@ -15,29 +15,31 @@ import { Toast } from 'primereact/toast';
 import { Paginator } from 'primereact/paginator';
 
 
-const TableDocument = ({ data, loading, refeshData, paginate, setPaginate }) => {
+const TableDocument = ({ data, isMobile, refeshData, paginate, setPaginate }) => {
     const { total, items } = data
-    console.log(items)
     const [dialogVisible, setDialogVisible] = useState(false);
     const [selectedDocument, setSelectedDocument] = useState(null);
     const toast = useRef(null);
+
     // Định nghĩa render cho cột "Thao tác"
-    console.log("total", total)
     const actionBodyTemplate = (rowData) => {
         return (
-            <span className='flex gap-2'>
+            <span className='grid gap-2 justify-content-center '>
                 <Button
                     tooltip='Xem chi tiết'
                     icon="pi pi-eye"
+                    tooltipOptions={{ position: 'left' }}
+
                     className="p-button-rounded text-lg"
-                    style={{ width: 35, height: 35, backgroundColor: "rgb(20, 69, 167)" }}
+                    style={{ width: 30, height: 30, backgroundColor: "rgb(20, 69, 167)" }}
                     onClick={() => handleViewOrKySo(rowData)}
                 />
                 <Button
                     tooltip='Tải xuống'
+                    tooltipOptions={{ position: 'left' }}
                     icon="pi pi-arrow-circle-down"
                     className="text-lg"
-                    style={{ width: 35, height: 35, backgroundColor: "rgb(20, 69, 167)" }}
+                    style={{ width: 30, height: 30, backgroundColor: "rgb(20, 69, 167)" }}
                     onClick={() => handleDownload(rowData.file_upload)}
                 />
             </span>
@@ -47,9 +49,8 @@ const TableDocument = ({ data, loading, refeshData, paginate, setPaginate }) => 
 
     // Sự kiện khi thay đổi trang hoặc số bản ghi trên mỗi trang
     const onPageChange = (event) => {
-
-        setPaginate((prev)=>({...prev,page:event.page + 1}));  // Cập nhật pageIndex từ sự kiện
-        setPaginate((prev)=>({...prev,pageSize:event.rows}));  // Cập nhật pageIndex từ sự kiện
+        setPaginate((prev) => ({ ...prev, page: event.page + 1 }));  // Cập nhật pageIndex từ sự kiện
+        setPaginate((prev) => ({ ...prev, pageSize: event.rows }));  // Cập nhật pageIndex từ sự kiện
 
     };
     // Hàm xử lý "Xem" PDF
@@ -73,8 +74,9 @@ const TableDocument = ({ data, loading, refeshData, paginate, setPaginate }) => 
 
                 <DataTable showGridlines style={{ minWidth: 1000 }} value={items} responsiveLayout="scroll" >
                     {/* Cột STT */}
-                    <Column headerStyle={headerStyleColumn} field="stt" header="STT" body={(rowData, { rowIndex }) => rowIndex + 1} />
+                    <Column headerStyle={headerStyleColumn} field="stt" header="STT" body={(_, { rowIndex }) => (paginate.page - 1) * paginate.pageSize + rowIndex + 1} />
 
+                    {isMobile && <Column headerStyle={headerStyleColumn} body={actionBodyTemplate} header="Thao tác" />}
                     {/* Cột Thông tin chung */}
                     <Column
                         style={{ maxWidth: 350 }}
@@ -178,12 +180,12 @@ const TableDocument = ({ data, loading, refeshData, paginate, setPaginate }) => 
                     />
 
                     {/* Cột Thao tác */}
-                    <Column headerStyle={headerStyleColumn} body={actionBodyTemplate} header="Thao tác" />
+                    {!isMobile && <Column headerStyle={headerStyleColumn} body={actionBodyTemplate} header="Thao tác" />}
                 </DataTable>
             </div>
-          
+
             <Paginator
-                first={((paginate.page)-1)*paginate.pageSize} // Vị trí bản ghi đầu tiên của trang hiện tại
+                first={((paginate.page) - 1) * paginate.pageSize} // Vị trí bản ghi đầu tiên của trang hiện tại
                 rows={paginate.pageSize}
                 totalRecords={total} // Tổng số bản ghi
                 rowsPerPageOptions={[5, 10, 20, 50]} // Các lựa chọn số bản ghi mỗi trang
@@ -192,8 +194,11 @@ const TableDocument = ({ data, loading, refeshData, paginate, setPaginate }) => 
             {/* Dialog hiển thị PDF */}
 
             {selectedDocument && <ViewKyso
+                isMobile={isMobile}
                 toastParent={toast}
-                setShow={setDialogVisible} Detail={selectedDocument} Show={dialogVisible} refeshData={refeshData} />}
+                setShow={setDialogVisible} Detail={selectedDocument}
+                Show={dialogVisible}
+                refeshData={refeshData} />}
         </div >
     );
 };

@@ -45,7 +45,7 @@ const FillThongTinYCTN = ({ Element }) => {
 
     const searchYCTN = async (event) => {
         let res = await QLTN_YCTNService.search_Ma_YCTN(event.query);
-        const suggestions = res.map(code => ({
+        const suggestions = res?.map(code => ({
             ma_yctn: code
         }));
         setListMa_YCTN(suggestions);
@@ -57,6 +57,7 @@ const FillThongTinYCTN = ({ Element }) => {
                 <label className='font-medium text-sm my-3 block' htmlFor="ma_yctn">Mã yêu cầu thí nghiệm <span>(STT được hệ thống quy định)</span> <span className="text-lg text-red-500">*</span></label>
 
                 <AutoComplete
+                    maxLength={20}
                     id="ma_yctn"
                     value={ma_yctn_Current}
                     suggestions={listMa_YCTN}

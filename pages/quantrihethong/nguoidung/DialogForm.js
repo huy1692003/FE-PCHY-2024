@@ -109,7 +109,7 @@ export const DialogForm = ({ isAdd, formData, setFormData, visible, setVisible, 
                 loadData(search);
 
             } catch (error) {
-                toast.current.show({ severity: 'error', summary: 'Thông báo!', detail: `${(isAdd ? "Thêm" : "Sửa")} thất bại.`, life: 3000 });
+                toast.current.show({ severity: 'error', summary: 'Thông báo!', detail: `${(isAdd ? "Thêm" : "Sửa")} thất bại .`, life: 3000 });
             } finally {
                 setLoading(false);
             }

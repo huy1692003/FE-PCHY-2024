@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef, useState } from 'react';
+import React, { memo, use, useEffect, useRef, useState } from 'react';
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
@@ -11,17 +11,15 @@ import { Notification } from '../../../utils/notification';
 import QLTN_KYSO_Service from '../../../services/quanlythinghiem/QLTN_KYSO_Service';
 import { Toast } from 'primereact/toast';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
-
-const ViewKySo = ({ Show, setShow, Detail, refeshData, toastParent }) => {
+const ViewKySo = ({ Show, setShow, Detail, refeshData, toastParent, isMobile }) => {
     const [rejectDialogVisible, setRejectDialogVisible] = useState(false);  // Thay thế confirmVisible bằng rejectDialogVisible
     const [rejectionReason, setRejectionReason] = useState('');
-    const userID = JSON.parse(sessionStorage.getItem('user'))?.id;
+    const userID= JSON.parse(sessionStorage.getItem('user'));
     const { file_upload, chi_tiet_tn, list_NguoiKy, ma_loaitb, ten_thietbi, soluong, ma_yctn, ten_yctn, nguoi_tao, ngaytao } = Detail;
     const toast = useRef(null);
 
     //Bản ghi cần ký số 
-    const record_kyso = list_NguoiKy.find(s => s.nhom_nguoi_ky === chi_tiet_tn.nhomky_hientai && s.id_nguoi_ky === userID && s.trang_thai_ky === 0) || null;
-
+    const record_kyso = list_NguoiKy.find(s => s.nhom_nguoi_ky === chi_tiet_tn.nhomky_hientai && s.id_nguoi_ky === userID?.id && s.trang_thai_ky === 0) || null;
 
     useEffect(() => {
         setRejectDialogVisible(false);  // Đóng dialog từ chối khi Show thay đổi
@@ -29,7 +27,8 @@ const ViewKySo = ({ Show, setShow, Detail, refeshData, toastParent }) => {
     }, [Show]);
 
     const renderSignerStatus = (signer) => (
-        <div key={signer.id} className="font-normal text-base">
+        <div key={signer.id} className="font-normal text-base md:flex justify-content-between  my-1" style={{ minWidth: isMobile ? '100%' : '240px' }}>
+
             {signer.ho_ten} - {signer.ten_dang_nhap}
             <span className={
                 signer.trang_thai_ky === 1 ? "text-blue-700 font-semibold" :
@@ -55,7 +54,7 @@ const ViewKySo = ({ Show, setShow, Detail, refeshData, toastParent }) => {
     const timelineItems = [
         {
             title: "Khởi tạo",
-            description: `${nguoi_tao} khởi tạo văn bản`,
+            description: <span style={{ minWidth: isMobile ? '100%' : '240px' }} className='inline-block '>{nguoi_tao} khởi tạo văn bản</span>,
             date: formatDateTime(ngaytao),
             isCompleted: true,
             groupId: null
@@ -125,14 +124,26 @@ const ViewKySo = ({ Show, setShow, Detail, refeshData, toastParent }) => {
         const data = {
             id: record_kyso?.id,
             maCTTN: record_kyso?.ma_chi_tiet_tn,
-            idNguoiKy: userID,
+            idNguoiKy: userID?.id,
             nhomNguoiKy: record_kyso?.nhom_nguoi_ky,
             trangThai: status,
             lyDoTuChoi: status === -1 ? rejectionReason : null,
         };
 
         const executeUpdate = async () => {
-            await QLTN_KYSO_Service.update_TrangThai_Ky(data);
+            await QLTN_KYSO_Service.update_TrangThai_Ky({
+                ...data,
+                requestSign: {
+                    "userSign": {
+                      "userID": "002087000080",
+                      "serial_number": "540101016946c14b754c1f902c13be8e"
+                    },
+                    "pathFileIn_Out": file_upload,
+                    "descSign": "Ký số cho biên bản " + ma_yctn,
+                    "fullNameUser":userID?.ho_ten, 
+                    "idUserApp": userID?.id,
+                  }
+            });
             refeshData();
             setShow(false);
             setRejectionReason(''); // Reset lý do từ chối
@@ -151,7 +162,7 @@ const ViewKySo = ({ Show, setShow, Detail, refeshData, toastParent }) => {
                 header: 'Thông báo',
                 icon: 'pi pi-question-circle',
                 accept: executeUpdate,
-                reject: () => {return},
+                reject: () => { return },
             });
         } else {
             await executeUpdate();
@@ -164,17 +175,18 @@ const ViewKySo = ({ Show, setShow, Detail, refeshData, toastParent }) => {
         <Dialog
             visible={Show}
             closable={false}
-            style={{ width: '94%', minHeight: '88vh' }}
+            style={{ width: '94vw', minHeight: '88vh' }}
             header={dialogHeader}
             onHide={() => setShow(false)}
         >
             <Toast ref={toast} />
-            <div className='flex justify-content-between gap-2'>
-
+            <div className="flex flex-column md:flex-row gap-2">
                 {file_upload && (
-                    <div style={{ width: "60%", minHeight: "800px", height: "100vh" }} >
+                    <div
+                    
+                        style={{ height: isMobile ? '300px' : "90vh" , width:"98%" , minWidth:300}}
+                    >
                         <iframe
-
                             src={urlServer + file_upload}
                             type="application/pdf"
                             width="100%"
@@ -182,10 +194,12 @@ const ViewKySo = ({ Show, setShow, Detail, refeshData, toastParent }) => {
                             title="PDF Preview"
                             style={{ border: 'none' }}
                         />
+                        
+                       
                     </div>
                 )}
 
-                <div style={{ width: "37%" }} className="flex flex-col gap-2">
+                <div className="w-full md:w-4 flex flex-col gap-2">
                     <div className="w-full p-2">
                         <Panel header="Thông tin YCTN">
                             {documentInfo.map((info, index) => (
@@ -193,18 +207,19 @@ const ViewKySo = ({ Show, setShow, Detail, refeshData, toastParent }) => {
                                     key={index}
                                     readOnly
                                     value={`${info.label} ${info.value}`}
-                                    className='w-full mb-2'
+                                    className="w-full mb-2"
                                 />
                             ))}
                         </Panel>
 
-                        <Panel className='mt-1' header="Tiến trình ký số văn bản">
+                        <Panel className="mt-1" header="Tiến trình ký số văn bản">
                             <div className="w-full">
                                 <Timeline
                                     value={timelineItems}
                                     align="left"
                                     marker={(item) => (
-                                        <i className={`pi ${item.isCompleted ? "pi-check-circle" : "pi-circle"}`}
+                                        <i
+                                            className={`pi ${item.isCompleted ? "pi-check-circle" : "pi-circle"}`}
                                             style={{
                                                 fontSize: '1.5rem',
                                                 color: item.isCompleted ? 'blue' : 'orange',
@@ -212,12 +227,17 @@ const ViewKySo = ({ Show, setShow, Detail, refeshData, toastParent }) => {
                                         />
                                     )}
                                     content={(item) => (
-                                        <div style={{ color: item.isCompleted ? 'green' : 'orange', marginBottom: 30 }}>
-                                            <h6 className='text-base text-gray-700'>{item.status}</h6>
+                                        <div
+                                            style={{
+                                                color: item.isCompleted ? 'green' : 'orange',
+                                                marginBottom: 30,
+                                            }}
+                                        >
+                                            <h6 className="text-base text-gray-700">{item.status}</h6>
                                         </div>
                                     )}
                                     opposite={(item) => (
-                                        <div className='text-gray-600 text-base p-0'>
+                                        <div className="text-gray-600 text-base p-0">
                                             {item.date}
                                         </div>
                                     )}
@@ -225,9 +245,8 @@ const ViewKySo = ({ Show, setShow, Detail, refeshData, toastParent }) => {
                             </div>
                         </Panel>
 
-                        {/* // Kiểm tra người ký hiện tại có trong danh sách người ký và chưa ký */}
-                        {record_kyso && chi_tiet_tn.trang_thai_ky === 1 &&
-                            <div className='flex justify-content-between gap-2'>
+                        {record_kyso && chi_tiet_tn.trang_thai_ky === 1 && (
+                            <div className="flex flex-column sm:flex-row gap-2">
                                 <Button
                                     label="Đồng ý ký"
                                     icon="pi pi-check"
@@ -242,52 +261,54 @@ const ViewKySo = ({ Show, setShow, Detail, refeshData, toastParent }) => {
                                     className="w-full mt-3"
                                     onClick={handleReject}
                                 />
-                            </div>}
+                            </div>
+                        )}
                     </div>
                 </div>
-
-                {/* Dialog từ chối ký */}
-                <Dialog
-                    visible={rejectDialogVisible}
-                    style={{ width: '90vw', maxWidth: '500px' }}
-                    header={
-                        <div className="flex align-items-center gap-2">
-                            <i className="pi pi-info-circle text-primary text-3xl"></i>
-                            <span>Xác nhận từ chối ký</span>
-                        </div>
-                    }
-                    onHide={handleCancelReject}
-                >
-                    <div className="w-full">
-                        <InputTextarea
-                            className="w-full inline-block"
-                            rows={4}
-                            id="rejectionReason"
-                            placeholder="Lý do từ chối ký "
-                            value={rejectionReason}
-                            onChange={(e) => setRejectionReason(e.target.value)}
-                        />
-                    </div>
-                    <div className="flex flex-wrap justify-content-end gap-2 mt-3">
-                        <Button
-                            label="Xác nhận"
-                            icon="pi pi-check"
-                            severity="info"
-                            onClick={() => handleSubmit(-1)}
-                            className="flex-grow-1 sm:flex-grow-0"
-                        />
-                        <Button
-                            label="Hủy"
-                            icon="pi pi-times"
-                            severity="secondary"
-                            onClick={handleCancelReject}
-                            className="flex-grow-1 sm:flex-grow-0"
-                        />
-                    </div>
-                </Dialog>
-                    <ConfirmDialog/>
             </div>
+
+            {/* Dialog từ chối ký */}
+            <Dialog
+                visible={rejectDialogVisible}
+                style={{ width: '90vw', maxWidth: '500px' }}
+                header={
+                    <div className="flex align-items-center gap-2">
+                        <i className="pi pi-info-circle text-primary text-3xl"></i>
+                        <span>Xác nhận từ chối ký</span>
+                    </div>
+                }
+                onHide={handleCancelReject}
+            >
+                <div className="w-full">
+                    <InputTextarea
+                        className="w-full inline-block"
+                        rows={4}
+                        id="rejectionReason"
+                        placeholder="Lý do từ chối ký"
+                        value={rejectionReason}
+                        onChange={(e) => setRejectionReason(e.target.value)}
+                    />
+                </div>
+                <div className="flex flex-wrap justify-content-end gap-2 mt-3">
+                    <Button
+                        label="Xác nhận"
+                        icon="pi pi-check"
+                        severity="info"
+                        onClick={() => handleSubmit(-1)}
+                        className="flex-grow-1 sm:flex-grow-0"
+                    />
+                    <Button
+                        label="Hủy"
+                        icon="pi pi-times"
+                        severity="secondary"
+                        onClick={handleCancelReject}
+                        className="flex-grow-1 sm:flex-grow-0"
+                    />
+                </div>
+            </Dialog>
+            <ConfirmDialog />
         </Dialog>
+
     );
 };
 

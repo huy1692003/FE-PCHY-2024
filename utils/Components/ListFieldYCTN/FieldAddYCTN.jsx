@@ -24,8 +24,8 @@ import { Tooltip } from "primereact/tooltip";
 
 
 export const FormField = ({ label, className, style, placeholder, value, onChange, id, isCalendar = false, isNumber = false, row = 5, isFileUpload = false, isDropdown = false, isTextArea = false, options = [], prefix, isDisabled = false, styleField, props, mode, currency, locale, childrenIPNumber = "VNĐ", optionsValue, optionsLabel }) => (
-    <div className={className +" mb-2"} style={style}>
-        <label className='font-medium text-sm my-1 block' htmlFor={id}>{label}</label>
+    <div className={className +""} style={style}>
+        <label className='font-medium text-sm my-2 block' htmlFor={id}>{label}</label>
         {isCalendar ? (
             <Calendar id={id} name={id} value={value} onChange={(e) => onChange(id, e.value)} showIcon className="w-full"  disabled={isDisabled} appendTo="self"   />
         ) : isNumber ? (
