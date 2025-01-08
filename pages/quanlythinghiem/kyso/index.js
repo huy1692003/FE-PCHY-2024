@@ -14,6 +14,7 @@ import { Notification } from "../../../utils/notification";
 import { Toast } from "primereact/toast";
 import QLTN_KYSO_Service from "../../../services/quanlythinghiem/QLTN_KYSO_Service";
 import { useMediaQuery } from 'react-responsive';
+import { ProgressSpinner } from "primereact/progressspinner";
 
 // List các trạng thái
 const statusList = [
@@ -208,7 +209,7 @@ const Kyso = () => {
                         }
 
                     }}
-                    
+
                     label="Xuất file Excel"
                     icon="pi pi-file-excel"
                     className="bg-green-700 border-none font-medium flex align-items-center"
@@ -223,19 +224,18 @@ const Kyso = () => {
                 <title>{currentStatusTitle}</title>
             </Head>
             <Toast ref={toast} />
-            <Panel headerTemplate={(options) => headerList(options, currentStatusTitle)}>
-                <div className={`box-filter ${isMobile ? 'flex-column' : 'flex justify-content-between gap-2'} mb-5`}>
+            <Panel headerTemplate={(options) => headerList(options, currentStatusTitle)} className="min-h-full">
+                <div className={`max-w-full overflow-x-auto box-filter ${isMobile ? 'flex-column' : 'flex justify-content-between gap-2'} mb-5`}>
                     {!isMobile && (
                         <>
                             <InputText
                                 showClear
-                                className="min-w-[200px] w-10rem"
+                                className="min-w-[20px] w-10rem"
                                 placeholder="Từ khóa ..."
                                 onChange={onKeywordChange}
                             />
                             <Dropdown
                                 value={rangeOption}
-                                className="w-[150px]"
                                 style={{ maxWidth: 160 }}
                                 options={rangeOptions}
                                 onChange={onRangeChange}
@@ -245,6 +245,7 @@ const Kyso = () => {
                                 value={dates}
                                 selectionMode="range"
                                 showButtonBar
+                                style={{ minWidth: 220 }}
                                 onChange={onCalendarChange}
                                 dateIcon="pi pi-calendar"
                                 showIcon={true}
@@ -281,7 +282,7 @@ const Kyso = () => {
                                 placeholder="Trạng thái"
                                 showClear
                             />
-                            <Button className="text-white" type="primary" onClick={handleSearch}>
+                            <Button  className="text-white inline-block" style={{minWidth:100}} type="primary" onClick={handleSearch}>
                                 Tìm kiếm
                             </Button>
                         </>
@@ -360,13 +361,17 @@ const Kyso = () => {
                     )}
                 </div>
 
-                <TableDocument
-                    isMobile={isMobile}
-                    loading={loading}
-                    data={listDocument}
-                    paginate={paginate}
-                    setPaginate={setPaginate}
-                />
+                {loading ?
+                    <div className="spinner-container" style={{ textAlign: 'center', padding: '15px' }}>
+                        <ProgressSpinner color="blue" />
+                    </div> :
+                    <TableDocument
+                        isMobile={isMobile}
+                        loading={loading}
+                        data={listDocument}
+                        paginate={paginate}
+                        setPaginate={setPaginate}
+                    />}
             </Panel>
         </>
     );

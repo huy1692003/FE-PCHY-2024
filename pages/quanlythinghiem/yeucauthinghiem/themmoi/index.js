@@ -27,6 +27,9 @@ const ThemMoiYCTN = () => {
         setSelectLoaiYCTN(loai);
     }
 
+    
+
+
 
 
     return (
@@ -41,7 +44,8 @@ const ThemMoiYCTN = () => {
                         <label className='font-bold text-base my-3 block' htmlFor="selectLoaiYCTN">Loại hình dịch vụ</label>
                         <Dropdown filter placeholder="--Mời chọn--" showClear id="selectLoaiYCTN" name="selectLoaiYCTN" value={selectLoaiYCTN?.id} optionValue="id" optionLabel="ten_loai_yc" options={loaiYCTN} onChange={handleSelectLoaiYCTN} className="w-full text-base" />
                     </div>
-                    {selectLoaiYCTN && <FieldAddYCTN isAdd={true} toast={toast} loai_yctn={selectLoaiYCTN} />}
+                    {selectLoaiYCTN && <FieldAddYCTN isAdd={true} toast={toast} loai_yctn={selectLoaiYCTN}  />}
+
 
                     
                 </Panel>

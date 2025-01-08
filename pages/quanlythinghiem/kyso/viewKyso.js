@@ -11,13 +11,14 @@ import { Notification } from '../../../utils/notification';
 import QLTN_KYSO_Service from '../../../services/quanlythinghiem/QLTN_KYSO_Service';
 import { Toast } from 'primereact/toast';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import LoadingOverlay from '../../../utils/Components/LoadingOverlay';
 const ViewKySo = ({ Show, setShow, Detail, refeshData, toastParent, isMobile }) => {
     const [rejectDialogVisible, setRejectDialogVisible] = useState(false);  // Thay thế confirmVisible bằng rejectDialogVisible
     const [rejectionReason, setRejectionReason] = useState('');
-    const userID= JSON.parse(sessionStorage.getItem('user'));
+    const userID = JSON.parse(sessionStorage.getItem('user'));
     const { file_upload, chi_tiet_tn, list_NguoiKy, ma_loaitb, ten_thietbi, soluong, ma_yctn, ten_yctn, nguoi_tao, ngaytao } = Detail;
     const toast = useRef(null);
-
+    const [loading, setLoading] = useState(false)
     //Bản ghi cần ký số 
     const record_kyso = list_NguoiKy.find(s => s.nhom_nguoi_ky === chi_tiet_tn.nhomky_hientai && s.id_nguoi_ky === userID?.id && s.trang_thai_ky === 0) || null;
 
@@ -120,7 +121,6 @@ const ViewKySo = ({ Show, setShow, Detail, refeshData, toastParent, isMobile }) 
             Notification.error(toast, 'Vui lòng nhập lý do từ chối.');
             return; // Thoát sớm nếu lý do từ chối không hợp lệ
         }
-
         const data = {
             id: record_kyso?.id,
             maCTTN: record_kyso?.ma_chi_tiet_tn,
@@ -129,31 +129,44 @@ const ViewKySo = ({ Show, setShow, Detail, refeshData, toastParent, isMobile }) 
             trangThai: status,
             lyDoTuChoi: status === -1 ? rejectionReason : null,
         };
-
         const executeUpdate = async () => {
-            await QLTN_KYSO_Service.update_TrangThai_Ky({
-                ...data,
-                requestSign: {
-                    "userSign": {
-                      "userID": "002087000080",
-                      "serial_number": "540101016946c14b754c1f902c13be8e"
-                    },
-                    "pathFileIn_Out": file_upload,
-                    "descSign": "Ký số cho biên bản " + ma_yctn,
-                    "fullNameUser":userID?.ho_ten, 
-                    "idUserApp": userID?.id,
-                  }
-            });
-            refeshData();
-            setShow(false);
-            setRejectionReason(''); // Reset lý do từ chối
-            setRejectDialogVisible(false); // Đóng dialog từ chối
-            Notification.success(
-                toastParent,
-                status === 1
-                    ? `Ký số thành công ${ma_yctn}`
-                    : `Bạn vừa từ chối ký số thành công ${ma_yctn}`
-            );
+            setLoading(true)
+            try {
+                await QLTN_KYSO_Service.update_TrangThai_Ky({
+                    ...data,
+                    requestSign: {
+                        "userSign": {
+                            "userID": "002087000080",
+                            "serial_number": "540101016946c14b754c1f902c13be8e"
+                        },
+                        "pathFileIn_Out": file_upload,
+                        "descSign": "Ký số cho biên bản " + ma_yctn,
+                        "fullNameUser": userID?.ho_ten,
+                        "idUserApp": userID?.id,
+                    }
+                });
+                refeshData();
+                setShow(false);
+                setRejectionReason(''); // Reset lý do từ chối
+                setRejectDialogVisible(false); // Đóng dialog từ chối
+                Notification.success(
+                    toastParent,
+                    status === 1
+                        ? `Ký số thành công ${ma_yctn}`
+                        : `Bạn vừa từ chối ký số thành công ${ma_yctn}`
+                );
+            } catch (error) {
+                Notification.error(
+                    toastParent,
+                    status === 1
+                        ? `Ký số thất bại ${ma_yctn}`
+                        : `Từ chối ký số thất bại ${ma_yctn}`,
+                    "Thất bại",
+                    5000
+                );
+            } finally {
+                setLoading(false)
+            }
         };
 
         if (status === 1) {
@@ -183,8 +196,8 @@ const ViewKySo = ({ Show, setShow, Detail, refeshData, toastParent, isMobile }) 
             <div className="flex flex-column md:flex-row gap-2">
                 {file_upload && (
                     <div
-                    
-                        style={{ height: isMobile ? '300px' : "90vh" , width:"98%" , minWidth:300}}
+
+                        style={{ height: isMobile ? '300px' : "90vh", width: "98%", minWidth: 300 }}
                     >
                         <iframe
                             src={urlServer + file_upload}
@@ -194,8 +207,8 @@ const ViewKySo = ({ Show, setShow, Detail, refeshData, toastParent, isMobile }) 
                             title="PDF Preview"
                             style={{ border: 'none' }}
                         />
-                        
-                       
+
+
                     </div>
                 )}
 
@@ -307,6 +320,7 @@ const ViewKySo = ({ Show, setShow, Detail, refeshData, toastParent, isMobile }) 
                 </div>
             </Dialog>
             <ConfirmDialog />
+            <LoadingOverlay isLoading={loading} title={<span className='text-xl'>Đã gửi yêu cầu ký số đến app VNPT SMARTCA . <br/> <span className='text-red-500'>* Lưu ý : Yêu cầu này chỉ tồn tại trong 5 phút</span></span>} />
         </Dialog>
 
     );
