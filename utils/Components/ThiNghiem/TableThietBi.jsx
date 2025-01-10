@@ -109,17 +109,17 @@ const TableThietBi = ({ thongtinYCTN, label, data, loaiThietBi, loaiBienBan, toa
                         data.map((thietBi, index) => (
                             <>
                                 <tr key={index}>
-                                    <td rowSpan={thietBi.listTN.length + 1} style={{ width: "20px",  }} className="text-center border-1 border-300 py-3">{index + 1}</td>
-                                    <td rowSpan={thietBi.listTN.length + 1}  className="text-center border-1 border-300 py-3">{thietBi.ma_tbtn}</td>
-                                    <td rowSpan={thietBi.listTN.length + 1}  className="text-center border-1 border-300 py-3">{loaiThietBi.find(l => l.ma_loai_tb === thietBi.ma_loai_tb)?.ten_loai_tb}</td>
-                                    <td rowSpan={thietBi.listTN.length + 1}  className="text-center border-1 border-300 py-3">{thietBi.ma_loai_tb}</td>
-                                    <td className="text-center border-1 border-300 py-3">{thietBi.so_luong}</td>
-                                    <td className="text-center border-1 border-300 py-3">
+                                    <td rowSpan={thietBi.listTN.length + 1} style={{ width: "15px",  }} className="text-center border-1 border-300 py-3">{index + 1}</td>
+                                    <td rowSpan={thietBi.listTN.length + 1}  style={{ width: "15%",  }} className="text-center border-1 border-300 py-3">{thietBi.ten_thiet_bi}</td>
+                                    <td rowSpan={thietBi.listTN.length + 1}  style={{ width: "18%",  }} className="text-center border-1 border-300 py-3">{loaiThietBi.find(l => l.ma_loai_tb === thietBi.ma_loai_tb)?.ten_loai_tb}</td>
+                                    <td rowSpan={thietBi.listTN.length + 1}  style={{ width: "15%",  }} className="text-center border-1 border-300 py-3">{thietBi.ma_loai_tb}</td>
+                                    <td className="text-center border-1 border-300 py-3"  style={{ width: "25%",  }}>{thietBi.so_luong}</td>
+                                    <td className="text-center border-1 border-300 py-3"  style={{ width: "23%",  }}>
                                         <span className="px-5" style={{ cursor: "pointer", padding: "5px", borderRadius: "20px", backgroundColor: thietBi.trang_thai === 0 ? "#E9E9F1" : "#1170E4", color: thietBi.trang_thai === 0 ? "black" : "white" }} >
                                             {thietBi.trang_thai === 0 ? "Tạo mới" : "Phát sinh"}
                                         </span>
                                     </td>
-                                    <td className="text-center border-1 border-300 py-3">
+                                    <td className="text-center border-1 border-300 py-3"  style={{ width: "30px",  }}>
                                         <Button onClick={() => showCreateThiNghiemTB(thietBi)} tooltip="Thí nghiệm" icon="fas fa-thermometer-three-quarters" className="p-button-text text-primary text-xl hover:bg-primary-600 hover:text-white" />
                                     </td>
                                 </tr>

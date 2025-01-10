@@ -28,19 +28,20 @@ const ViewKySo = ({ Show, setShow, Detail, refeshData, toastParent, isMobile }) 
     }, [Show]);
 
     const renderSignerStatus = (signer) => (
-        <div key={signer.id} className="font-normal text-base md:flex justify-content-between  my-1" style={{ minWidth: isMobile ? '100%' : '240px' }}>
+        <div key={signer.id} className="font-normal text-base md:flex justify-content-between  my-1" style={{ minWidth: isMobile ? '120px' : '240px', maxWidth: isMobile ? '120px' : 'auto' }}>
 
             {signer.ho_ten} - {signer.ten_dang_nhap}
-            <span className={
+            <span style={{ minWidth: 80 }} className={
                 signer.trang_thai_ky === 1 ? "text-blue-700 font-semibold" :
                     signer.trang_thai_ky === -1 ? "text-red-500" :
                         "text-orange-500"
             }>
-                {signer.trang_thai_ky === 1 ? " ( Đồng ý ký )" :
+                {signer.trang_thai_ky === 1 ? " ( Đã ký )" :
                     signer.trang_thai_ky === -1 ?
                         <span> ( Từ chối ký )
                             <Button label="Xem lý do" icon="pi pi-info-circle" className="block mt-3" onClick={() => Notification.info(toast, signer.ly_do_tu_choi, "Lý do từ chối ký văn bản", 13000)} /></span> :
-                        " ( Chưa ký )"}
+                        " ( Chưa ký )"
+                }
             </span>
         </div>
     );
@@ -55,7 +56,7 @@ const ViewKySo = ({ Show, setShow, Detail, refeshData, toastParent, isMobile }) 
     const timelineItems = [
         {
             title: "Khởi tạo",
-            description: <span style={{ minWidth: isMobile ? '100%' : '240px' }} className='inline-block '>{nguoi_tao} khởi tạo văn bản</span>,
+            description: <span style={{ minWidth: isMobile ? '120px' : '240px', maxWidth: isMobile ? '120px' : '' }} className='inline-block '>{nguoi_tao} khởi tạo văn bản</span>,
             date: formatDateTime(ngaytao),
             isCompleted: true,
             groupId: null
@@ -96,6 +97,7 @@ const ViewKySo = ({ Show, setShow, Detail, refeshData, toastParent, isMobile }) 
         </div>
     );
 
+    console.log(file_upload)
     const documentInfo = [
         { label: 'Mã loại thiết bị:', value: ma_loaitb },
         { label: 'Tên thiết bị:', value: ten_thietbi },
@@ -114,6 +116,8 @@ const ViewKySo = ({ Show, setShow, Detail, refeshData, toastParent, isMobile }) 
         setRejectDialogVisible(false);  // Đóng dialog từ chối
     };
 
+    // console.log(userID)
+    // console.log(record_kyso)
 
     // status = 1 đồng ý kí , -1 từ chối kí
     const handleSubmit = async (status = 1) => {
@@ -132,7 +136,7 @@ const ViewKySo = ({ Show, setShow, Detail, refeshData, toastParent, isMobile }) 
         const executeUpdate = async () => {
             setLoading(true)
             try {
-                await QLTN_KYSO_Service.update_TrangThai_Ky({
+                let res = await QLTN_KYSO_Service.update_TrangThai_Ky({
                     ...data,
                     requestSign: {
                         "userSign": {
@@ -143,27 +147,28 @@ const ViewKySo = ({ Show, setShow, Detail, refeshData, toastParent, isMobile }) 
                         "descSign": "Ký số cho biên bản " + ma_yctn,
                         "fullNameUser": userID?.ho_ten,
                         "idUserApp": userID?.id,
+                        "signType": record_kyso?.nhom_nguoi_ky > 1 ? 1 : 0,
+                        "pathImageSign": userID?.anhchukynhay,
                     }
                 });
-                refeshData();
-                setShow(false);
-                setRejectionReason(''); // Reset lý do từ chối
-                setRejectDialogVisible(false); // Đóng dialog từ chối
-                Notification.success(
-                    toastParent,
-                    status === 1
-                        ? `Ký số thành công ${ma_yctn}`
-                        : `Bạn vừa từ chối ký số thành công ${ma_yctn}`
-                );
+                if (res) {
+                    setShow(false);
+                    refeshData();
+                    setRejectionReason(''); // Reset lý do từ chối
+                    setRejectDialogVisible(false); // Đóng dialog từ chối
+                    Notification.success(
+                        toastParent,
+                        status === 1
+                            ? `Ký số thành công ${ma_yctn}`
+                            : `Bạn vừa từ chối ký số thành công ${ma_yctn}`
+                    );
+                }
             } catch (error) {
-                Notification.error(
-                    toastParent,
+                alert(
                     status === 1
                         ? `Ký số thất bại ${ma_yctn}`
-                        : `Từ chối ký số thất bại ${ma_yctn}`,
-                    "Thất bại",
-                    5000
-                );
+                        : `Từ chối ký số thất bại ${ma_yctn}`)
+
             } finally {
                 setLoading(false)
             }
@@ -200,11 +205,17 @@ const ViewKySo = ({ Show, setShow, Detail, refeshData, toastParent, isMobile }) 
                         style={{ height: isMobile ? '300px' : "90vh", width: "98%", minWidth: 300 }}
                     >
                         <iframe
-                            src={urlServer + file_upload}
-                            type="application/pdf"
+                            src={
+                                file_upload.endsWith('.pdf')
+                                    ? urlServer + file_upload
+                                    : file_upload.endsWith('.docx' || '.doc')
+                                        ? `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent('https://thinghiem.pchungyen.vn/Documents/c205001e-67b9-478b-ad64-f0db800d26a4_NguoiKyChinh.pdf')}`
+                                        : urlServer + file_upload // Xử lý với file khác nếu cần
+                            }
+                            type={file_upload.endsWith('.pdf') ? 'application/pdf' : 'application/octet-stream'}
                             width="100%"
                             height="100%"
-                            title="PDF Preview"
+                            title="File Preview"
                             style={{ border: 'none' }}
                         />
 
@@ -320,7 +331,7 @@ const ViewKySo = ({ Show, setShow, Detail, refeshData, toastParent, isMobile }) 
                 </div>
             </Dialog>
             <ConfirmDialog />
-            <LoadingOverlay isLoading={loading} title={<span className='text-xl'>Đã gửi yêu cầu ký số đến app VNPT SMARTCA . <br/> <span className='text-red-500'>* Lưu ý : Yêu cầu này chỉ tồn tại trong 5 phút</span></span>} />
+            <LoadingOverlay isLoading={loading} title={<span className='text-xl'>Đã gửi yêu cầu ký số đến app VNPT SMARTCA . <br /> <span className='text-red-500'>* Lưu ý : Yêu cầu này chỉ tồn tại trong 5 phút</span></span>} />
         </Dialog>
 
     );

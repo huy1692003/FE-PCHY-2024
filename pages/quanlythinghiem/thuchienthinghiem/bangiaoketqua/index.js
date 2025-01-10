@@ -11,6 +11,7 @@ import QLTN_YCTN from "../../../../models/QLTN_YCTN";
 import QLTN_YCTNService from "../../../../services/quanlythinghiem/QLTN_YCTNService";
 import { Notification } from "../../../../utils/notification";
 import { convertTimezoneToVN } from "../../../../utils/FunctionFormart";
+import { getMenuCurrent } from "../../../../utils/Function";
 
 const BanGiaoKetQua = () => {
   const { ma_yctn, thongTinYCTN } = useThongTinYCTN();
@@ -64,7 +65,7 @@ const BanGiaoKetQua = () => {
     <div className="border-round-3xl bg-white p-3">
       <Toast ref={toast} />
       <Head>
-        <title>Bàn giao kết quả</title>
+        <title>{getMenuCurrent()}</title>
       </Head>
       <Panel className="mt-3" header={<h3 className="text-xl font-bold">Bàn giao kết quả</h3>}>
         <FillThongTinYCTN

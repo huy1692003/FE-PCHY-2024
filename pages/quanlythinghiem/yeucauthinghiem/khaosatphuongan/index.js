@@ -17,6 +17,7 @@ const KhaoSatPhuongAn = () => {
   const [isSaved, setIsSaved] = useState(false);
   //console.log(thongTinYCTN);
   const router = useRouter();
+  const user = JSON.parse(sessionStorage.getItem("user"))?.ten_dang_nhap || "";
   const { data } = useContext(MyContext)
   const [formData, setFormData] = useState({
     file_pa_thi_cong: null,
@@ -37,7 +38,7 @@ const KhaoSatPhuongAn = () => {
         ...thongTinYCTN,
         file_pa_thi_cong: thongTinYCTN?.file_pa_thi_cong || null,
         nguoi_th_ks_lap_pa_thi_cong:
-          thongTinYCTN?.nguoi_th_ks_lap_pa_thi_cong || null,
+          thongTinYCTN?.nguoi_th_ks_lap_pa_thi_cong || user,
         ngay_ks_lap_pa_thi_cong: thongTinYCTN?.ngay_ks_lap_pa_thi_cong || null,
       });
   }, [thongTinYCTN]);
@@ -73,7 +74,7 @@ const KhaoSatPhuongAn = () => {
 
       setIsSaved(true);
       // setCrrStep(4);
-    
+
     } catch (error) {
       console.error("Lỗi khi lưu dữ liệu:", error);
     }
@@ -88,7 +89,7 @@ const KhaoSatPhuongAn = () => {
     }
   }, [isSaved]);
 
-
+  
 
   const handleChange = useCallback((field, value) => {
     setFormData((prevData) => ({
@@ -127,25 +128,27 @@ const KhaoSatPhuongAn = () => {
                   />
                 </Panel>
                 <div className="flex justify-content-end mt-6">
+                  <Button
+                    label={formData?.crr_step < 4 ? "Lưu" : "Cập nhật"}
+                    icon="pi pi-save"
+                    onClick={handleSave}
+                  />
                   {formData && (
                     <div>
-                      {formData?.crr_step === 4 ? (
+                      {formData?.crr_step === 4 && (
                         <Button
                           label={"Bước tiếp theo   " + data.listBuocYCTN?.find(s => s.buoc === 5)?.ten_buoc_yctn}
                           icon="pi pi-arrow-right"
+                          className="ml-2"
                           onClick={() => {
                             router.push(
                               `/quanlythinghiem/thuchienthinghiem/thinghiem/list?code=${ma_yctn}`
                             );
                           }}
                         />
-                      ) : (
-                        <Button
-                          label="Lưu"
-                          icon="pi pi-save"
-                          onClick={handleSave}
-                        />
                       )}
+
+
                     </div>
                   )}
                 </div>

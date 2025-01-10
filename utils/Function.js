@@ -1,3 +1,10 @@
+
+/**
+ * @returns {"string"} - Tên menu hiện tại 
+// */
+export const getMenuCurrent = () => {
+    return sessionStorage.getItem('menu_current')||"Danh sách"
+}
 /**
  * Kiểm tra tính hợp lệ của mật khẩu
  * @param {string} password - Mật khẩu cần kiểm tra
@@ -10,6 +17,9 @@
  * - Phải chứa ít nhất 1 chữ hoa
  * - Phải chứa ít nhất 1 ký tự đặc biệt (!@#$%^&*(),.?":{}|<>)
  */
+
+
+
 export const validatePassword = (password, toast) => {
     if (!password) {
         toast.current.show({
@@ -22,7 +32,7 @@ export const validatePassword = (password, toast) => {
     }
     if (password.length <= 7) {
         toast.current.show({
-            severity: 'error', 
+            severity: 'error',
             summary: 'Thông báo!',
             detail: `Mật khẩu phải từ 8 kí tự.`,
             life: 3000

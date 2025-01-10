@@ -82,7 +82,7 @@ const DialogForm = ({
           toast.current.show({
             severity: "error",
             summary: "Thất bại",
-            detail: "Thêm khối lượng thực hiện thất bại",
+            detail: "Thêm khối lượng thực hiện thất bại hãy kiểm tra lại dữ liệu",
             life: 3000,
           });
           return prev;
@@ -131,27 +131,14 @@ const DialogForm = ({
     >
       <div className="grid p-fluid">
         <div className="flex flex-column gap-2 w-full">
-          <div>
-            <label htmlFor="ten_thiet_bi" className="block mb-2">
-              Tên thiết bị<span className="text-red-500">*</span>
-            </label>
-            <InputText
-              id="ten_thiet_bi"
-              name="ten_thiet_bi"
-              value={formData.ten_thiet_bi || ""}
-              onChange={handleChange}
-              className="w-full"
-            />
-          </div>
-
-          <div>
+        <div>
             <label htmlFor="ma_loai_tb" className="block mb-2">
               Loại thiết bị<span className="text-red-500">*</span>
             </label>
             <Dropdown
               filter
               id="ma_loai_tb"
-              name="ma_loai_tb"
+              name="ma_loai_tb" 
               value={formData.ma_loai_tb}
               onChange={(e) => {
                 handleChange(e);
@@ -170,6 +157,20 @@ const DialogForm = ({
               className="w-full"
             />
           </div>
+          <div>
+            <label htmlFor="ten_thiet_bi" className="block mb-2">
+              Tên thiết bị<span className="text-red-500">*</span>
+            </label>
+            <InputText
+              id="ten_thiet_bi"
+              name="ten_thiet_bi"
+              value={formData.ten_thiet_bi || ""}
+              onChange={handleChange}
+              className="w-full"
+            />
+          </div>
+
+          
 
           <div>
             <label htmlFor="so_luong" className="block mb-2">

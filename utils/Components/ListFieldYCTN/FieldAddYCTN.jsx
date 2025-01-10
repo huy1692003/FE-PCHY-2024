@@ -21,25 +21,29 @@ import { set } from "date-fns";
 import { MyContext } from "../../../context/dataContext";
 import { urlServer } from "../../../constants/api";
 import { Tooltip } from "primereact/tooltip";
+import { convertTimezoneToVN } from "../../FunctionFormart";
 
 
 export const FormField = ({ label, className, style, placeholder, value, onChange, id, isCalendar = false, isNumber = false, row = 5, isFileUpload = false, isDropdown = false, isTextArea = false, options = [], prefix, isDisabled = false, styleField, props, mode, currency, locale, childrenIPNumber = "VNĐ", optionsValue, optionsLabel }) => (
-    <div className={className +""} style={style}>
+    <div className={className + " "} style={style}>
         <label className='font-medium text-sm my-3 block' htmlFor={id}>{label}</label>
         {isCalendar ? (
-            <Calendar id={id} name={id} value={value} onChange={(e) => onChange(id, e.value)} showIcon className="w-full"  disabled={isDisabled} appendTo="self"   />
-        ) : isNumber ? (
-            <div className="p-inputgroup">
-                <InputNumber id={id} name={id} value={value} onChange={(e) => onChange(id, e.value)} className="w-full" readOnly={isDisabled} />
-                {childrenIPNumber && <span className="p-inputgroup-addon" style={{ backgroundColor: "#6366F1", color: "white" }}>{childrenIPNumber}</span>}
-            </div>
-        ) : isDropdown ? (
-            <Dropdown  {...props} id={id} name={id} value={value} options={options} showClear onChange={(e) => onChange(id, e.value)} className="w-full" disabled={isDisabled} filter optionValue={optionsValue} optionLabel={optionsLabel} placeholder="-- Mời chọn --" />
-        ) : isTextArea ? (
-            <InputTextarea id={id} name={id} value={value} onChange={(e) => onChange(id, e.target.value)} rows={row} className="w-full" readOnly={isDisabled} autoResize />
-        ) : (
-            <InputText style={styleField} id={id} name={id} value={value} onChange={(e) => onChange(id, e.target.value)} className="w-full" readOnly={isDisabled} />
-        )}
+            <Calendar
+                id={id} name={id} value={value} onChange={(e) => onChange(id, convertTimezoneToVN(e.value))} showIcon className="w-full" disabled={isDisabled} appendTo="self" 
+                />
+        )
+            : isNumber ? (
+                <div className="p-inputgroup">
+                    <InputNumber id={id} name={id} value={value} onChange={(e) => onChange(id, e.value)} className="w-full" readOnly={isDisabled} />
+                    {childrenIPNumber && <span className="p-inputgroup-addon" style={{ backgroundColor: "#6366F1", color: "white" }}>{childrenIPNumber}</span>}
+                </div>
+            ) : isDropdown ? (
+                <Dropdown  {...props} id={id} name={id} value={value} options={options} showClear onChange={(e) => onChange(id, e.value)} className="w-full" disabled={isDisabled} filter optionValue={optionsValue} optionLabel={optionsLabel} placeholder="-- Mời chọn --" />
+            ) : isTextArea ? (
+                <InputTextarea id={id} name={id} value={value} onChange={(e) => onChange(id, e.target.value)} rows={row} className="w-full" readOnly={isDisabled} autoResize />
+            ) : (
+                <InputText style={styleField} id={id} name={id} value={value} onChange={(e) => onChange(id, e.target.value)} className="w-full" readOnly={isDisabled} />
+            )}
     </div>
 );
 
@@ -312,7 +316,7 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, formDataInit = QLTN_YCTN
             key: "ngay_tao",
             element: (
                 <FormField
-                
+
                     label={<RenderLabel label="Ngày tạo" nameField="ngay_tao" />}
                     id="ngay_tao"
                     value={moment(formData?.ngay_tao).toDate()}
@@ -327,7 +331,7 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, formDataInit = QLTN_YCTN
             key: "ngay_ky_hop_dong",
             element: (
                 <FormField
-                
+
                     label={<RenderLabel label="Ngày ký hợp đồng" nameField="ngay_ky_hop_dong" />}
                     id="ngay_ky_hop_dong"
                     value={moment(formData?.ngay_ky_hop_dong).toDate()}
@@ -435,8 +439,8 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, formDataInit = QLTN_YCTN
                 </div>
             ),
         },
-        
-        
+
+
         {
             stt: 16,
             key: "file_upload",
@@ -491,7 +495,7 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, formDataInit = QLTN_YCTN
         if (isAdd) {
             try {
 
-                let res = await QLTN_YCTNService.create_QLTN_YCTN({...formData,nguoi_tao:user})
+                let res = await QLTN_YCTNService.create_QLTN_YCTN({ ...formData, nguoi_tao: user })
 
                 setFormData((prev) => ({ ...prev, ma_yctn: res, next_step: 2, crr_step: 1, nguoi_tao: user }))
                 Notification.success(toast, "Tạo mới YCTN thành công")

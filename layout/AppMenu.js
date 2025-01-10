@@ -3,10 +3,12 @@ import { PanelMenu } from 'primereact/panelmenu';
 import { useRouter } from 'next/router';
 import { MenuProvider } from './context/menucontext';
 import { HT_NGUOIDUNG_Service } from '../services/quantrihethong/HT_NGUOIDUNGService';
+import Head from 'next/head';
 
 const AppMenu = () => {
     const [menu, setMenu] = useState([]);
     const router = useRouter();
+    const [titleHead,setTitleHead]=useState("Phần mềm quản lý thí nghiệm")
 
     useEffect(() => {
         const getMenu = async () => {
@@ -28,7 +30,7 @@ const AppMenu = () => {
                             items: hasChildren ? buildMenuModel(
                                 menu.children.sort((a, b) => a.ten_menu.localeCompare(b.ten_menu))
                             ) : null,
-                            command: menu.duong_dan ? () => handleMenuClick(menu.duong_dan) : undefined,
+                            command: menu.duong_dan ? () => handleMenuClick(menu.ten_menu, menu.duong_dan) : undefined,
                             // Nếu không có children, không cần thêm items
                             className: !hasChildren ? 'menu-item-no-children' : '' // Thêm class để dễ dàng tùy chỉnh CSS nếu cần
                         };
@@ -46,12 +48,20 @@ const AppMenu = () => {
         getMenu();
     }, []);
 
-    const handleMenuClick = (url) => {
+    const handleMenuClick = (menuName, url) => {
+        // Lưu tên menu vào sessionStorage
+        sessionStorage.setItem('menu_current', menuName);
+        setTitleHead(menuName)
+        // Chuyển hướng đến đường dẫn của menu
         router.push(url);
     };
 
     return (
         <MenuProvider>
+            <Head>
+
+                <title>{titleHead}</title>
+            </Head>
             <PanelMenu
                 model={menu}
                 multiple // Cho phép mở nhiều cấp cùng lúc

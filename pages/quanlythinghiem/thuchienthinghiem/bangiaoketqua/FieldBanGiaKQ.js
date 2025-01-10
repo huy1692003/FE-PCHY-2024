@@ -56,7 +56,7 @@ const FieldBanGiaKQ = ({ thongTinYCTN, formData, setFormData }) => {
           />
         </div>
         <div style={{ width: "49%" }}>
-          <label className="font-medium text-sm my-2 block">
+          <label className="font-medium text-sm my-3 block">
             Đơn vị bàn giao
           </label>
           <MultiSelect

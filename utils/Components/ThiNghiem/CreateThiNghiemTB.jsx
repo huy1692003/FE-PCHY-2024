@@ -17,6 +17,7 @@ import UploadFileService from "../../../services/UploadFileService";
 import QLTN_NGUOI_KY_Service from "../../../services/quanlythinghiem/QLTN_NGUOI_KY_Service";
 import { Toast } from "primereact/toast";
 import { th } from "date-fns/locale";
+import { convertToDate } from "../../FunctionFormart";
 const initNguoiKy = [
     {
         cap: 1,
@@ -42,6 +43,7 @@ const CreateThiNghiemTB = ({ thongtinYCTN, stateDialog, thongtinThietBi, donVi, 
             ...QL_TN_CHI_TIET_THI_NGHIEM,
             ma_yctn: thongtinYCTN.ma_yctn,
             ma_tbtn: thongtinThietBi.ma_tbtn,
+            ngay_tt_tn:new Date(),
             nguoi_tao: JSON.parse(sessionStorage.getItem("user")).ten_dang_nhap,
             lanthu: thongtinThietBi.listTN.length ? thongtinThietBi.listTN.length + 1 : 1
         })
@@ -58,12 +60,14 @@ const CreateThiNghiemTB = ({ thongtinYCTN, stateDialog, thongtinThietBi, donVi, 
         getDM();
     }, []);
 
+    console.log(formData)
     useEffect(() => {
         if (stateDialog.visible) {
             setFormData({
                 ...QL_TN_CHI_TIET_THI_NGHIEM,
                 ma_yctn: thongtinYCTN.ma_yctn,
                 ma_tbtn: thongtinThietBi.ma_tbtn,
+                ngay_tt_tn:new Date(),
                 nguoi_tao: JSON.parse(sessionStorage.getItem("user")).ten_dang_nhap,
                 lanthu: thongtinThietBi.listTN.length ? thongtinThietBi.listTN.length + 1 : 1
             })
@@ -299,6 +303,8 @@ const CreateThiNghiemTB = ({ thongtinYCTN, stateDialog, thongtinThietBi, donVi, 
                                     optionValue="id"
                                     placeholder="Chọn đơn vị thực hiện"
                                     filter
+
+                                    display="chip"
                                     className="w-full"
                                 />
                             </div>
@@ -321,7 +327,7 @@ const CreateThiNghiemTB = ({ thongtinYCTN, stateDialog, thongtinThietBi, donVi, 
                                 <FormField
                                     label="Ngày thực tế thí nghiệm"
                                     id="ngay_tt_tn"
-                                    value={formData.ngay_tt_tn}
+                                    value={convertToDate(formData.ngay_tt_tn)}
                                     onChange={(id, value) => setFormData(prev => ({ ...prev, [id]: value }))}
                                     isCalendar={true}
                                 />
@@ -339,7 +345,7 @@ const CreateThiNghiemTB = ({ thongtinYCTN, stateDialog, thongtinThietBi, donVi, 
                                 />
                             </div>
                             <div className="col-6">
-                                <label className='font-medium text-sm my-2 block' htmlFor="file_dinh_kem_giao_nv">
+                                <label className='font-medium text-sm my-3 block' htmlFor="file_dinh_kem_giao_nv">
                                     <span className="flex justify-content-between">
                                         <span>File upload</span>
                                     </span>

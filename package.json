@@ -26,6 +26,7 @@
         "primeicons": "^7.0.0",
         "primereact": "^9.6.4",
         "react": "18.2.0",
+        "react-doc-viewer": "^0.1.14",
         "react-dom": "18.2.0",
         "react-responsive": "^10.0.0",
         "uuid": "^10.0.0"

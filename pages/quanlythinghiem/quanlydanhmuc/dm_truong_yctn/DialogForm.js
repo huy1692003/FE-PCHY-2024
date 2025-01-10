@@ -18,7 +18,7 @@ const DialogForm = ({ show, setShowDialog, isAdd, formData,setFormData, loadData
     const renderHeader = () => {
         return (
             <div className="flex align-items-center justify-content-between">
-                <span>{isAdd ? "Thêm mới trường yêu cầu" : "Cập nhật trường yêu cầu"}</span>
+                <span>{isAdd ? "Thêm mới" : "Cập nhật"}</span>
                 <div className="flex gap-2">
                     <Button
                         label="Lưu"

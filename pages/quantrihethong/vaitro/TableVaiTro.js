@@ -13,6 +13,7 @@ import { Dropdown } from "primereact/dropdown";
 import { HT_NHOMQUYEN } from "../../../models/HT_NHOMQUYEN";
 
 import { propSortAndFilter } from "../../../constants/propGlobal";
+import { getMenuCurrent } from "../../../utils/Function";
 
 const TableVaiTro = ({
   setVisible,
@@ -94,7 +95,7 @@ const TableVaiTro = ({
     const className = `${options.className} flex flex-wrap justify-content-between align-items-center gap-2`
     return (
       <div className={className} >
-        <span className='text-xl font-bold'>Danh sách</span>
+        <span className='text-xl font-bold'>{getMenuCurrent()}</span>
         <div className="flex align-items-center gap-2">
           {selectedRows.length > 0 && (
             <Button

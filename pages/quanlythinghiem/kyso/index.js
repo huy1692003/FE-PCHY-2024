@@ -15,6 +15,7 @@ import { Toast } from "primereact/toast";
 import QLTN_KYSO_Service from "../../../services/quanlythinghiem/QLTN_KYSO_Service";
 import { useMediaQuery } from 'react-responsive';
 import { ProgressSpinner } from "primereact/progressspinner";
+import { getMenuCurrent } from "../../../utils/Function";
 
 // List các trạng thái
 const statusList = [
@@ -91,7 +92,8 @@ const Kyso = () => {
         };
 
         getDanhMuc();
-        search_Document(paginate, {
+        setPaginate({ ...paginate, page: 1 })
+        search_Document({ ...paginate, page: 1 }, {
             ...paramSearch,
             status_Document: currentStatus === 0 ? null : currentStatus,
             userId: currentStatus === 1 ? idUserCurrent : null,
@@ -169,8 +171,9 @@ const Kyso = () => {
         setParamSearch((prev) => ({ ...prev, keyword: e.target.value ?? null }));
     };
 
-    const handleSearch = async () => {
-        search_Document(paginate, {
+    const handleSearch = (isRefesh = true) => {
+        console.log("refesh:", isRefesh);
+        search_Document(isRefesh ? paginate : { ...paginate, page: 1 }, {
             ...paramSearch,
             status_Document: currentStatus === 0 ? null : currentStatus,
             userId: currentStatus === 1 ? idUserCurrent : null,
@@ -182,7 +185,7 @@ const Kyso = () => {
         const className = `${options.className} flex flex-wrap justify-content-between align-items-center`;
         return (
             <div className={className + " mt-3"}>
-                <span className="text-xl font-bold">{currentStatusTitle}</span>
+                <span className="text-xl font-bold">{getMenuCurrent()}</span>
                 <Button
                     loading={loadingExport}
                     onClick={async () => {
@@ -225,12 +228,12 @@ const Kyso = () => {
             </Head>
             <Toast ref={toast} />
             <Panel headerTemplate={(options) => headerList(options, currentStatusTitle)} className="min-h-full">
-                <div className={`max-w-full overflow-x-auto box-filter ${isMobile ? 'flex-column' : 'flex justify-content-between gap-2'} mb-5`}>
+                <div className={`box-filter ${isMobile ? 'flex-column' : 'flex flex-wrap gap-2'} mb-5`}>
                     {!isMobile && (
                         <>
                             <InputText
                                 showClear
-                                className="min-w-[20px] w-10rem"
+                                className="min-w-[20px] w-12rem"
                                 placeholder="Từ khóa ..."
                                 onChange={onKeywordChange}
                             />
@@ -282,7 +285,13 @@ const Kyso = () => {
                                 placeholder="Trạng thái"
                                 showClear
                             />
-                            <Button  className="text-white inline-block" style={{minWidth:100}} type="primary" onClick={handleSearch}>
+                            <Button className="text-white" type="primary"
+                                onClick={() => {
+
+                                    setPaginate({ ...paginate, page: 1 })
+                                    handleSearch(false)
+                                }
+                                }>
                                 Tìm kiếm
                             </Button>
                         </>
@@ -350,7 +359,13 @@ const Kyso = () => {
                                 showClear
                             />
                             <div className="flex justify-content-around w-full mt-2">
-                                <Button className="text-white" type="primary" onClick={handleSearch}>
+                                <Button className="text-white" type="primary"
+                                    onClick={() => {
+
+                                        setPaginate({ ...paginate, page: 1 })
+                                        handleSearch(false)
+                                    }
+                                    }>
                                     Tìm kiếm
                                 </Button>
                                 <Button className="text-white" type="text" onClick={() => setShowFilter(false)}>
@@ -366,10 +381,12 @@ const Kyso = () => {
                         <ProgressSpinner color="blue" />
                     </div> :
                     <TableDocument
+                        toast={toast}
                         isMobile={isMobile}
                         loading={loading}
                         data={listDocument}
                         paginate={paginate}
+                        refeshData={handleSearch}
                         setPaginate={setPaginate}
                     />}
             </Panel>

@@ -20,6 +20,7 @@ import {
   update_HT_MENU,
 } from "../../../services/quantrihethong/HT_MENUService";
 import { Tooltip } from "primereact/tooltip";
+import { getMenuCurrent } from "../../../utils/Function";
 
 const Menu = () => {
   const toast = useRef(null);
@@ -60,7 +61,7 @@ const Menu = () => {
 
     return (
       <div className={className}>
-        <span className="font-bold text-xl">Danh sách</span>
+        <span className="font-bold text-xl">{getMenuCurrent()}</span>
         <div className="flex flex-wrap gap-2">
           {selectedMenus.length > 0 && (
             <Button

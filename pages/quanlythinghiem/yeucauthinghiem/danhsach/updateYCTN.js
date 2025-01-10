@@ -75,7 +75,7 @@ const Update_QLTN = () => {
     return (
         <div className="border-round-3xl bg-white p-3">
             <Head>
-                <title>Chỉnh sửa yêu cầu thí nghiệm</title>
+                <title>Chỉnh sửa</title>
             </Head>
             <Toast ref={toast} />
 

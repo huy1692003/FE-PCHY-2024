@@ -63,6 +63,7 @@ const TableBUOC_YCTN = ({
         headerStyle={headerStyleColumn}
         field="buoc"
         header="Bước"
+        {...propSortAndFilter}
       ></Column>
       <Column
         header="Thao tác"

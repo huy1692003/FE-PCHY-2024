@@ -2,17 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Panel } from "primereact/panel";
 
 export const CustomPanel = ({ header, fields, formData, currentStep, children , stepPanel }) => {
-  const [isCompleted, setIsCompleted] = useState(false);
-  const SP_THINGHIEM = 3;
-  // useEffect(() => {
-  //   if (fields && formData) {
-  //     const completed = fields.every((field) => {
-      
-  //       return formData[field] !== null && formData[field] !== "" && formData[field] !== undefined;
-  //     });
-  //     setIsCompleted(completed);
-  //   }
-  // }, [fields, formData]);
+  const [isCompleted, setIsCompleted] = useState(false); 
   useEffect(() => {
     if (formData?.crr_step >= stepPanel) {
       setIsCompleted(true);
@@ -29,6 +19,7 @@ export const CustomPanel = ({ header, fields, formData, currentStep, children , 
       toggleable
       collapsed={true}
       className={`my-panel ${isCompleted ? "completed" : "incomplete"} mt-4`}
+       // Thay icon mặc định bằng icon tùy chỉnh
     >
       {children}
     </Panel>

@@ -22,6 +22,7 @@ import { getAll_DM_CHUCVU } from '../../../services/quantrihethong/DM_CHUCVUServ
 import { searchDM_PHONGBAN } from '../../../services/quantrihethong/DM_PHONGBANService';
 import { DialogResetPass } from './DialogResetPass';
 import { propSortAndFilter } from "../../../constants/propGlobal";
+import { getMenuCurrent } from '../../../utils/Function';
 
 
 
@@ -206,7 +207,7 @@ const NguoiDung = () => {
         const className = `${options.className} flex flex-column md:flex-row justify-content-between align-items-center gap-2`
         return (
             <div className={className}>
-                <span className='text-xl font-bold mb-3 md:mb-0'>Danh sách</span>
+                <span className='text-xl font-bold mb-3 md:mb-0'>{getMenuCurrent()}</span>
                 <div className="flex flex-column md:flex-row align-items-center gap-2">
                     {selectedNguoiDung.length > 0 && 
                         <div className="mb-2 md:mb-0 w-full md:w-auto">

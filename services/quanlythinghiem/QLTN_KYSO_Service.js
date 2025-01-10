@@ -15,7 +15,7 @@ const QLTN_KYSO_Service = {
             const res = await apiClient.post(`/QLTN_KYSO/update_TrangThai_Ky`, data);
             return res?.data;
         } catch (error) {
-            console.log(error)
+            throw new Error(error.response ? error.response.data : 'Error creating NGUOI_KY_SO');
         }
     },
     exportExcel: async (paginate,data) => {

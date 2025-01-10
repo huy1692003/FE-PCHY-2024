@@ -15,15 +15,16 @@ import { Notification } from "../../../../utils/notification";
 import { MyContext } from "../../../../context/dataContext";
 const GiaoNhiemVu = () => {
 
-
+    const router = useRouter();
     const { ma_yctn, thongTinYCTN } = useThongTinYCTN();
     const [formData, setFormData] = useState(QLTN_YCTN);
     const user = JSON.parse(sessionStorage.getItem("user"))?.ten_dang_nhap || "";
     const toast = useRef(null);
     const { data } = useContext(MyContext)
+    console.log("tt", thongTinYCTN)
     useEffect(() => {
         if (thongTinYCTN) {
-            setFormData({ ...thongTinYCTN, nguoi_giao_nhiem_vu: formData?.nguoi_giao_nhiem_vu || user, ngay_giao_nv: new Date() });
+            setFormData({ ...thongTinYCTN, nguoi_giao_nhiem_vu: formData?.nguoi_giao_nhiem_vu || user, ngay_giao_nv: thongTinYCTN?.ngay_giao_nv ?? new Date() });
         }
     }, [thongTinYCTN]);
 
@@ -32,16 +33,14 @@ const GiaoNhiemVu = () => {
 
     const onSubmit = async () => {
         try {
-            if (formData.file_dinh_kem_giao_nv) {
+            if (formData.file_dinh_kem_giao_nv instanceof FormData) {
                 let resUpload = await UploadFileService.file(formData.file_dinh_kem_giao_nv, "fileGiaoNV")
                 formData.file_dinh_kem_giao_nv = resUpload.filePath
             }
-            console.log(formData);
-            setFormData(prev=>({...prev,}))
-            await QLTN_YCTNService.giao_nhiem_vu_YCTN(formData);
+
+            await QLTN_YCTNService.giao_nhiem_vu_YCTN(formData)
             Notification.success(toast, "Giao nhiệm vụ thành công");
-            
-            // router.back();
+            setFormData({ ...formData, crr_step: 2 });
         } catch (err) {
             console.log(err);
             Notification.error(toast, "Giao nhiệm vụ thất bại");
@@ -64,7 +63,8 @@ const GiaoNhiemVu = () => {
                     {
                         thongTinYCTN &&
                         <div>
-                            {formData?.crr_step === 2 ? <Button onClick={() => { router.push("/quanlythinghiem/yeucauthinghiem/nhapkhoiluongthuchien?code=" + formData?.ma_yctn) }} label={"Bước tiếp theo   " + data.listBuocYCTN?.find(s => s.buoc === 3)?.ten_buoc_yctn} icon="pi pi-arrow-right" /> : <Button label="Lưu" icon="pi pi-save" onClick={onSubmit} />}
+                            <Button label={formData?.crr_step >= 2 ? "Cập nhật" : "Lưu"} icon="pi pi-save" onClick={onSubmit} />
+                            {formData?.crr_step >= 2 && <Button className="ml-2" onClick={() => { router.push("/quanlythinghiem/yeucauthinghiem/nhapkhoiluongthuchien?code=" + formData?.ma_yctn) }} label={"Bước tiếp theo   " + data.listBuocYCTN?.find(s => s.buoc === 3)?.ten_buoc_yctn} icon="pi pi-arrow-right" />}
                         </div>
                     }
                 </div>

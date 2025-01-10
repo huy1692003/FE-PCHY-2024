@@ -39,7 +39,7 @@ const ThemMoiYCTN = () => {
             </Head>
             <Toast ref={toast} />
             <div className='border-round-3xl bg-white p-3'>
-                <Panel header={<span className="font-bold text-xl">Thêm mới Yêu cầu thí nghiệm</span>}>
+                <Panel header={<span className="font-bold text-xl">Tạo mới</span>}>
                     <div className="field ">
                         <label className='font-bold text-base my-3 block' htmlFor="selectLoaiYCTN">Loại hình dịch vụ</label>
                         <Dropdown filter placeholder="--Mời chọn--" showClear id="selectLoaiYCTN" name="selectLoaiYCTN" value={selectLoaiYCTN?.id} optionValue="id" optionLabel="ten_loai_yc" options={loaiYCTN} onChange={handleSelectLoaiYCTN} className="w-full text-base" />

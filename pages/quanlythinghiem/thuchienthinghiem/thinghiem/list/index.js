@@ -10,6 +10,7 @@ import { Toast } from "primereact/toast";
 import { Notification } from "../../../../../utils/notification";
 import DanhSachThietBi from "../../../../../utils/Components/ThiNghiem/DanhSachThietBi";
 import { useRouter } from "next/router";
+import { getMenuCurrent } from "../../../../../utils/Function";
 
 const ThiNghiem = () => {
     const { ma_yctn, thongTinYCTN } = useThongTinYCTN();
@@ -36,7 +37,7 @@ const ThiNghiem = () => {
     return (
         <div className="border-round-3xl bg-white p-3">
             <Head>
-                <title>Thực hiện thí nghiệm</title>
+                <title>{getMenuCurrent()}</title>
             </Head>
             <Toast ref={toast} />
             <Panel header={<h3 className="text-xl font-bold">Thực hiện thí nghiệm</h3>} className="mt-3">

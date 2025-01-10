@@ -79,7 +79,7 @@ const DialogForm_ImportFIle = ({ show, setShowDialogImportFile ,setArrThietbi,ar
       toast.current.show({
         severity: 'error',
         summary: 'Lỗi', 
-        detail: `Import file thất bại: ${error.message}`,
+        detail: `Import file thất bại hãy kiểm tra lại dữ liệu: ${error.message}`,
         life: 3000
       });
     }

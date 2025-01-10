@@ -16,22 +16,14 @@ const ChiTiet_YCTN = () => {
 
   const toast = useRef(null);
 
-  // console.log("before formData", formData);
+
 
   useEffect(() => {
     if (thongTinYCTN) {
       setFormData(thongTinYCTN);
     }
   }, [thongTinYCTN]); 
-
-  const handleChange = useCallback((field, value) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      [field]: value,
-    }));
-    }, []);
-
-  console.log(">>>> FORM:", formData);
+console.log(formData)
 
   return (
     <div className="border-round-3xl bg-white p-3">
@@ -83,6 +75,7 @@ const ChiTiet_YCTN = () => {
 
               <CustomPanel 
                 formData={formData}
+                stepPanel={5}
                 header="Thực hiện thí nghiệm " toggleable
                 currentStep={formData.crr_step} //5
                 >

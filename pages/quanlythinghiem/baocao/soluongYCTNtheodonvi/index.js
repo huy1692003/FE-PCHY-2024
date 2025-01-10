@@ -10,6 +10,7 @@ import { BAO_CAO_Service } from "../../../../services/quanlythinghiem/BAO_CAO_Se
 import Table from "./Table";
 import ChartJS from "chart.js/auto";
 import ExcelJS from "exceljs";
+import { getMenuCurrent } from "../../../../utils/Function";
 
 const rangeOptions = [
   { label: "Hôm Nay", value: "today" },
@@ -244,7 +245,7 @@ const BaoCao_YCTN_TheoDonViThucHien = () => {
     return (
       <div className={className}>
         <span className="font-bold text-xl">
-          Báo cáo số lượng Yêu cầu thí nghiệm theo Đơn vị thực hiện
+          {getMenuCurrent()}
         </span>
         <div className="flex flex-wrap gap-2">
           <Button

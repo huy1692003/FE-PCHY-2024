@@ -97,7 +97,7 @@ const QuanLyVaiTro = () => {
             <Panel header="Tìm kiếm">
               <div className="flex flex-column md:flex-row gap-3">
                 <div className="flex-grow-1 flex flex-column">
-                  <label>Tên vai trò</label>
+                  <label className="mb-1">Tên vai trò</label>
                   <InputText
                     placeholder="Nhập tên vai trò "
                     onChange={(e) => {

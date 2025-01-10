@@ -8,6 +8,7 @@ import { QLTN_BUOC_YCTN } from "../../../../models/QLTN_BUOC_YCTN";
 import { useRef } from "react";
 import DialogForm from "./DialogForm";
 import { ConfirmDialog } from "primereact/confirmdialog";
+import { getMenuCurrent } from "../../../../utils/Function";
 const BuocYCTN = () => {
   const [data, setData] = useState([]);
   const [showDialog, setShowDialog] = useState(false);
@@ -41,7 +42,7 @@ const BuocYCTN = () => {
 
     return (
       <div className={className}>
-        <span className="font-bold text-xl">Danh sách</span>
+        <span className="font-bold text-xl">{getMenuCurrent()}</span>
 
         <div className="flex flex-wrap gap-2">
           {selected.length > 0 && (

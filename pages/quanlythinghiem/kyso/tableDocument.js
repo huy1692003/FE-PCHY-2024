@@ -15,11 +15,10 @@ import { Toast } from 'primereact/toast';
 import { Paginator } from 'primereact/paginator';
 
 
-const TableDocument = ({ data, isMobile, refeshData, paginate, setPaginate }) => {
+const TableDocument = ({ data, isMobile, refeshData, paginate,toast, setPaginate }) => {
     const { total, items } = data
     const [dialogVisible, setDialogVisible] = useState(false);
     const [selectedDocument, setSelectedDocument] = useState(null);
-    const toast = useRef(null);
 
     // Định nghĩa render cho cột "Thao tác"
     const actionBodyTemplate = (rowData) => {
@@ -59,17 +58,19 @@ const TableDocument = ({ data, isMobile, refeshData, paginate, setPaginate }) =>
         setDialogVisible(true);
     };
 
-    // Hàm xử lý "Tải xuống" PDF
     const handleDownload = (fileUrl) => {
         const link = document.createElement('a');
-        link.href = fileUrl;
-        link.download = fileUrl.split('/').pop(); // Lấy tên file từ URL
+        link.href = urlServer+fileUrl;
+    
+        // Lấy tên file từ URL và kiểm tra đuôi file
+        const fileName = fileUrl.split('/').pop();
+        link.download = fileName;
+    
         link.click();
     };
 
     return (
         <div className='w-full'>
-            <Toast ref={toast} />
             <div className='min-w-full overflow-x-auto' >
 
                 <DataTable showGridlines style={{ minWidth: 1000 }} value={items} responsiveLayout="scroll" >

@@ -42,7 +42,7 @@ const TruongYCTN = () => {
 
     return (
       <div className={className}>
-        <span className="font-bold text-xl">Danh sách</span>
+        <span className="font-bold text-xl">{getMenuCurrent()}</span>
 
         <div className="flex flex-wrap gap-2">
           {selected.length > 0 && (

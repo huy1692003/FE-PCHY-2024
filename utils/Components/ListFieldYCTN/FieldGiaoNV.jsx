@@ -20,36 +20,31 @@ const FieldGiaoNV = ({ formData, setFormData }) => {
         setDonVi(res);
     }
 
-
     useEffect(() => {
-        if (formData.file_dinh_kem_giao_nv && formData.crr_step === 2) {
+        if (!(formData.file_dinh_kem_giao_nv instanceof FormData) && formData.file_dinh_kem_giao_nv && formData.crr_step >= 2) {
             let file = urlServer + formData.file_dinh_kem_giao_nv;
             let fileName = formData.file_dinh_kem_giao_nv.split('/').pop(); // Lấy phần tử cuối cùng sau dấu /
             setListFileUpload([{ file, name: fileName }]);
         }
     }, [formData.file_dinh_kem_giao_nv, formData.crr_step]);
 
-
-    //console.log('da chuyen doi', formatDateTime(formData?.ngay_giao_nv));
-    console.log('days: ', convertToDate(formData?.ngay_giao_nv));
-
     return (
         <div>
             <div className="flex gap-4">
                 <div style={{ width: "49%" }}>
-                    <label className='font-bold text-sm mb-3 block' htmlFor="file_dinh_kem_giao_nv">
+                    <label className='font-bold text-sm my-3 block' htmlFor="file_dinh_kem_giao_nv">
                         <span className="flex justify-content-between">
                             <span>File quyết định</span>
                         </span>
                     </label>
                     <InputFile nameField="file_dinh_kem_giao_nv" setFormData={setFormData} />
 
-                    {formData.file_dinh_kem_giao_nv && formData.crr_step === 2 &&
+                    {listFileUpload.length > 0  &&
                         <span
                             className="flex justify-content-end mr-2 text-indigo-600 text-sm font-medium-100 ml-2 cursor-pointer"
                             onClick={() => setShowFiles(!showFiles)}
                         >
-                            Danh sách file Upload
+                            @Danh sách file Upload
                         </span>
                     }
                 </div>
@@ -64,7 +59,7 @@ const FieldGiaoNV = ({ formData, setFormData }) => {
                 </div>
             </div>
             {/* Hiển thị danh sách các file đã upload */}
-            <div className={`mt-2 transition-all duration-300 ${showFiles ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'} overflow-hidden`}>
+            <div className={`mt-2 transition-all duration-300 ${showFiles ? ' max-h-[500px] opacity-100' : 'max-h-0 opacity-0'} overflow-hidden`}>
                 {listFileUpload.length > 0 && listFileUpload.map((file, index) => (
                     <div
                         key={index}
@@ -86,7 +81,6 @@ const FieldGiaoNV = ({ formData, setFormData }) => {
             </div>
             <div className="flex gap-4">
                 <div style={{ width: "49%" }}>
-                    <div style={{ height: "14px", visibility: "hidden" }}></div>
                     <FormField
                         label="Ngày giao nhiệm vụ"
                         id="ngay_giao_nv"

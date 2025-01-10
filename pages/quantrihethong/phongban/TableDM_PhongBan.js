@@ -13,6 +13,7 @@ import { Dropdown } from "primereact/dropdown";
 import { deleteDM_PHONGBAN } from "../../../services/quantrihethong/DM_PHONGBANService";
 import { FilterMatchMode, PrimeIcons } from "primereact/api";
 import { InputText } from "primereact/inputtext";
+import { getMenuCurrent } from "../../../utils/Function";
 
 const TableDM_PhongBan = ({
     setVisible,
@@ -113,7 +114,7 @@ const TableDM_PhongBan = ({
         const className = `${options.className} flex flex-wrap justify-content-between align-items-center gap-2`
         return (
             <div className={className} >
-                <span className='text-xl font-bold'>Danh sách</span>
+                <span className='text-xl font-bold'>{getMenuCurrent()}</span>
                 <div className="flex flex-column sm:flex-row gap-3">
                     {selectedRecords.length > 0 &&
                         <Button

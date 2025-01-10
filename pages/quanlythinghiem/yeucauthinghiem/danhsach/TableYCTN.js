@@ -191,7 +191,7 @@ const TableYCTN = ({ toast, loadYCTN, dataYCTN, totalRecords }) => {
               <div >
                 <div>
                   Ngày tạo:{" "}
-                  <strong>{moment(rowData.ngayTao).format("DD/MM/YYYY")}</strong>
+                  <strong>{moment(rowData.ngay_tao).format("DD/MM/YYYY")}</strong>
                 </div>
                 <div>
                   Người tạo: <strong>{rowData.nguoi_tao}</strong>
