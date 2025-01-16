@@ -9,6 +9,7 @@ import { InputText } from "primereact/inputtext";
 import QLTN_YCTNService from "../../../../services/quanlythinghiem/QLTN_YCTNService";
 import { DM_KHACHHANG_Service } from "../../../../services/quanlythinghiem/DM_KHACHHANG_Service";
 import { get_All_DM_DONVI } from "../../../../services/quantrihethong/DM_DONVIService";
+import { getMenuCurrent } from "../../../../utils/Function";
 
 const DanhSachYCTN = () => {
   const toast = useRef(null);
@@ -86,7 +87,7 @@ const load_DANHMUC = async () => {
 
     return (
       <div className={className}>
-        <span className="font-bold text-xl">Danh sách yêu cầu thí nghiệm</span>
+        <span className="font-bold text-xl">{getMenuCurrent()}</span>
         <div className="flex flex-wrap gap-2">
           <Button
             label="Thêm mới"

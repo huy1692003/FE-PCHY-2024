@@ -8,6 +8,7 @@ import { DM_LOAI_TAISANService } from "../../../../services/quanlythinghiem/DM_L
 
 import TableDM_LOAI_TAI_SAN from "./TableDM_LOAI_TAISAN";
 import { DM_LOAI_TAISAN } from "../../../../models/DM_LOAI_TAISAN";
+import { getMenuCurrent } from "../../../../utils/Function";
 
 const DM_LOAI_TAI_SAN = () => {
   const [showDialog, setShowDialog] = useState(false);
@@ -51,7 +52,7 @@ const DM_LOAI_TAI_SAN = () => {
 
     return (
       <div className={className}>
-        <span className="font-bold text-xl">Danh sách Loại Tài Sản</span>
+        <span className="font-bold text-xl">{getMenuCurrent()}</span>
         <div className="flex flex-wrap gap-2">
           {selectedItems.length > 0 && (
             <Button label="Xóa nhiều" severity="danger" onClick={() => {}} />

@@ -144,7 +144,7 @@ const AppTopbar = forwardRef((props, ref) => {
                     onClick={(e) => overlayPanelRef.current.toggle(e)}
                 >
                     <i className="pi pi-user"></i>
-                    <span>Profile</span>
+                    <span>Thông tin cá nhân</span>
                     {/* <Menu
                         model={items}
                         popup

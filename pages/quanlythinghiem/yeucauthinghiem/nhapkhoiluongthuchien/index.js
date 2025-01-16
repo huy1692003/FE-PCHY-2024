@@ -12,6 +12,7 @@ import ThongTinYCTN from "../../../../utils/Components/ListFieldYCTN/ThongTinYCT
 import { QLTN_THIET_BI_YCTN_Service } from "../../../../services/quanlythinghiem/QLTN_THIET_BI_YCTN_Service";
 import useThongTinYCTN from "../../../../hooks/useThongTinYCTN";
 import LichSuNhapKhoiLuong from "./LichSuNhapKhoiLuong";
+import { getMenuCurrent } from "../../../../utils/Function";
 
 const NhapKhoiLuongThucHien = () => {
   const router = useRouter();
@@ -99,7 +100,7 @@ const NhapKhoiLuongThucHien = () => {
 
   return (
     <div className="border-round-3xl bg-white p-3">
-      <Panel header={<h3 className="text-xl font-bold">Nhập khối lượng thực hiện</h3>} className="mt-3">
+      <Panel header={<h3 className="text-xl font-bold">{getMenuCurrent()}</h3>} className="mt-3">
         <FillThongTinYCTN
           Element={
             thongTinYCTN ? (

@@ -1,8 +1,25 @@
-import { apiClient } from "../../constants/api";
+import axios from "axios";
+import { apiClient, urlServer } from "../../constants/api";
 
+
+// Khai báo urlServer và các biến liên quan
+
+// Tạo một instance Axios riêng cho việc login
+const apiLoginClient = axios.create({
+    baseURL: urlServer + "/APIPCHY",
+    timeout: 1000 * 60 * 30 * 3,
+});
+
+// API login không kiểm tra token
 export const login_HT_NGUOIDUNG = async (data) => {
-    const res = await apiClient.post('/HT_NGUOIDUNG/login', data);
-    return res.data
+    try {
+        const res = await apiLoginClient.post('/HT_NGUOIDUNG/login', data);
+        return res.data;
+    } catch (error) {
+        // Xử lý lỗi nếu có
+        console.error('Login error:', error);
+        throw error;
+    }
 }
 
 export const HT_NGUOIDUNG_Service = {
@@ -44,8 +61,8 @@ export const HT_NGUOIDUNG_Service = {
 
     getAll: async () => {
         const res = await apiClient.post("/HT_NGUOIDUNG/search", {
-          
-            "tranG_THAI": 1,           
+
+            "tranG_THAI": 1,
             "pageIndex": 1,
             "pageSize": 1000000
         });

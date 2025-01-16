@@ -32,7 +32,7 @@ export const Notification = {
             summary: title,
             detail: message,
             life,
-            process: true,
+            process:true
         });
     },
 

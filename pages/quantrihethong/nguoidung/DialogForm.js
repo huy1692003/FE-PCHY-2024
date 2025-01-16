@@ -142,7 +142,7 @@ export const DialogForm = ({ isAdd, formData, setFormData, visible, setVisible, 
                         { name: '4-Viettel Token', id: 4 },
                         { name: '5-EVN CA', id: 5 }
                     ]} onChange={handleInputChange} id="hrms_type" isDropdown />
-                    <FormField label="Token Chữ Ký" value={formData.value_token} onChange={handleInputChange} id="value_token" />
+                    <FormField label="Token Chữ Ký / Serial Number" value={formData.value_token} onChange={handleInputChange} id="value_token" />
                 </div>
 
                 {(previewImage) && (

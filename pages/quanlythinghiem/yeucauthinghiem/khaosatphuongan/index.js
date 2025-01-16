@@ -11,6 +11,7 @@ import QLTN_YCTNService from "../../../../services/quanlythinghiem/QLTN_YCTNServ
 import FieldKhaoSatPA from "../../../../utils/Components/ListFieldYCTN/FieldKhaoSatPA";
 import ThongTinYCTN from "../../../../utils/Components/ListFieldYCTN/ThongTinYCTN";
 import { MyContext } from "../../../../context/dataContext";
+import { getMenuCurrent } from "../../../../utils/Function";
 
 const KhaoSatPhuongAn = () => {
   const { ma_yctn, thongTinYCTN } = useThongTinYCTN();
@@ -104,11 +105,11 @@ const KhaoSatPhuongAn = () => {
     <div className="border-round-3xl bg-white p-3">
       <Toast ref={toast} />
       <Head>
-        <title>Khảo sát lập phương án thi công</title>
+        <title>{getMenuCurrent()}</title>
       </Head>
       <Panel
         header={
-          <h3 className="text-xl font-bold">Khảo sát lập phương án thi công</h3>
+          <h3 className="text-xl font-bold">{getMenuCurrent()}</h3>
         }
         className="mt-3"
       >
@@ -120,7 +121,7 @@ const KhaoSatPhuongAn = () => {
                 formData={thongTinYCTN}
               >
                 <br className="mt-2"></br>
-                <Panel header={<p className="text-base font-bold">Lập phương án thi công</p>}>
+                <Panel header={<p className="text-base font-bold">{getMenuCurrent()}</p>}>
                   <FieldKhaoSatPA
                     formData={formData}
                     setFormData={setFormData}

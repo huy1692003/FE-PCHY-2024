@@ -14,6 +14,7 @@ import ThongTinYCTN from "../../../../utils/Components/ListFieldYCTN/ThongTinYCT
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { formatDate, formatPrice } from "../../../../utils/FunctionFormart";
+import { getMenuCurrent } from "../../../../utils/Function";
 
 const ChinhSuaGTHD = () => {
     const toast = useRef(null);
@@ -75,12 +76,12 @@ const ChinhSuaGTHD = () => {
     return (
         <div className="border-round-3xl bg-white p-3">
             <Head>
-                <title>Chỉnh sửa giá trị hợp đồng</title>
+                <title>{getMenuCurrent()}</title>
             </Head>
             <Toast ref={toast} />
 
             <Toast ref={toast} />
-            <Panel header={<h3 className="text-xl font-bold">Chỉnh sửa giá trị hợp đồng</h3>} className="mt-3">
+            <Panel header={<h3 className="text-xl font-bold">{getMenuCurrent()}</h3>} className="mt-3">
                 <FillThongTinYCTN Element={thongTinYCTN && loaiYCTN_Current ? <FieldAddYCTN refeshData={refeshData} toast={toast} formDataInit={formData} isUpdateHD={true} loai_yctn={loaiYCTN_Current} /> : <></>} />
 
 

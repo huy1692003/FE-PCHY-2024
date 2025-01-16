@@ -12,6 +12,7 @@ import DialogForm_ImportFIle from "./DialogForm_ImportFIle";
 import { Toast } from "primereact/toast";
 import FillThongTinYCTN from "../../../../utils/Components/FilterYCTN/FillThongTinYCTN";
 import { useRouter } from "next/router";
+import { getMenuCurrent } from "../../../../utils/Function";
 
 const NhapKhoiLuongPhatSinh = () => {
   const { ma_yctn, thongTinYCTN } = useThongTinYCTN();
@@ -132,7 +133,7 @@ const NhapKhoiLuongPhatSinh = () => {
   };
   return (
     <div className="border-round-3xl bg-white p-4">
-      <Panel header="Nhập khối lượng phát sinh" className="mt-3 text-xl">
+      <Panel header={getMenuCurrent()} className="mt-3 text-xl">
         <FillThongTinYCTN
           Element={
             thongTinYCTN ? (

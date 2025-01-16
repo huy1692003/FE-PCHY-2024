@@ -40,7 +40,7 @@ const ThiNghiem = () => {
                 <title>{getMenuCurrent()}</title>
             </Head>
             <Toast ref={toast} />
-            <Panel header={<h3 className="text-xl font-bold">Thực hiện thí nghiệm</h3>} className="mt-3">
+            <Panel header={<h3 className="text-xl font-bold">{getMenuCurrent()}</h3>} className="mt-3">
                 <FillThongTinYCTN Element={thongTinYCTN ? <ThongTinYCTN loai_yctn={thongTinYCTN.loai_yctn_model} formData={thongTinYCTN} /> : <></>} />
 
                 {thongTinYCTN && <><Panel header="Khối lượng thiết bị thí nghiệm" className="mt-3">

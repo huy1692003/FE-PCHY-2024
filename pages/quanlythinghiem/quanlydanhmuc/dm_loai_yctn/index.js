@@ -7,6 +7,7 @@ import { Toast } from "primereact/toast";
 import DialogForm from "./DialogForm";
 import { DM_LOAI_YCTN } from "../../../../models/DM_LOAI_YCTN";
 import DM_LOAI_YCTNService from "../../../../services/quanlythinghiem/DM_LOAI_YCTNService";
+import { getMenuCurrent } from "../../../../utils/Function";
 
 const DM_LOAIYCTN = () => {
     const [showDialog, setShowDialog] = useState(false);
@@ -40,7 +41,7 @@ const DM_LOAIYCTN = () => {
 
         return (
             <div className={className}>
-                <span className="font-bold text-xl">Danh sách</span>
+                <span className="font-bold text-xl">{getMenuCurrent()}</span>
                 <div className="flex flex-wrap gap-2">
                     {selectedItems.length > 0 && (
                         <Button

@@ -12,6 +12,7 @@ import { Toast } from "primereact/toast";
 import { DM_LOAITHIETBI } from "../../../../models/DM_LOAITB";
 import { InputText } from "primereact/inputtext";
 import { DM_LOAI_THIET_BI_Service } from "../../../../services/quanlythinghiem/DM_LOAITHIETBIService";
+import { getMenuCurrent } from "../../../../utils/Function";
 
 const TableDM_LoaiThietBi = ({
   data,
@@ -75,7 +76,7 @@ const TableDM_LoaiThietBi = ({
 
     return (
       <div className={className}>
-        <span className="font-bold text-xl">Danh sách</span>
+        <span className="font-bold text-xl">{getMenuCurrent()}</span>
 
         <div className="flex flex-wrap gap-2">
           {selected.length > 0 && (

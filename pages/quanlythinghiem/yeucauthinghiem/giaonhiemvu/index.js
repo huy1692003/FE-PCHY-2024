@@ -13,6 +13,7 @@ import UploadFileService from "../../../../services/UploadFileService";
 import { Toast } from "primereact/toast";
 import { Notification } from "../../../../utils/notification";
 import { MyContext } from "../../../../context/dataContext";
+import { getMenuCurrent } from "../../../../utils/Function";
 const GiaoNhiemVu = () => {
 
     const router = useRouter();
@@ -50,10 +51,10 @@ const GiaoNhiemVu = () => {
 
         <div className="border-round-3xl bg-white p-3">
             <Head>
-                <title>Giao nhiệm vụ thí nghiệm</title>
+                <title>{getMenuCurrent()}</title>
             </Head>
             <Toast ref={toast} />
-            <Panel header={<h3 className="text-xl font-bold">Giao nhiệm vụ thí nghiệm</h3>} className="mt-3">
+            <Panel header={<h3 className="text-xl font-bold">{getMenuCurrent()}</h3>} className="mt-3">
                 <FillThongTinYCTN Element={thongTinYCTN ? <ThongTinYCTN loai_yctn={thongTinYCTN.loai_yctn_model} formData={thongTinYCTN} /> : <></>} />
                 {thongTinYCTN && <Panel header={<h3 className="text-base font-bold">Thông tin giao nhiệm vụ</h3>}>
                     <FieldGiaoNV formData={formData} setFormData={setFormData} />

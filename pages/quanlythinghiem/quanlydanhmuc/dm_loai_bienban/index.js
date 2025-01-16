@@ -6,6 +6,7 @@ import { Panel } from "primereact/panel";
 import TableDM_LOAI_BB from "./TableDM_LOAI_BB";
 import DialogForm from "./DialogForm";
 import { DM_LOAI_BIENBAN } from "../../../../models/DM_LOAI_BIENBAN";
+import { getMenuCurrent } from "../../../../utils/Function";
 
 const DM_LOAI_BIEN_BAN = () => {
   const toast = useRef(null);
@@ -35,7 +36,7 @@ const DM_LOAI_BIEN_BAN = () => {
 
     return (
       <div className={className}>
-        <span className="font-bold text-xl">Danh sách loại biên bản</span>
+        <span className="font-bold text-xl">{getMenuCurrent()}</span>
         <div className="flex flex-wrap gap-2">
           <Button
             label="Thêm mới"

@@ -35,7 +35,6 @@ const LoginPage = () => {
             const data = { ten_dang_nhap: username, mat_khau: password }
             const response = await login_HT_NGUOIDUNG(data)
             if (response) {
-                console.log(response)
                 let ds_donvi = response.user.ds_donvi.map(s => ({ ten: s.ten, ma_dviqly: s.ma_dviqly }))
                 sessionStorage.setItem('ds_donvi', JSON.stringify(ds_donvi))
                 sessionStorage.setItem('user', JSON.stringify(response.user));

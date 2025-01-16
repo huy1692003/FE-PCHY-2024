@@ -6,6 +6,7 @@ import { Panel } from "primereact/panel";
 import TableDM_KHACHHANG from "./TableDM_KHACHHANG";
 import DialogForm from "./DialogForm";
 import { DM_KHACH_HANG } from "../../../../models/DM_KHACHHANG";
+import { getMenuCurrent } from "../../../../utils/Function";
 
 const DM_KHACHHANG = () => {
   const toast = useRef(null);
@@ -43,7 +44,7 @@ const DM_KHACHHANG = () => {
 
     return (
       <div className={className}>
-        <span className="font-bold text-xl">Danh sách Khách Hàng</span>
+        <span className="font-bold text-xl">{getMenuCurrent()}</span>
         <div className="flex flex-wrap gap-2">
           <Button
             label="Thêm mới"

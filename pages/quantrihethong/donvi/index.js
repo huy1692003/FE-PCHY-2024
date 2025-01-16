@@ -268,13 +268,7 @@ const DonVi = () => {
     { id: 0, name: 'Hết hiệu lực' },
   ];
 
-  const breadcrumb_router = [
-    { label: 'Danh mục hệ thống' },
-    {
-      label: 'Đơn vị',
-      template: () => <Link href='/danhmuchethong/donvi'>Đơn vị</Link>
-    },
-  ];
+
   const home = { icon: 'pi pi-home', url: '/' };
 
   return (

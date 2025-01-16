@@ -15,12 +15,12 @@ import LoadingOverlay from '../../../utils/Components/LoadingOverlay';
 const ViewKySo = ({ Show, setShow, Detail, refeshData, toastParent, isMobile }) => {
     const [rejectDialogVisible, setRejectDialogVisible] = useState(false);  // Thay thế confirmVisible bằng rejectDialogVisible
     const [rejectionReason, setRejectionReason] = useState('');
-    const userID = JSON.parse(sessionStorage.getItem('user'));
+    const user = JSON.parse(sessionStorage.getItem('user'));
     const { file_upload, chi_tiet_tn, list_NguoiKy, ma_loaitb, ten_thietbi, soluong, ma_yctn, ten_yctn, nguoi_tao, ngaytao } = Detail;
     const toast = useRef(null);
     const [loading, setLoading] = useState(false)
     //Bản ghi cần ký số 
-    const record_kyso = list_NguoiKy.find(s => s.nhom_nguoi_ky === chi_tiet_tn.nhomky_hientai && s.id_nguoi_ky === userID?.id && s.trang_thai_ky === 0) || null;
+    const record_kyso = list_NguoiKy.find(s => s.nhom_nguoi_ky === chi_tiet_tn.nhomky_hientai && s.id_nguoi_ky === user?.id && s.trang_thai_ky === 0) || null;
 
     useEffect(() => {
         setRejectDialogVisible(false);  // Đóng dialog từ chối khi Show thay đổi
@@ -97,7 +97,6 @@ const ViewKySo = ({ Show, setShow, Detail, refeshData, toastParent, isMobile }) 
         </div>
     );
 
-    console.log(file_upload)
     const documentInfo = [
         { label: 'Mã loại thiết bị:', value: ma_loaitb },
         { label: 'Tên thiết bị:', value: ten_thietbi },
@@ -116,8 +115,7 @@ const ViewKySo = ({ Show, setShow, Detail, refeshData, toastParent, isMobile }) 
         setRejectDialogVisible(false);  // Đóng dialog từ chối
     };
 
-    // console.log(userID)
-    // console.log(record_kyso)
+
 
     // status = 1 đồng ý kí , -1 từ chối kí
     const handleSubmit = async (status = 1) => {
@@ -128,7 +126,7 @@ const ViewKySo = ({ Show, setShow, Detail, refeshData, toastParent, isMobile }) 
         const data = {
             id: record_kyso?.id,
             maCTTN: record_kyso?.ma_chi_tiet_tn,
-            idNguoiKy: userID?.id,
+            idNguoiKy: user?.id,
             nhomNguoiKy: record_kyso?.nhom_nguoi_ky,
             trangThai: status,
             lyDoTuChoi: status === -1 ? rejectionReason : null,
@@ -136,19 +134,20 @@ const ViewKySo = ({ Show, setShow, Detail, refeshData, toastParent, isMobile }) 
         const executeUpdate = async () => {
             setLoading(true)
             try {
+                if (!user?.so_cmnd || !user?.value_token) { Notification.error(toast, "Bạn chưa thêm thông tin về tài khoản ký số !", "Cần bổ sung thông tin", 5000); return }
                 let res = await QLTN_KYSO_Service.update_TrangThai_Ky({
                     ...data,
                     requestSign: {
                         "userSign": {
-                            "userID": "002087000080",
-                            "serial_number": "540101016946c14b754c1f902c13be8e"
+                            "userID": user?.so_cmnd,
+                            "serial_number": user?.value_token
                         },
                         "pathFileIn_Out": file_upload,
                         "descSign": "Ký số cho biên bản " + ma_yctn,
-                        "fullNameUser": userID?.ho_ten,
-                        "idUserApp": userID?.id,
+                        "fullNameUser": user?.ho_ten,
+                        "idUserApp": user?.id,
                         "signType": record_kyso?.nhom_nguoi_ky > 1 ? 1 : 0,
-                        "pathImageSign": userID?.anhchukynhay,
+                        "pathImageSign": user?.anhchukynhay,
                     }
                 });
                 if (res) {
@@ -164,11 +163,13 @@ const ViewKySo = ({ Show, setShow, Detail, refeshData, toastParent, isMobile }) 
                     );
                 }
             } catch (error) {
-                alert(
-                    status === 1
-                        ? `Ký số thất bại ${ma_yctn}`
-                        : `Từ chối ký số thất bại ${ma_yctn}`)
-
+                const errorMessage = error instanceof Error ? error.message : error;
+                Notification.error(toast,
+                    errorMessage,  // Truyền thông điệp lỗi (chuỗi)
+                    status === 1 ? `Ký số thất bại ${ma_yctn}` 
+                                  : `Từ chối ký số thất bại ${ma_yctn}`,
+                    7000
+                );
             } finally {
                 setLoading(false)
             }

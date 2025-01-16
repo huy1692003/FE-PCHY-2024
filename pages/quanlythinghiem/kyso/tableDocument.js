@@ -88,7 +88,7 @@ const TableDocument = ({ data, isMobile, refeshData, paginate,toast, setPaginate
                         body={(rowData) =>
                             <div className='px-1 ' >
                                 <p className='mb-1 text-gray-700 text-base'><b className='font-semibold'>Mã YCTN: </b> <span className='font-normal'>{rowData.ma_yctn}</span></p>
-                                <p className='mb-1 text-gray-700 text-base text-justify'><b className='font-semibold'>Tên YCTN: </b> <span className='font-normal'>{rowData.ten_yctn}</span></p>
+                                <p className='mb-1 text-gray-700 text-base'><b className='font-semibold'>Tên YCTN: </b> <span className='font-normal'>{rowData.ten_yctn}</span></p>
                                 <p className='mb-1 text-gray-700 text-base'><b className='font-semibold'>Loại hình TN: </b> <span className='font-normal'>{rowData.loai_yctn}</span></p>
                                 {/* `${rowData.MA_YCTN} - ${rowData.ThongTinChung.TEN_YCTN} - ${rowData.ThongTinChung.LOAI_TN}` */}
                             </div>

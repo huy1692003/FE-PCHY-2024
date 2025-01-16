@@ -8,6 +8,7 @@ import { DM_TRUONG_YCTN } from "../../../../models/DM_TRUONG_YCTN";
 import { useRef } from "react";
 import { Toast } from "primereact/toast";
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import { getMenuCurrent } from "../../../../utils/Function";
 
 
 const TruongYCTN = () => {
