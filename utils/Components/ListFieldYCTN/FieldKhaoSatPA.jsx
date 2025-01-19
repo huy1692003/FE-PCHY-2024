@@ -1,9 +1,9 @@
 import React, { memo, useEffect, useState } from "react";
 import { urlServer } from "../../../constants/api";
 import InputFile from "../InputFile";
-import { FormField } from "./ThongTinYCTN";
 import { HT_NGUOIDUNG_Service } from "../../../services/quantrihethong/HT_NGUOIDUNGService.js"
-import { convertTimezoneToVN } from "../../FunctionFormart.js";
+import { convertTimezoneToVN, convertToDate } from "../../FunctionFormart.js";
+import { FormField } from "./FieldAddYCTN.jsx";
 
 
 
@@ -104,11 +104,12 @@ const FieldKhaoSatPA = ({
         {/* Ngày khảo sát */}
         <div className="col-12 md:col-6">
           <FormField
-            label="Ngày khảo sát"
+            label="Ngày giao nhiệm vụ"
             id="ngay_ks_lap_pa_thi_cong"
+            value={convertToDate(formData?.ngay_ks_lap_pa_thi_cong)}
+            onChange={(id, value) => setFormData(prev => ({ ...prev, [id]: value }))}
             isCalendar
-            value={formData.ngay_ks_lap_pa_thi_cong}
-            onChange={(e) => handleChange("ngay_ks_lap_pa_thi_cong", convertTimezoneToVN(e.value))}
+           
           />
         </div>
       </div>

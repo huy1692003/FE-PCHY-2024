@@ -12,7 +12,7 @@ import DialogForm_ImportFIle from "./DialogForm_ImportFIle";
 import { Toast } from "primereact/toast";
 import FillThongTinYCTN from "../../../../utils/Components/FilterYCTN/FillThongTinYCTN";
 import { useRouter } from "next/router";
-import { getMenuCurrent } from "../../../../utils/Function";
+import { getMenuCurrent, setMenuCurrent } from "../../../../utils/Function";
 
 const NhapKhoiLuongPhatSinh = () => {
   const { ma_yctn, thongTinYCTN } = useThongTinYCTN();
@@ -33,7 +33,7 @@ const NhapKhoiLuongPhatSinh = () => {
         await QLTN_THIET_BI_YCTN_Service.getAll_QLTN_THIET_BI_YCTN_byMA_YCTN({
           ma_yctn: thongTinYCTN?.ma_yctn,
         });
-      
+
       console.log("test");
       console.log(items);
       // console.log("TBBD",items);
@@ -53,7 +53,7 @@ const NhapKhoiLuongPhatSinh = () => {
   };
 
   const ThemMoiThietBi_YCTN = async () => {
-    const mayctn = thongTinYCTN?.ma_yctn;    
+    const mayctn = thongTinYCTN?.ma_yctn;
     const thietBiData = arrThietbi.map((item, index) => {
       const maxMaTBTN = arrThietbiBD.reduce((max, current) => {
         const currentNumber = parseInt(current.ma_tbtn.split("-").pop());

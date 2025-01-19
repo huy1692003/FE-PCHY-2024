@@ -10,13 +10,13 @@ import { Toast } from "primereact/toast";
 import { Notification } from "../../../../../utils/notification";
 import DanhSachThietBi from "../../../../../utils/Components/ThiNghiem/DanhSachThietBi";
 import { useRouter } from "next/router";
-import { getMenuCurrent } from "../../../../../utils/Function";
+import { getMenuCurrent, setMenuCurrent } from "../../../../../utils/Function";
 
 const ThiNghiem = () => {
     const { ma_yctn, thongTinYCTN } = useThongTinYCTN();
     const [formData, setFormData] = useState({});
     const toast = useRef(null);
-    const router=useRouter()
+    const router = useRouter()
 
     useEffect(() => {
         if (thongTinYCTN) {
@@ -45,12 +45,18 @@ const ThiNghiem = () => {
 
                 {thongTinYCTN && <><Panel header="Khối lượng thiết bị thí nghiệm" className="mt-3">
                     <DanhSachThietBi thongtinYCTN={thongTinYCTN} ma_yctn={ma_yctn} />
-                        </Panel>
+                </Panel>
 
                     <div className="flex justify-content-end mt-6">
                         {
                             thongTinYCTN &&
-                            <Button label="Bước tiếp theo : Bàn giao kết quả" icon="pi pi-save" onClick={()=>router.push("/quanlythinghiem/thuchienthinghiem/bangiaoketqua")} />
+                            <Button label="Bước tiếp theo : Bàn giao kết quả" icon="pi pi-save" onClick={() => {
+                                router.push("/quanlythinghiem/thuchienthinghiem/bangiaoketqua?code="+thongTinYCTN.ma_yctn)
+                                setMenuCurrent("Bàn giao kết quả")
+
+                            }
+
+                            } />
                         }
                     </div>
                 </>}

@@ -5,6 +5,10 @@
 export const getMenuCurrent = () => {
     return sessionStorage.getItem('menu_current')||"Danh sách"
 }
+
+export const setMenuCurrent=(title_menu)=>{
+    sessionStorage.setItem('menu_current',title_menu)
+}
 /**
  * Kiểm tra tính hợp lệ của mật khẩu
  * @param {string} password - Mật khẩu cần kiểm tra

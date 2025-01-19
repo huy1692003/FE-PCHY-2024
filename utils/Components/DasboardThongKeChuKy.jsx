@@ -145,7 +145,7 @@ const ThongKe_SL_ChuKy = () => {
         return (
             <div className={className}>
                 <span className="font-bold text-xl">
-                    {getMenuCurrent()}
+                    Thống kê chữ ký số
                 </span>
 
             </div>

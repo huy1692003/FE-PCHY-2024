@@ -13,7 +13,7 @@ import UploadFileService from "../../../../services/UploadFileService";
 import { Toast } from "primereact/toast";
 import { Notification } from "../../../../utils/notification";
 import { MyContext } from "../../../../context/dataContext";
-import { getMenuCurrent } from "../../../../utils/Function";
+import { getMenuCurrent, setMenuCurrent } from "../../../../utils/Function";
 const GiaoNhiemVu = () => {
 
     const router = useRouter();
@@ -65,7 +65,11 @@ const GiaoNhiemVu = () => {
                         thongTinYCTN &&
                         <div>
                             <Button label={formData?.crr_step >= 2 ? "Cập nhật" : "Lưu"} icon="pi pi-save" onClick={onSubmit} />
-                            {formData?.crr_step >= 2 && <Button className="ml-2" onClick={() => { router.push("/quanlythinghiem/yeucauthinghiem/nhapkhoiluongthuchien?code=" + formData?.ma_yctn) }} label={"Bước tiếp theo   " + data.listBuocYCTN?.find(s => s.buoc === 3)?.ten_buoc_yctn} icon="pi pi-arrow-right" />}
+                            {formData?.crr_step >= 2 && <Button className="ml-2" onClick={() => {
+                                router.push("/quanlythinghiem/yeucauthinghiem/nhapkhoiluongthuchien?code=" + formData?.ma_yctn)
+                                setMenuCurrent(data.listBuocYCTN?.find(s => s.buoc === 3)?.ten_buoc_yctn||"Nhập khối lượng thực hiện")
+                            }}
+                                label={"Bước tiếp theo   " + data.listBuocYCTN?.find(s => s.buoc === 3)?.ten_buoc_yctn} icon="pi pi-arrow-right" />}
                         </div>
                     }
                 </div>

@@ -206,14 +206,11 @@ const ViewKySo = ({ Show, setShow, Detail, refeshData, toastParent, isMobile }) 
                         style={{ height: isMobile ? '300px' : "90vh", width: "98%", minWidth: 300 }}
                     >
                         <iframe
-                            src={
-                                file_upload.endsWith('.pdf')
-                                    ? urlServer + file_upload
-                                    : file_upload.endsWith('.docx' || '.doc')
-                                        ? `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent('https://thinghiem.pchungyen.vn/Documents/c205001e-67b9-478b-ad64-f0db800d26a4_NguoiKyChinh.pdf')}`
-                                        : urlServer + file_upload // Xử lý với file khác nếu cần
+                            src={                               
+                                     urlServer + file_upload
+                                    
                             }
-                            type={file_upload.endsWith('.pdf') ? 'application/pdf' : 'application/octet-stream'}
+                            type={'application/pdf'}
                             width="100%"
                             height="100%"
                             title="File Preview"

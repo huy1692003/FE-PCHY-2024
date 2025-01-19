@@ -12,7 +12,7 @@ import ThongTinYCTN from "../../../../utils/Components/ListFieldYCTN/ThongTinYCT
 import { QLTN_THIET_BI_YCTN_Service } from "../../../../services/quanlythinghiem/QLTN_THIET_BI_YCTN_Service";
 import useThongTinYCTN from "../../../../hooks/useThongTinYCTN";
 import LichSuNhapKhoiLuong from "./LichSuNhapKhoiLuong";
-import { getMenuCurrent } from "../../../../utils/Function";
+import { getMenuCurrent, setMenuCurrent } from "../../../../utils/Function";
 
 const NhapKhoiLuongThucHien = () => {
   const router = useRouter();
@@ -147,6 +147,7 @@ const NhapKhoiLuongThucHien = () => {
                   onClick={() => {
                     ThemMoiThietBi_YCTN();
                     router.push(`/quanlythinghiem/yeucauthinghiem/khaosatphuongan?code=${thongTinYCTN?.ma_yctn}`);
+                     setMenuCurrent ("Khảo sát lập phương án thi công")
                   }}
                 />
               </div>

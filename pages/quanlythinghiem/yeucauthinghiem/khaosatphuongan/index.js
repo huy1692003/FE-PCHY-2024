@@ -11,7 +11,7 @@ import QLTN_YCTNService from "../../../../services/quanlythinghiem/QLTN_YCTNServ
 import FieldKhaoSatPA from "../../../../utils/Components/ListFieldYCTN/FieldKhaoSatPA";
 import ThongTinYCTN from "../../../../utils/Components/ListFieldYCTN/ThongTinYCTN";
 import { MyContext } from "../../../../context/dataContext";
-import { getMenuCurrent } from "../../../../utils/Function";
+import { getMenuCurrent, setMenuCurrent } from "../../../../utils/Function";
 
 const KhaoSatPhuongAn = () => {
   const { ma_yctn, thongTinYCTN } = useThongTinYCTN();
@@ -40,7 +40,7 @@ const KhaoSatPhuongAn = () => {
         file_pa_thi_cong: thongTinYCTN?.file_pa_thi_cong || null,
         nguoi_th_ks_lap_pa_thi_cong:
           thongTinYCTN?.nguoi_th_ks_lap_pa_thi_cong || user,
-        ngay_ks_lap_pa_thi_cong: thongTinYCTN?.ngay_ks_lap_pa_thi_cong || null,
+        ngay_ks_lap_pa_thi_cong: thongTinYCTN?.ngay_ks_lap_pa_thi_cong ?? new Date() ,
       });
   }, [thongTinYCTN]);
 
@@ -145,6 +145,7 @@ const KhaoSatPhuongAn = () => {
                             router.push(
                               `/quanlythinghiem/thuchienthinghiem/thinghiem/list?code=${ma_yctn}`
                             );
+                            setMenuCurrent(data.listBuocYCTN?.find(s => s.buoc === 5)?.ten_buoc_yctn||"Thực hiện thí nghiệm")
                           }}
                         />
                       )}

@@ -13,6 +13,7 @@ import { Badge } from "primereact/badge";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import QLTN_YCTNService from "../../../../services/quanlythinghiem/QLTN_YCTNService";
 import { Notification } from "../../../../utils/notification";
+import { setMenuCurrent } from "../../../../utils/Function";
 
 const urlRedirect = [
   { i: 2, url: "/quanlythinghiem/yeucauthinghiem/giaonhiemvu" },
@@ -215,6 +216,7 @@ const TableYCTN = ({ toast, loadYCTN, dataYCTN, totalRecords }) => {
                   if (rowData.cur_step === 5) {
                     const url = urlRedirect.find(s => s.i === rowData.cur_step)?.url;
                     router.push({ pathname: url, query: { code: rowData.ma_yctn ?? "" } });
+                    setMenuCurrent(rowData.ten_buoc_current)
                   }
                 }}
 
@@ -226,7 +228,8 @@ const TableYCTN = ({ toast, loadYCTN, dataYCTN, totalRecords }) => {
                 <Badge
                   onClick={() => {
                     let url = urlRedirect.find(s => s.i === rowData.nex_step)?.url
-                    router.push({ pathname: url, query: { code: rowData.ma_yctn ?? "" }, })
+                    router.push({ pathname: url, query: { code: rowData.ma_yctn ?? "" } })
+                    setMenuCurrent(rowData.ten_buoc_next)
                   }
                   }
                   value={`Bước tiếp theo: ${rowData.ten_buoc_next}`}

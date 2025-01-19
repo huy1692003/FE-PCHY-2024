@@ -22,6 +22,7 @@ import { MyContext } from "../../../context/dataContext";
 import { urlServer } from "../../../constants/api";
 import { Tooltip } from "primereact/tooltip";
 import { convertTimezoneToVN } from "../../FunctionFormart";
+import { setMenuCurrent } from "../../Function";
 
 
 export const FormField = ({ label, className, style, placeholder, value, onChange, id, isCalendar = false, isNumber = false, row = 5, isFileUpload = false, isDropdown = false, isTextArea = false, options = [], prefix, isDisabled = false, styleField, props, mode, currency, locale, childrenIPNumber = "VNĐ", optionsValue, optionsLabel }) => (
@@ -29,8 +30,8 @@ export const FormField = ({ label, className, style, placeholder, value, onChang
         <label className='font-medium text-sm my-3 block' htmlFor={id}>{label}</label>
         {isCalendar ? (
             <Calendar
-                id={id} name={id} value={value} onChange={(e) => onChange(id, convertTimezoneToVN(e.value))} showIcon className="w-full" disabled={isDisabled} appendTo="self" 
-                />
+                id={id} name={id} value={value} onChange={(e) => onChange(id, convertTimezoneToVN(e.value))} showIcon className="w-full" disabled={isDisabled} appendTo="self"
+            />
         )
             : isNumber ? (
                 <div className="p-inputgroup">
@@ -563,7 +564,10 @@ const FieldAddYCTN = ({ loai_yctn, isAdd = true, toast, formDataInit = QLTN_YCTN
                 {loai_yctn && isAdd && !isUpdateHD && formData.next_step != 2 && <Button label={"Tạo mới " + loai_yctn?.ten_loai_yc} icon="pi pi-check" onClick={handleSubmit} />}
                 {loai_yctn && isAdd === false && <Button label={"Cập nhật " + loai_yctn?.ten_loai_yc} icon="pi pi-check" onClick={handleSubmit} />}
                 {loai_yctn && isUpdateHD && <Button label={"Cập nhật hợp đồng " + loai_yctn?.ten_loai_yc} icon="pi pi-check" onClick={handleUpdate} />}
-                {loai_yctn && formData.next_step === 2 && <Button onClick={() => { router.push("/quanlythinghiem/yeucauthinghiem/giaonhiemvu?code=" + formData.ma_yctn) }} label={"Bước tiếp theo   " + data.listBuocYCTN?.find(s => s.buoc === 2)?.ten_buoc_yctn} icon="pi pi-check" />}
+                {loai_yctn && formData.next_step === 2 && <Button onClick={() => {
+                    router.push("/quanlythinghiem/yeucauthinghiem/giaonhiemvu?code=" + formData.ma_yctn)
+                     setMenuCurrent(data.listBuocYCTN?.find(s => s.buoc === 2)?.ten_buoc_yctn||"Giao nhiệm vụ")
+                }} label={"Bước tiếp theo   " + data.listBuocYCTN?.find(s => s.buoc === 2)?.ten_buoc_yctn} icon="pi pi-check" />}
             </div>
         </div>
     );
